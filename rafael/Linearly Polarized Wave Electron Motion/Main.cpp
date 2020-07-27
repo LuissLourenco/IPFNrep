@@ -10,8 +10,8 @@
 #include "ODEsolver.h"
 #include "DataAnalysis.h"
 
-#define XCANVAS 900*2
-#define YCANVAS 1950*2
+#define XCANVAS 1000
+#define YCANVAS 1000
 
 using namespace std;
 
@@ -66,7 +66,7 @@ int main(){
 	DataSet VX(Solution.size(), vx_arr, 0);
 	double v_drift = 0;//VX.getMean().val();
 
-	for(int i = 0; i < VX.size(); i++) v_drift += VX[i].val() * dt / t_max;
+	//for(int i = 0; i < VX.size(); i++) v_drift += VX[i].val() * dt / t_max;
 
 	cout << "V_DRIFT = " << v_drift << endl;
 

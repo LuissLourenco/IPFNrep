@@ -31,6 +31,16 @@ Vec::~Vec(){ //DONE
   delete[] entries;
 }
 
+Vec::Vec(int n, ...){
+    va_list va;
+    va_start(va, n);
+    N = n;
+    entries = new double[n];
+    for(int i = 0; i < n; i++) entries[i] = va_arg(va, double);
+    va_end(va);
+}
+
+
 //Functions
 
 void Vec::SetEntries (int n, double* a){ //DONE
@@ -185,6 +195,20 @@ Vec& Vec::operator*=(double c){ //DONE
   return *this;
 }
 
+
+Vec Vec::operator%(const Vec &v){ //DONE
+  if(N != 3 || v.N != 3){
+    cout << "Tamanhos de vetores incompatíveis!" << endl;
+    return Vec();
+  }
+  double *aux = new double[3];
+  aux[0] = entries[1] * v.entries[2] - entries[2] * v.entries[1];
+  aux[1] = entries[2] * v.entries[0] - entries[0] * v.entries[2];
+  aux[2] = entries[0] * v.entries[1] - entries[1] * v.entries[0];
+  Vec res(N, aux);
+  delete[] aux;
+  return res;
+}
 
 
 //Getters & Setters

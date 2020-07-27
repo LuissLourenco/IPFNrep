@@ -3,7 +3,9 @@
 
 #include <utility>
 #include <vector>
-#include<cmath>
+#include <cmath>
+#include <cstdarg>
+
 
 using namespace std;
 
@@ -17,6 +19,8 @@ class Vec{
     Vec(const Vec &v0); //DONE 
     //Destructor
     ~Vec(); //DONE
+
+    Vec(int n, ...);
 
     //Functions
     void SetEntries (int n, double*); //DONE
@@ -41,6 +45,7 @@ class Vec{
     Vec& operator*=(const Vec &v); //DONE
     Vec& operator*=(double c); //DONE
 
+    Vec operator%(const Vec &v); //DONE <= CROSS PRODUCT
 
     //Getters and Setters
     double At(int i); //DONE

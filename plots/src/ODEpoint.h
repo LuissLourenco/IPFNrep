@@ -18,7 +18,8 @@ public:
     //member    access  funcEons    
     vector<double> Get_Var_vec() const;  //return    the y1,…,yNdim  dependent   variables   
     double *Get_Var_ptr() const;  //same but  as  double  *
-    double *Get_VarTime() const;  //first the y1,…,yNdim  then    t       
+    double *Get_VarTime() const;  //first the y1,…,yNdim  then    t    
+    double* Get(){return Get_VarTime();};   
     int GetNdim() const;  //return    the number  of  dependent   variables   
     double Get_Time() const;  //return    only    the independent variable    (t) 
     void Set_Time(double tval);  //Set   dependent   variable    

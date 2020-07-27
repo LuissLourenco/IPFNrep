@@ -123,7 +123,10 @@ vector<ODEpoint> solucao(double a0, double delta, double T, double dt, string fr
 int main(int argc, char** argv){
 
 
-	auto sol1 = solucao(1, 1, 20, 0.0001, "lab");
+	if (argc!=5)
+		return 0;
+	
+	auto sol1 = solucao(stod(argv[1]), stod(argv[2]), 20, 0.0001, string(argv[3]));
 	
 
 	int n1 = sol1.size();
@@ -193,7 +196,7 @@ int main(int argc, char** argv){
 	leg12->SetBorderSize(0);
 	leg12->SetFillStyle(0);
 
-	c1->SaveAs("lab_PolLin_1.png");
+	c1->SaveAs((string(argv[4])+string(".png")).c_str());
 
 	
 

@@ -18,20 +18,19 @@ using namespace std;
 
 int main(){
 
-	double dt = 0.000001;
+	double dt = 0.00001;
 	int n_iter = 2000000;
 
+	double c = 1;
 	double m = 1;
 	double q = 1;
-	double omega = 10;
-	double k = 1./omega;
+	double omega = 1;
+	double kx = 1./omega;
+	double ky = 0;
+	double kz = 0;
 
-	double E0y = 1;
-	double B0y = 1;
-	double phase = M_PI/2;
-
-	double E0z = 1;
-	double B0z = 1;
+	double a0 = 0.5;
+	double delta = 1;//1./sqrt(2);
 
 	double *t;
 	Vec *pos, *vel;
@@ -39,33 +38,50 @@ int main(){
 	pos = new Vec[n_iter];
 	vel = new Vec[n_iter];
 
-	TF2* Ey = new TF2("Ey", "[0]*cos([1]*x[0]-[2]*x[1]+[3])", -100, 100, -100, 100);
-	TF2* By = new TF2("By", "[0]*cos([1]*x[0]-[2]*x[1]+[3])", -100, 100, -100, 100);
-	Ey->SetParameters(E0y, omega, k, phase);
-	By->SetParameters(B0y, omega, k, 0);
+	TF2* Phi = new TF2("phi", "[omega]*x[0]-[kx]*x[1]-[ky]*x[2]-[kz]*x[3]", -1000, 1000, -1000, 1000);
+	Phi->SetParameter("omega", omega); 
+	Phi->SetParameter("kx", kx);
+	Phi->SetParameter("ky", ky);
+	Phi->SetParameter("kz", kz);
 
-	TF2* Ez = new TF2("Ez", "[0]*cos([1]*x[0]-[2]*x[1]+[3])", -100, 100, -100, 100);
-	TF2* Bz = new TF2("Bz", "[0]*cos([1]*x[0]-[2]*x[1]+[3])", -100, 100, -100, 100);
-	Ez->SetParameters(E0z, omega, k, 0);
-	Bz->SetParameters(B0z, omega, k, phase);
+	TF1* Ax = new TF1("Ax", "0", -1000, 1000);
+	TF1* Ay = new TF1("Ay", "[a0]*[delta]*sin(x)", -1000, 1000);
+	TF1* Az = new TF1("Az", "[a0]*sqrt(1-[delta]*[delta])*cos(x)", -1000, 1000);
+	Ay->SetParameter("a0", a0);
+	Ay->SetParameter("delta", delta);
+	Az->SetParameter("a0", a0);
+	Az->SetParameter("delta", delta);
 
 	Vec EVec, BVec, S, U, H, UL;
-	double ql = dt * q / (2 * m);
+	double phi, bx_aux, by_aux, bz_aux, gamma, ql;
 
-	pos[0] = Vec(3, 0., 0., 0.);
-	vel[0] = Vec(3, 0., 0., 0.);
 	t[0] = 0;
-
+	pos[0] = Vec(3, 0., 0., 1.);
+	phi = Phi->Eval(t[0], pos[0][0], pos[0][1], pos[0][2]);
+	vel[0] = Vec(3, -a0*a0/(4+a0*a0), Ay->Eval(phi), Az->Eval(phi));
+	
 	for(int i = 1; i < n_iter; i++){
+
+		gamma = sqrt(1 + (vel[i-1][0] * vel[i-1][0] + vel[i-1][1] * vel[i-1][1] + vel[i-1][2] * vel[i-1][2]) / c / c);
+		ql = dt * q / (2 * m * c * gamma);
+
 		t[i] = i*dt;
-		EVec = Vec(3, 0., Ey->Eval(t[i], pos[i-1][0]), Ez->Eval(t[i], pos[i-1][0]));
-		BVec = Vec(3, 0., By->Eval(t[i], pos[i-1][0]), Bz->Eval(t[i], pos[i-1][0]));
+		phi = Phi->Eval(t[i], pos[i-1][0], pos[i-1][1], pos[i-1][2]);
+
+		EVec = Vec(3, -Ax->Derivative(phi)*omega, -Ay->Derivative(phi)*omega, -Az->Derivative(phi)*omega);
+		bx_aux = Az->Derivative(phi)*(-ky) - Ay->Derivative(phi)*(-kz);
+		by_aux = Ax->Derivative(phi)*(-kz) - Az->Derivative(phi)*(-kx);
+		bz_aux = Ax->Derivative(phi)*(-ky) - Ay->Derivative(phi)*(-kx);
+		BVec = Vec(3, bx_aux, by_aux, bz_aux);
+
 		H = BVec * ql;
 		S = H * (2 / (1 + H.dot(H)));
 		U = vel[i-1] + EVec * ql;
 		UL = U + (U + (U % H)) % S;
+
 		vel[i] = UL + EVec * ql;
 		pos[i] = pos[i-1] + vel[i] * dt;
+
 		printProgress((double)i/n_iter);
 	}
 	cout << endl;
@@ -94,21 +110,24 @@ int main(){
 	
 	TApplication *myapp=new TApplication("myapp",0,0);
 
-	TCanvas *c = new TCanvas("c0", "", XCANVAS, YCANVAS);
+	TCanvas *canvas = new TCanvas("c0", "", XCANVAS, YCANVAS);
+	
+	//TGraph* graph = new TGraph(n_iter/step, x, y);
 
 	TGraph2D* graph = new TGraph2D(n_iter/step, x, y, z);
 	graph->SetMarkerStyle(20);
 	//graph->SetMarkerSize(1);
 	//graph->SetMarkerColor(kRed);
 	//graph->SetLineColor(kRed);
+	graph->SetTitle("Boris;x;y;z");
 
-	c->cd();
+	canvas->cd();
 	graph->Draw("P0");
 
 	myapp->Run();
 
 
-	c->SaveAs("Plot.png");
+	canvas->SaveAs("Plot.png");
 	
 
 	return 0;

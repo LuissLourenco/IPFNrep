@@ -35,8 +35,8 @@ int main(){
 
 	TFormula dxdt("dxdt", "x[2]");
 	TFormula dydt("dydt", "x[3]");
-	TFormula dvxdt("dvxdt", "-x[3]*[0]*cos([1]*x[4] - [2]*x[0])");
-	TFormula dvydt("dvydt", "(-[3] + x[2]*[0])*cos([1]*x[4] - [2]*x[0])");
+	TFormula dvxdt("dvxdt", "1./sqrt(1-(x[2]*x[2]*x[3]*x[3]))*(-x[3]*[0]*cos([1]*x[4] - [2]*x[0]))");
+	TFormula dvydt("dvydt", "1./sqrt(1-(x[2]*x[2]*x[3]*x[3]))*((-[3] + x[2]*[0])*cos([1]*x[4] - [2]*x[0]))");
 	dvxdt.SetParameters(B0, omega, k);
 	dvydt.SetParameters(B0, omega, k, E0);
 

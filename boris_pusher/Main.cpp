@@ -79,7 +79,7 @@ int main(){
 	t_now = 0;
 	pos = Vec(3, 0., 0., 1.);
 	phi = Phi(pos[0], pos[1], pos[2], t_now);
-	vel = Vec(3, -Ax(phi), -Ay(phi), -Az(phi));
+	vel = Vec(3, 0., 0., 0.);
 
 	double *t, *x, *y, *z, *vx, *vy, *vz, *g;
 	t = new double[n_iter/step];

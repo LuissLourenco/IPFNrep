@@ -17,21 +17,20 @@ void plotOut0(){
 		momentos->SetPoint(i, sol[i][3], sol[i][4]);
 	}	
 
-	trajetoria->SetTitle("trajetoria;x;y");
-	trajetoria->SetMarkerStyle(8);
-	trajetoria->SetMarkerSize(1);
+	trajetoria->SetTitle(";x;y");
 	trajetoria->SetMarkerColor(kRed);
 
-	momentos->SetTitle("momentos;px;py");
-	momentos->SetMarkerStyle(8);
-	momentos->SetMarkerSize(1);
+	momentos->SetTitle(";px;py");
 	momentos->SetMarkerColor(kRed);
 
 
 	TCanvas* c1 = new TCanvas("c1", "", 1200, 600);
+	c1->Divide(2,1);
+
+	c1->cd(1);
 	trajetoria->Draw("AP");
 
-	TCanvas* c2 = new TCanvas("c2", "", 1200, 600);
+	c1->cd(2);
 	momentos->Draw("AP");
 
 }

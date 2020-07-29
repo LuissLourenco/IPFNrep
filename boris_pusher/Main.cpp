@@ -6,8 +6,6 @@
 #include <sstream>
 #include <ctime>
 
-#include "ODEpoint.h"
-#include "ODEsolver.h"
 #include "DataAnalysis.h"
 #include "Vec.h"
 
@@ -149,29 +147,6 @@ int main(){
 	}
 
 	fclose(fo);
-
-
-	//==========================================================
-	
-	TApplication *myapp=new TApplication("myapp",0,0);
-
-	TCanvas *canvas = new TCanvas("c0", "", XCANVAS, YCANVAS);
-	
-	//TGraph* graph = new TGraph(n_iter/step, x, y);
-
-	TGraph2D* graph = new TGraph2D(n_iter/step, x, y, z);
-	graph->SetMarkerStyle(20);
-	graph->SetMarkerSize(0.5);
-	//graph->SetMarkerColor(kRed);
-	//graph->SetLineColor(kRed);
-	graph->SetTitle("Boris;x;y;z");
-
-	canvas->cd();
-	graph->Draw("P0");
-
-	canvas->SaveAs("Plot.png");
-
-	myapp->Run();
 
 	return 0;
 }

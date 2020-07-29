@@ -169,11 +169,9 @@ int main(){
 	canvas->cd();
 	graph->Draw("P0");
 
-	myapp->Run();
-
-
 	canvas->SaveAs("Plot.png");
-	
+
+	myapp->Run();
 
 	return 0;
 }

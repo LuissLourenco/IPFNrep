@@ -6,6 +6,8 @@ CCFLAGS := -std=c++14
 INCLUDE := src
 
 SOURCES := $(shell ls src | grep cpp & ls | grep cpp)
+SOURCES := $(filter-out plotBorisOut.cpp, $(SOURCES))
+
 OBJECTS := $(SOURCES:.cpp=.o)
 
 #####################################################

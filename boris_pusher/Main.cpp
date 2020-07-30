@@ -13,8 +13,8 @@ using namespace std;
 
 template <typename F>
 double Der(F&& f, double x){
-	double h = 1E-4;
-	return (f(x+h)-f(x))/h; 
+	double h = 1E-5;
+	return (f(x+h/2.)-f(x-h/2.))/h; 
 };
 
 int main(){
@@ -22,8 +22,8 @@ int main(){
 	FILE *fo;
  	fo = fopen("BorisOut.txt","w");
 
-	double dt = 0.004;
-	int n_iter = 10000;
+	double dt = 1e-4;
+	int n_iter = 100e3;
 
 	int step = 1; //numero de passos a saltar aquando da impressao
 
@@ -35,14 +35,14 @@ int main(){
 	double ky = 0;
 	double kz = 0;
 
-	double a0 = 0.5;
-	double delta = 1./sqrt(2);
+	double a0 = 27;
+	double delta = 1.;
 
 	double t_now;
 	Vec pos, vel;
 
 	// Funcoes para criar o Envelope
-	double tfwhm = 20;
+	double tfwhm = 40;
 	auto Poly = [](double x){
 		return 10*x*x*x-15*x*x*x*x+6*x*x*x*x*x;
 	};
@@ -62,10 +62,10 @@ int main(){
 		return 0*Envelope(phi);
 	};
 	auto Ay = [&](double phi){
-		return a0*delta*sin(phi)*Envelope(phi);
+		return a0*delta*cos(phi)*Envelope(phi);
 	};
 	auto Az = [&](double phi){
-		return a0*sqrt(1-delta*delta)*cos(phi)*Envelope(phi);
+		return a0*sqrt(1-delta*delta)*sin(phi)*Envelope(phi);
 	};
 
 
@@ -75,7 +75,7 @@ int main(){
 	t_now = 0;
 	pos = Vec(3, 0., 0., 1.);
 	phi = Phi(pos[0], pos[1], pos[2], t_now);
-	vel = Vec(3, 0., 0., 0.);
+	vel = Vec(3, -10., 0., 0.);
 
 	double *t, *x, *y, *z, *vx, *vy, *vz, *g;
 	t = new double[n_iter/step];
@@ -114,13 +114,13 @@ int main(){
 
 		// Avancar metade do efeito de E e rodar por B
 		H = BVec * ql;
-		S = H * (2 / (1 + H.dot(H)));
+		S = H * (2. / (1. + H.dot(H)));
 		U = vel + EVec * ql;
 		UL = U + (U + (U % H)) % S;
 
 		// Atualizar as constantes
 		gamma = sqrt(1 + (vel[0] * vel[0] + vel[1] * vel[1] + vel[2] * vel[2]) / c / c);
-		ql = dt * q / (2 * m * c * gamma);
+		ql = dt * q / (2. * m * c * gamma);
 
 		// Aplicar a outra metade do efeito de E e atualizar posicoes
 		vel = UL + EVec * ql;

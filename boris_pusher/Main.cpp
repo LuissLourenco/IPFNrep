@@ -9,9 +9,6 @@
 #include "DataAnalysis.h"
 #include "Vec.h"
 
-#define XCANVAS 1000
-#define YCANVAS 1000
-
 using namespace std;
 
 template <typename F>
@@ -44,6 +41,7 @@ int main(){
 	double t_now;
 	Vec pos, vel;
 
+	// Funcoes para criar o Envelope
 	double tfwhm = 20;
 	auto Poly = [](double x){
 		return 10*x*x*x-15*x*x*x*x+6*x*x*x*x*x;
@@ -55,7 +53,7 @@ int main(){
 		else return 0.;
  	};
 	
-
+ 	// Funcoes da Onda Eletromagnetica
 	auto Phi = [&](double x, double y, double z, double t){
 		return omega*t - kx*x - ky*y - kz*z;
 	};
@@ -103,26 +101,32 @@ int main(){
 		t_now = i*dt;
 		phi = Phi(pos[0], pos[1], pos[2], t_now);
 
+		// Calculo dos campos
 		EVec = Vec(3, -Der(Ax, phi)*omega, -Der(Ay, phi)*omega, -Der(Az, phi)*omega);
 		bx_aux = Der(Az, phi)*(-ky) - Der(Ay, phi)*(-kz);
 		by_aux = Der(Ax, phi)*(-kz) - Der(Az, phi)*(-kx);
 		bz_aux = Der(Ax, phi)*(-ky) - Der(Ay, phi)*(-kx);
 		BVec = Vec(3, bx_aux, by_aux, bz_aux);
 
+		// Constantes
 		gamma = sqrt(1 + (vel[0] * vel[0] + vel[1] * vel[1] + vel[2] * vel[2]) / c / c);
 		ql = dt * q / (2 * m * c * gamma);
 
+		// Avancar metade do efeito de E e rodar por B
 		H = BVec * ql;
 		S = H * (2 / (1 + H.dot(H)));
 		U = vel + EVec * ql;
 		UL = U + (U + (U % H)) % S;
 
+		// Atualizar as constantes
 		gamma = sqrt(1 + (vel[0] * vel[0] + vel[1] * vel[1] + vel[2] * vel[2]) / c / c);
 		ql = dt * q / (2 * m * c * gamma);
 
+		// Aplicar a outra metade do efeito de E e atualizar posicoes
 		vel = UL + EVec * ql;
 		pos = pos + vel * dt;
 
+		// Print e guardar tudo
 		if(i % step == 0){
 			t [i / step - 1] = t_now;
 			x [i / step - 1] = pos[0];
@@ -147,6 +151,15 @@ int main(){
 	}
 
 	fclose(fo);
+
+	delete[] t;
+	delete[] x;
+	delete[] y;
+	delete[] z;
+	delete[] vx;
+	delete[] vy;
+	delete[] vz;
+	delete[] g;
 
 	return 0;
 }

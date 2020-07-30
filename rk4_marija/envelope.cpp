@@ -17,7 +17,6 @@ double Envelope(double x,double t){
 	else if (x<t-tfwhm) res = 1;
 	else if (x<t) res=Poly(x2);
 	else res=0; 
-
 	return res;
 }
 

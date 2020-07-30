@@ -1,5 +1,6 @@
 
-double tfwhm=40.0;
+double tfwhm=20.0;
+double stable=40.0;
 
 double Poly(double x)
 {double res;
@@ -9,10 +10,11 @@ double Poly(double x)
 
 double Envelope(double x,double t){
 	double res,x1,x2; 
-	x1=(x-t+2*tfwhm)/tfwhm; 
+	x1=(x-t+2*tfwhm+stable)/tfwhm; 
 	x2=(t-x)/tfwhm;
-	if (x<t-2*tfwhm) res=0;
-	else if (x<t-tfwhm) res=Poly(x1);
+	if (x<t-2*tfwhm-stable) res=0;
+	else if (x<t-tfwhm-stable) res=Poly(x1);
+	else if (x<t-tfwhm) res = 1;
 	else if (x<t) res=Poly(x2);
 	else res=0; 
 

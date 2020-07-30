@@ -22,10 +22,12 @@ int main(){
 	FILE *fo;
  	fo = fopen("BorisOut.txt","w");
 
-	double dt = 1e-4;
-	int n_iter = 100e3;
+	double dt = 1e-3;
+	double t_max = 150;
+	int n_iter = t_max / dt;
 
 	int step = 1; //numero de passos a saltar aquando da impressao
+	double t_stabilize = 0; //tempo a partir do qual comeca a guardar dados
 
 	double c = 1;
 	double m = 1;
@@ -35,21 +37,23 @@ int main(){
 	double ky = 0;
 	double kz = 0;
 
-	double a0 = 27;
-	double delta = 1.;
+	double a0 = 1;
+	double delta = 1./sqrt(2);
 
 	double t_now;
 	Vec pos, vel;
 
 	// Funcoes para criar o Envelope
-	double tfwhm = 40;
+	double rise = 50;
+	double stable = 30;
 	auto Poly = [](double x){
 		return 10*x*x*x-15*x*x*x*x+6*x*x*x*x*x;
 	};
 	auto Envelope = [&](double phi){
-		if(phi > 2 * tfwhm) return 0.;
-		if(phi > tfwhm) return Poly((-phi+2*tfwhm)/tfwhm);
-		if(phi > 0) return Poly(phi / tfwhm);
+		if(phi > 2 * rise + stable) return 0.;
+		if(phi > rise + stable) return Poly((-phi+2*rise+stable)/rise);
+		if(phi > rise) return 1.;
+		if(phi > 0) return Poly(phi / rise);
 		else return 0.;
  	};
 	
@@ -75,27 +79,20 @@ int main(){
 	t_now = 0;
 	pos = Vec(3, 0., 0., 1.);
 	phi = Phi(pos[0], pos[1], pos[2], t_now);
-	vel = Vec(3, -10., 0., 0.);
+	//vel = Vec(3, 1.016*a0*a0/4, 0., 0.); // Average Rest Frame (?)
+	vel = Vec(3, 0., 0., 0.);
 
-	double *t, *x, *y, *z, *vx, *vy, *vz, *g;
-	t = new double[n_iter/step];
-	x = new double[n_iter/step];
-	y = new double[n_iter/step];
-	z = new double[n_iter/step];
-	vx = new double[n_iter/step];
-	vy = new double[n_iter/step];
-	vz = new double[n_iter/step];
-	g = new double[n_iter/step];
+	if(t_now >= t_stabilize){
+		fprintf(fo, "%.14e \t ", t_now); 
+		fprintf(fo, "%.14e \t ", pos[0]); 
+		fprintf(fo, "%.14e \t ", pos[1]); 
+		fprintf(fo, "%.14e \t ", pos[2]); 
+		fprintf(fo, "%.14e \t ", vel[0]); 
+		fprintf(fo, "%.14e \t ", vel[1]); 
+		fprintf(fo, "%.14e \t ", vel[2]); 
+		fprintf(fo, "%.14e\n", sqrt(1 + (vel[0] * vel[0] + vel[1] * vel[1] + vel[2] * vel[2]) / c / c)); 
+	}
 
-	fprintf(fo, "%.14e \t ", t_now); 
-	fprintf(fo, "%.14e \t ", pos[0]); 
-	fprintf(fo, "%.14e \t ", pos[1]); 
-	fprintf(fo, "%.14e \t ", pos[2]); 
-	fprintf(fo, "%.14e \t ", vel[0]); 
-	fprintf(fo, "%.14e \t ", vel[1]); 
-	fprintf(fo, "%.14e \t ", vel[2]); 
-	fprintf(fo, "%.14e", sqrt(1 + (vel[0] * vel[0] + vel[1] * vel[1] + vel[2] * vel[2]) / c / c)); 
-	
 	for(int i = 1; i < n_iter; i++){
 
 		t_now = i*dt;
@@ -127,39 +124,23 @@ int main(){
 		pos = pos + vel * dt;
 
 		// Print e guardar tudo
-		if(i % step == 0){
-			t [i / step - 1] = t_now;
-			x [i / step - 1] = pos[0];
-			y [i / step - 1] = pos[1];
-			z [i / step - 1] = pos[2];
-			vx[i / step - 1] = vel[0];
-			vy[i / step - 1] = vel[1];
-			vz[i / step - 1] = vel[2];
-			g [i / step - 1] = gamma;
-			fprintf(fo, "\n%.14e \t ", t [i / step - 1]); 
-			fprintf(fo, "%.14e \t ", x [i / step - 1]); 
-			fprintf(fo, "%.14e \t ", y [i / step - 1]); 
-			fprintf(fo, "%.14e \t ", z [i / step - 1]); 
-			fprintf(fo, "%.14e \t ", vx[i / step - 1]); 
-			fprintf(fo, "%.14e \t ", vy[i / step - 1]); 
-			fprintf(fo, "%.14e \t ", vz[i / step - 1]); 
-			fprintf(fo, "%.14e",  g [i / step - 1]); 
+		if(i % step == 0 && t_now >= t_stabilize){
+			fprintf(fo, "%.14e \t ", t_now); 
+			fprintf(fo, "%.14e \t ", pos[0]); 
+			fprintf(fo, "%.14e \t ", pos[1]); 
+			fprintf(fo, "%.14e \t ", pos[2]); 
+			fprintf(fo, "%.14e \t ", vel[0]); 
+			fprintf(fo, "%.14e \t ", vel[1]); 
+			fprintf(fo, "%.14e \t ", vel[2]); 
+			fprintf(fo, "%.14e\n",  gamma); 
 		}
 
 		printProgress((double)i/n_iter);
 
 	}
+	cout << "Закончилось" << endl;
 
 	fclose(fo);
-
-	delete[] t;
-	delete[] x;
-	delete[] y;
-	delete[] z;
-	delete[] vx;
-	delete[] vy;
-	delete[] vz;
-	delete[] g;
 
 	return 0;
 }

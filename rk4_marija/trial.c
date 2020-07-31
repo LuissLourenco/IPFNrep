@@ -234,7 +234,7 @@ double RK(double T,long long int N, double p01, double p02,double p03, double x0
  	 k23=h*fun3(px,py,pz,x,y,z);
  	 k24=h*fun4(px,py,pz,x,y,z);
  	 k25=h*fun5(px,py,pz,x,y,z);
- 	 k26=h*fun5(px,py,pz,x,y,z);
+ 	 k26=h*fun6(px,py,pz,x,y,z);
 
  	 //-----------------------------------------------------------------------
  	 
@@ -250,7 +250,7 @@ double RK(double T,long long int N, double p01, double p02,double p03, double x0
  	 k33=h*fun3(px,py,pz,x,y,z);
  	 k34=h*fun4(px,py,pz,x,y,z);
  	 k35=h*fun5(px,py,pz,x,y,z);
- 	 k36=h*fun5(px,py,pz,x,y,z);
+ 	 k36=h*fun6(px,py,pz,x,y,z);
 
  	 //---------------------------------------------------------------------------
  	  
@@ -268,7 +268,7 @@ double RK(double T,long long int N, double p01, double p02,double p03, double x0
  	 k43=h*fun3(px,py,pz,x,y,z);
  	 k44=h*fun4(px,py,pz,x,y,z);
  	 k45=h*fun5(px,py,pz,x,y,z);
- 	 k46=h*fun5(px,py,pz,x,y,z);
+ 	 k46=h*fun6(px,py,pz,x,y,z);
 
  	 
  	 w1=w1+(k11+2*k21+2*k31+k41)/6; 

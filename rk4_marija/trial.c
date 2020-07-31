@@ -289,7 +289,7 @@ double RK(double T,long long int N, double p01, double p02,double p03, double x0
  	 if ((i % pri) == 0)
  	 {gam=sqrt(1+w1*w1+w2*w2+w3*w3); 
  	  fprintf(fo, "%.14e    	%.14e 	 %.14e   %.14e	%.14e	 %.14e	%.14e		%.14e\n",t, w4, w5, w6, w1, w2, w3, gam); 
- 	  // prints t, x, y, px, py, pz, gamma
+ 	  // prints t, x, y, z, px, py, pz, gamma
 	  }
 	 }
  	}
@@ -309,7 +309,7 @@ int main()
  
  w=k; Bo=Eo; 
  fclose(foo);
- x01=100.; x02=0.; x03=0.;
+ x01=0.; x02=0.; x03=0.;
  dx=xgrid/2.;dy=ygrid/2.;
  
 

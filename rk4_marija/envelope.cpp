@@ -1,6 +1,6 @@
 
-double tfwhm=20.0;
-double stable=40.0;
+double tfwhm=100.0;
+double stable=100.0;
 
 double Poly(double x)
 {double res;

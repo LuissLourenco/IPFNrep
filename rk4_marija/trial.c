@@ -23,6 +23,8 @@ double Envelope(double x,double t){
 	return res;
 }
 
+
+/*
 double Ax(double phi){return 0;}
 double Ay(double phi){return delta*Eo*sin(phi);}
 double Az(double phi){return sqrt(1-delta*delta)*Eo*cos(phi);}
@@ -57,7 +59,9 @@ double DerBfx(double x, double y, double z){return 0;}
 double DerBfy(double x, double y, double z){return w*k*Der2(Az,Phi(x,y,z,t)) *Envelope(x,t);}
 double DerBfz(double x, double y, double z){return -w*k*Der2(Ay,Phi(x,y,z,t)) *Envelope(x,t);}
 
-/*
+
+*/
+
 double Efx(double x, double y, double z)  //Ex interpolation to (x,y,z)
 { double res;
  res=0;
@@ -129,7 +133,8 @@ double DerBfz(double x, double y, double z) //Bz time derivative at (x,y,z)
  res=delta*w*k*Bo*cos(w*t-k*x)*Envelope(x,t);
  return res; 
 }
-*/
+
+
 double fun1( double px,double py,double pz,double x,double y, double z)   //  dpx/dt
 {double res,A,B,C,D;
 A=0;// A=gam*DerEfx(x,y,z)+px*(Efx(x+dx,y)-Efx(x-dx,y))/(2*dx)+py*(Efx(x,y+dy)-Efx(x,y-dy))/(2*dy)+py*DerBfz(x,y,z)-pz*DerBfy(x,y,z);
@@ -299,12 +304,12 @@ int main()
  
  foo=fopen("InputTotBatch.txt","r");
  fscanf(foo,"%lf %lf %lf %lf %lf %lf %lf %lf %lld %i %lf %lf ", &p01, &p02, &p03, &Eo, &delta, &kdamp,&k, &T, &N, &pri, &xgrid, &ygrid);
- tfwhm = 30.;
+ tfwhm = 100.;
  stable = 100.;
  
  w=k; Bo=Eo; 
  fclose(foo);
- x01=0.; x02=0.; x03=0.;
+ x01=100.; x02=0.; x03=0.;
  dx=xgrid/2.;dy=ygrid/2.;
  
 

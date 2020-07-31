@@ -7,30 +7,31 @@ void plotOut0(){
 	vector<vector<double>> sol = ReadFile2Vec("Out0.txt");
 	int n = sol.size();
 
-	TGraph* trajetoria = new TGraph(n);
+	TGraph2D* trajetoria = new TGraph2D(n);
 	for (int i=0; i<n; i++){
-		trajetoria->SetPoint(i, sol[i][1], sol[i][2]);
+		trajetoria->SetPoint(i, sol[i][1], sol[i][2], sol[i][3]);
 	}
 
-	TGraph* momentos = new TGraph(n);
+	TGraph2D* momentos = new TGraph2D(n);
 	for (int i=0; i<n; i++){
-		momentos->SetPoint(i, sol[i][3], sol[i][4]);
+		momentos->SetPoint(i, sol[i][4], sol[i][5], sol[i][6]);
 	}	
 
-	trajetoria->SetTitle(";x;y");
+	trajetoria->SetTitle(";x;y;z");
 	trajetoria->SetMarkerColor(kRed);
 
-	momentos->SetTitle(";px;py");
+	momentos->SetTitle(";px;py;pz");
 	momentos->SetMarkerColor(kRed);
 
-
-	TCanvas* c1 = new TCanvas("c1", "", 1200, 600);
+	TCanvas* c1 = new TCanvas("c1", "", 2400, 1200);
 	c1->Divide(2,1);
 
 	c1->cd(1);
-	trajetoria->Draw("AP");
+	trajetoria->Draw("P");
 
 	c1->cd(2);
-	momentos->Draw("AP");
+	momentos->Draw("P");
+
+	c1->SaveAs("Plot.png");
 
 }

@@ -33,11 +33,11 @@ double myfunc2(double* x, double* par){
 void envelope(){
 
 
-	TF2* f1 = new TF2("f1", myfunc1, -100, 100, -100, 100, 0);
+	TF2* f1 = new TF2("f1", myfunc1, -500, 500, -500, 500, 0);
 	f1->SetTitle(";x;t;Envelope");
 	gStyle->SetPalette(kMint);
 
-	TF1* f2 = new TF1("f2", myfunc2, -100, 100, 1);
+	TF1* f2 = new TF1("f2", myfunc2, -500, 500, 1);
 	f2->SetParameter(0,0);
 	f2->SetTitle(";x;Envelope");
 

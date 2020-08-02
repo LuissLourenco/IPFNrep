@@ -5,6 +5,10 @@ double t, xgrid, ygrid,gam,Fx,Fy,Fz,pE,k,dx,dy,w,Eo,Bo,delta,kdamp, tfwhm, stabl
 int pri, Ni, Nj;
 
 
+int wave_type = 0; // 0-> Plane Wave; 1-> Gaussian Beam
+
+double lambda, w0, n, eta;
+
 double Poly(double x)
 {double res;
  res=10*x*x*x-15*x*x*x*x+6*x*x*x*x*x;
@@ -62,77 +66,99 @@ double DerBfz(double x, double y, double z){return -w*k*Der2(Ay,Phi(x,y,z,t)) *E
 
 */
 
-double Efx(double x, double y, double z)  //Ex interpolation to (x,y,z)
-{ double res;
- res=0;
- return res; 
+double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
+ if(wave_type == 0) return 0; 
+ if(wave_type == 1) return 0;
 }
 
-double DerEfx(double x, double y, double z) //Ex time derivative at (x,y,z)
-{double res;
- res=0;
- return res; 
+double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
+ if(wave_type == 0) return 0; 
+ if(wave_type == 1) return 0;
 }
 
-double Efy(double x, double y, double z)  //Ey interpolation to (x,y,z)
-{double res;
- res=delta*w*Eo*sin(w*t-k*x)*Envelope(x,t);
- return res; 
+double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
+ if(wave_type == 0) return delta*w*Eo*sin(w*t-k*x)*Envelope(x,t);
+ if(wave_type == 1){
+ 	double r = sqrt(y*y + z*z);
+ 	double zr = M_PI * w0*w0 * n / lambda;
+ 	double wz = w0 * sqrt(1 + x*x/(zr*zr));
+ 	double R_1 = x / (x*x + zr*zr);
+ 	double kg = 2 * M_PI * n / lambda;
+ 	double psi = atan(x/zr);
+ 	return Eo * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
+ }
 }
 
-double DerEfy(double x, double y, double z) //Ey time derivative at (x,y,z)
-{double res;
- res=delta*w*w*Eo*cos(w*t-k*x)*Envelope(x,t);
- return res; 
+double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
+ if(wave_type == 0) return delta*w*w*Eo*cos(w*t-k*x)*Envelope(x,t); 
+ if(wave_type == 1){
+ 	double r = sqrt(y*y + z*z);
+ 	double zr = M_PI * w0*w0 * n / lambda;
+ 	double wz = w0 * sqrt(1 + x*x/(zr*zr));
+ 	double R_1 = x / (x*x + zr*zr);
+ 	double kg = 2 * M_PI * n / lambda;
+ 	double psi = atan(x/zr);
+ 	return w * Eo * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
+ }
 }
 
-double Efz(double x, double y, double z)  //Ez interpolation to (x,y,z)
-{ double res;
- res=-sqrt(1-delta*delta)*w*Eo*cos(w*t-k*x)*Envelope(x,t);
- return res; 
+double Efz(double x, double y, double z){  //Ez interpolation to (x,y,z)
+ if(wave_type == 0) return -sqrt(1-delta*delta)*w*Eo*cos(w*t-k*x)*Envelope(x,t); 
+ if(wave_type == 1) return 0;
 }
 
-double DerEfz(double x, double y, double z) //Ez time derivative at (x,y,z)
-{double res;
- res=sqrt(1-delta*delta)*w*w*Eo*sin(w*t-k*x)*Envelope(x,t);
- return res; 
+double DerEfz(double x, double y, double z){ //Ez time derivative at (x,y,z)
+ if(wave_type == 0) return sqrt(1-delta*delta)*w*w*Eo*sin(w*t-k*x)*Envelope(x,t);
+ if(wave_type == 1) return 0;
 }
 
-double Bfx( double x, double y, double z)  //Bx interpolation to (x,y,z)
-{ double res;
- res=0;
- return res; 
+double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
+ if(wave_type == 0) return 0; 
+ if(wave_type == 1) return 0;
 }
 
-double DerBfx(double x, double y, double z) //Bx time derivative at (x,y,z)
-{double res;
- res=0;
- return res; 
+double DerBfx(double x, double y, double z){ //Bx time derivative at (x,y,z)
+ if(wave_type == 0) return 0; 
+ if(wave_type == 1) return 0;
 }
 
-double Bfy(double x, double y, double z)  //By interpolation to (x,y,z)
-{ double res;
- res=sqrt(1-delta*delta)*k*Bo*cos(w*t-k*x)*Envelope(x,t);
- return res; 
+double Bfy(double x, double y, double z){  //By interpolation to (x,y,z)
+ if(wave_type == 0) return sqrt(1-delta*delta)*k*Bo*cos(w*t-k*x)*Envelope(x,t);
+ if(wave_type == 1) return 0;
 }
 
-double DerBfy(double x, double y, double z) //By time derivative at (x,y,z)
-{double res;
- res=-sqrt(1-delta*delta)*w*k*Bo*sin(w*t-k*x)*Envelope(x,t);
- return res; 
+double DerBfy(double x, double y, double z){ //By time derivative at (x,y,z)
+ if(wave_type == 0) return -sqrt(1-delta*delta)*w*k*Bo*sin(w*t-k*x)*Envelope(x,t);
+ if(wave_type == 1) return 0;
 }
 
-double Bfz(double x, double y, double z)  //Bz interpolation to (x,y,z)
-{double res;
- res=delta*k*Bo*sin(w*t-k*x)*Envelope(x,t);
- return res; 
+double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
+ if(wave_type == 0) return delta*k*Bo*sin(w*t-k*x)*Envelope(x,t);
+ if(wave_type == 1){
+ 	double r = sqrt(y*y + z*z);
+ 	double zr = M_PI * w0*w0 * n / lambda;
+ 	double wz = w0 * sqrt(1 + x*x/(zr*zr));
+ 	double R_1 = x / (x*x + zr*zr);
+ 	double kg = 2 * M_PI * n / lambda;
+ 	double psi = atan(x/zr);
+ 	return Eo / eta * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
+ }
 }
 
-double DerBfz(double x, double y, double z) //Bz time derivative at (x,y,z)
-{double res;
- res=delta*w*k*Bo*cos(w*t-k*x)*Envelope(x,t);
- return res; 
+double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
+ if(wave_type == 0) return delta*w*k*Bo*cos(w*t-k*x)*Envelope(x,t); 
+ if(wave_type == 1){
+ 	double r = sqrt(y*y + z*z);
+ 	double zr = M_PI * w0*w0 * n / lambda;
+ 	double wz = w0 * sqrt(1 + x*x/(zr*zr));
+ 	double R_1 = x / (x*x + zr*zr);
+ 	double kg = 2 * M_PI * n / lambda;
+ 	double psi = atan(x/zr);
+ 	return w * Eo / eta * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
+ }
 }
+
+
 
 
 double fun1( double px,double py,double pz,double x,double y, double z)   //  dpx/dt
@@ -283,7 +309,7 @@ double RK(double T,long long int N, double p01, double p02,double p03, double x0
  	 w5=w5+(k15+2*k25+2*k35+k45)/6;
  	 w6=w6+(k16+2*k26+2*k36+k46)/6;
  	 
- 
+
  	 //---------------------------------------------------------------------------
  	 
  	 if ((i % pri) == 0)
@@ -304,15 +330,23 @@ int main()
  
  foo=fopen("InputTotBatch.txt","r");
  fscanf(foo,"%lf %lf %lf %lf %lf %lf %lf %lf %lld %i %lf %lf ", &p01, &p02, &p03, &Eo, &delta, &kdamp,&k, &T, &N, &pri, &xgrid, &ygrid);
- tfwhm = 100.;
- stable = 100.;
+ tfwhm = 30.;
+ stable = 40.;
  
  w=k; Bo=Eo; 
  //p01 = -Eo*Eo/4.;
  fclose(foo);
- x01=0.; x02=0.; x03=100.;
+ x01=0.; x02=0.; x03=10.;
  dx=xgrid/2.;dy=ygrid/2.;
- 
+
+
+ wave_type = 1;
+ lambda = 1;
+ w0 = 1;
+ n = 1;
+ eta = 1;
+ Eo = 10;
+
 
  RK(T, N, p01, p02, p03, x01, x02, x03);
 

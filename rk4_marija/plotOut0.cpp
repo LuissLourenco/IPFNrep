@@ -10,7 +10,6 @@ void plotOut0(){
 	foo=fopen("InputTotBatch.txt","r");
 	fscanf(foo,"%lf %lf %lf %lf %lf %lf %lf %lf %lld %i %lf %lf ", &p01, &p02, &p03, &Eo, &delta, &kdamp,&k, &T, &N, &pri, &xgrid, &ygrid);
 
-
 	// t x y z px py pz gama
 	vector<vector<double>> sol = ReadFile2Vec("Out0.txt");
 	int n = sol.size();
@@ -22,7 +21,7 @@ void plotOut0(){
 
 	TGraph2D* trajetoria_teorica = new TGraph2D(n);
 	for (int i=0; i<n; i++){
-		trajetoria_teorica->SetPoint(i, Eo*Eo/4*(sol[i][0]-sol[i][1]+(delta*delta-1/2)*cos(2*(sol[i][0]-sol[i][1]))),
+		trajetoria_teorica->SetPoint(i, Eo*Eo/4.*(sol[i][0]-sol[i][1]+(delta*delta-1./2.)*cos(2.*(sol[i][0]-sol[i][1]))),
 										delta*Eo*sin(sol[i][0]-sol[i][1]),
 										-sqrt(1-delta*delta)*Eo*cos(sol[i][0]-sol[i][1]));
 	}
@@ -44,7 +43,7 @@ void plotOut0(){
 
 	c1->cd(1);
 	trajetoria->Draw("P");
-	trajetoria_teorica->Draw("SAME");
+	trajetoria_teorica->Draw("SAME P");
 
 	c1->cd(2);
 	momentos->Draw("P");

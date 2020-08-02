@@ -308,8 +308,9 @@ int main()
  stable = 100.;
  
  w=k; Bo=Eo; 
+ //p01 = -Eo*Eo/4.;
  fclose(foo);
- x01=0.; x02=0.; x03=0.;
+ x01=0.; x02=0.; x03=100.;
  dx=xgrid/2.;dy=ygrid/2.;
  
 

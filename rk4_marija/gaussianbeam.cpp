@@ -20,10 +20,10 @@ double Envelope(double x,double t){
 	return res;
 }
 
-double w0 = 1;
+double w0 = 10;
 double lambda = 1;
 double n = 1;
-double E0 = 10;
+double E0 = 1;
 double omega = 1;
 
 double zr = M_PI * w0 * w0 * n / lambda;
@@ -41,7 +41,7 @@ double myfunc1(double* x, double* par){
 
 void gaussianbeam(){
 
-	TF2* f1 = new TF2("f1", myfunc1, -5, 5, -5, 5, 1); 
+	TF2* f1 = new TF2("f1", myfunc1, -5, 5, -20, 20, 1); 
 	f1->SetTitle(";z;r;Gaussian Beam");
 	///gStyle->SetPalette(kMint);
 	f1->SetNpx(100);

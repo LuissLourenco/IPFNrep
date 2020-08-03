@@ -6,8 +6,8 @@ int pri, Ni, Nj;
 
 
 int wave_type = 0; // 0-> Plane Wave; 1-> Gaussian Beam
-
 double lambda, w0, n, eta;
+
 
 double Poly(double x)
 {double res;
@@ -342,10 +342,10 @@ int main()
 
  wave_type = 1;
  lambda = 1;
- w0 = 1;
+ w0 = 10;
  n = 1;
  eta = 1;
- Eo = 10;
+ Eo = 1;
 
 
  RK(T, N, p01, p02, p03, x01, x02, x03);

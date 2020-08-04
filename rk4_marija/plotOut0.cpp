@@ -21,7 +21,7 @@ void plotOut0(){
 
 	TGraph2D* trajetoria_teorica = new TGraph2D(n);
 	for (int i=0; i<n; i++){
-		trajetoria_teorica->SetPoint(i, Eo*Eo/4.*(sol[i][0]-sol[i][1]+(delta*delta-1./2.)*cos(2.*(sol[i][0]-sol[i][1]))),
+		trajetoria_teorica->SetPoint(i, Eo*Eo/4.*(sol[i][0]-sol[i][1]+(delta*delta-1./2.)*sin(2.*(sol[i][0]-sol[i][1]))),
 										delta*Eo*sin(sol[i][0]-sol[i][1]),
 										-sqrt(1-delta*delta)*Eo*cos(sol[i][0]-sol[i][1]));
 	}
@@ -31,22 +31,51 @@ void plotOut0(){
 		momentos->SetPoint(i, sol[i][4], sol[i][5], sol[i][6]);
 	}	
 
+	TGraph2D* momentos_teoricos = new TGraph2D(n);
+	for (int i=0; i<n; i++){
+		momentos_teoricos->SetPoint(i, Eo*Eo/4.*(1.+(2.*delta*delta-1.)*cos(2.*(sol[i][0]-sol[i][1]))),
+										delta*Eo*cos(sol[i][0]-sol[i][1]),
+										sqrt(1-delta*delta)*Eo*sin(sol[i][0]-sol[i][1]));
+	}
+
 	trajetoria->SetTitle(";x;y;z");
 	trajetoria->SetMarkerColor(kRed);
 	trajetoria_teorica->SetMarkerColor(kBlue);
 
 	momentos->SetTitle(";px;py;pz");
 	momentos->SetMarkerColor(kRed);
+	momentos_teoricos->SetMarkerColor(kBlue);
+
+
+
+	trajetoria->SetMinimum(-1.);
+	trajetoria->SetMaximum(1.);
+	trajetoria_teorica->SetMinimum(-1.);
+	trajetoria_teorica->SetMaximum(1.);
+
+	momentos->SetMinimum(-1.);
+	momentos->SetMaximum(1.);
+	momentos_teoricos->SetMinimum(-1.);
+	momentos_teoricos->SetMaximum(1.);
+
+
 
 	TCanvas* c1 = new TCanvas("c1", "", 2400, 1200);
 	c1->Divide(2,1);
 
 	c1->cd(1);
 	trajetoria->Draw("P");
-	trajetoria_teorica->Draw("SAME P");
+	trajetoria_teorica->Draw("SAME");
 
 	c1->cd(2);
 	momentos->Draw("P");
+	momentos_teoricos->Draw("SAME");
+
+	momentos->GetXaxis()->SetTitleOffset(1.75);
+	momentos->GetYaxis()->SetTitleOffset(1.75);
+	momentos->GetZaxis()->SetTitleOffset(1.55);
+
+
 	/*
 	c1->Clear();
 	c1->Divide(2,1);

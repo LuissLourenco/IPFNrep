@@ -330,8 +330,8 @@ int main()
  
  foo=fopen("InputTotBatch.txt","r");
  fscanf(foo,"%lf %lf %lf %lf %lf %lf %lf %lf %lld %i %lf %lf ", &p01, &p02, &p03, &Eo, &delta, &kdamp,&k, &T, &N, &pri, &xgrid, &ygrid);
- tfwhm = 30.;
- stable = 40.;
+ tfwhm = 100.;
+ stable = 50.;
  
  w=k; Bo=Eo; 
  //p01 = -Eo*Eo/4.;
@@ -339,17 +339,13 @@ int main()
  x01=0.; x02=0.; x03=0.;
  dx=xgrid/2.;dy=ygrid/2.;
 
-delta = 0;
-T = 50;
-p01 = -1;
 
- wave_type = 0;
- lambda = 0;
+ /*lambda = 0;
  w0 = 10;
  n = 1;
  eta = 1;
  Eo = 1;
-
+	*/
 
  RK(T, N, p01, p02, p03, x01, x02, x03);
 

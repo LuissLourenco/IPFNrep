@@ -47,8 +47,26 @@ void plotOut0(){
 
 	c1->cd(2);
 	momentos->Draw("P");
-
-
+	/*
+	c1->Clear();
+	c1->Divide(2,1);
+	TGraph* graph_pos = new TGraph(n);
+	for (int i=0; i<n; i++){
+		graph_pos->SetPoint(i, sol[i][1], sol[i][3]);
+	}
+	TGraph* graph_vel = new TGraph(n);
+	for (int i=0; i<n; i++){
+		graph_vel->SetPoint(i, sol[i][4], sol[i][6]);
+	}
+	graph_pos->SetTitle("Trajectory;x;y");	
+	graph_pos->GetYaxis()->SetTitleOffset(0.55);
+	graph_vel->SetTitle("Momentum;p_{x};p_{y}");	
+	graph_vel->GetYaxis()->SetTitleOffset(0.55);
+	c1->cd(1);
+	graph_pos->Draw("ACP");
+	c1->cd(2);
+	graph_vel->Draw("ACP");
+	*/
 	c1->SaveAs("Plot.png");
 
 }

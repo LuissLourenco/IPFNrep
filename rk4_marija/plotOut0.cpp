@@ -9,13 +9,17 @@ void plotOut0(){
 	FILE *foo;
 	foo=fopen("InputTotBatch.txt","r");
 	fscanf(foo,"%lf %lf %lf %lf %lf %lf %lf %lf %lld %i %lf %lf ", &p01, &p02, &p03, &Eo, &delta, &kdamp,&k, &T, &N, &pri, &xgrid, &ygrid);
+	fclose(foo);
 
 	// t x y z px py pz gama
 	vector<vector<double>> sol = ReadFile2Vec("Out0.txt");
 	int n = sol.size();
 
+
+	/*
 	TGraph2D* trajetoria = new TGraph2D(n);
 	for (int i=0; i<n; i++){
+		if (sol[i][0]>100. && sol[i][0]<150.)
 		trajetoria->SetPoint(i, sol[i][1], sol[i][2], sol[i][3]);
 	}
 
@@ -36,7 +40,34 @@ void plotOut0(){
 		momentos_teoricos->SetPoint(i, Eo*Eo/4.*(1.+(2.*delta*delta-1.)*cos(2.*(sol[i][0]-sol[i][1]))),
 										delta*Eo*cos(sol[i][0]-sol[i][1]),
 										sqrt(1-delta*delta)*Eo*sin(sol[i][0]-sol[i][1]));
+	}*/
+
+
+
+	TGraph* trajetoria = new TGraph(n);
+	for (int i=0; i<n; i++){
+		trajetoria->SetPoint(i, sol[i][1], sol[i][2]);
 	}
+
+	TGraph* trajetoria_teorica = new TGraph(n);
+	for (int i=0; i<n; i++){
+		trajetoria_teorica->SetPoint(i, Eo*Eo/4.*(sol[i][0]-sol[i][1]+(delta*delta-1./2.)*sin(2.*(sol[i][0]-sol[i][1]))),
+										delta*Eo*sin(sol[i][0]-sol[i][1])
+										);
+	}
+
+	TGraph* momentos = new TGraph(n);
+	for (int i=0; i<n; i++){
+		momentos->SetPoint(i, sol[i][4], sol[i][5]);
+	}	
+
+	TGraph* momentos_teoricos = new TGraph(n);
+	for (int i=0; i<n; i++){
+		momentos_teoricos->SetPoint(i, Eo*Eo/4.*(1.+(2.*delta*delta-1.)*cos(2.*(sol[i][0]-sol[i][1]))),
+										delta*Eo*cos(sol[i][0]-sol[i][1])
+										);
+	}
+
 
 	trajetoria->SetTitle(";x;y;z");
 	trajetoria->SetMarkerColor(kRed);
@@ -47,7 +78,7 @@ void plotOut0(){
 	momentos_teoricos->SetMarkerColor(kBlue);
 
 
-
+	/*
 	trajetoria->SetMinimum(-1.);
 	trajetoria->SetMaximum(1.);
 	trajetoria_teorica->SetMinimum(-1.);
@@ -57,23 +88,31 @@ void plotOut0(){
 	momentos->SetMaximum(1.);
 	momentos_teoricos->SetMinimum(-1.);
 	momentos_teoricos->SetMaximum(1.);
+	*/
 
-
+	trajetoria->GetXaxis()->SetRangeUser(-1.5, -1.2);
 
 	TCanvas* c1 = new TCanvas("c1", "", 2400, 1200);
 	c1->Divide(2,1);
 
 	c1->cd(1);
-	trajetoria->Draw("P");
-	trajetoria_teorica->Draw("SAME");
+	trajetoria->Draw("AP");
+	//trajetoria_teorica->Draw("SAME");
 
 	c1->cd(2);
-	momentos->Draw("P");
-	momentos_teoricos->Draw("SAME");
+	momentos->Draw("AP");
+	//momentos_teoricos->Draw("SAME");
 
+
+	/*
 	momentos->GetXaxis()->SetTitleOffset(1.75);
 	momentos->GetYaxis()->SetTitleOffset(1.75);
 	momentos->GetZaxis()->SetTitleOffset(1.55);
+
+	trajetoria->GetXaxis()->SetTitleOffset(1.75);
+	trajetoria->GetYaxis()->SetTitleOffset(1.85);
+	trajetoria->GetZaxis()->SetTitleOffset(1.55);
+	*/
 
 
 	/*
@@ -98,4 +137,13 @@ void plotOut0(){
 	*/
 	c1->SaveAs("Plot.png");
 
+	/*
+	gPad->WaitPrimitive();
+
+	delete trajetoria;
+	delete trajetoria_teorica;
+	delete momentos_teoricos;
+	delete momentos;
+	delete c1;
+	*/
 }

@@ -72,10 +72,13 @@ void plotOut0(){
 	trajetoria->SetTitle(";x;y;z");
 	trajetoria->SetMarkerColor(kRed);
 	trajetoria_teorica->SetMarkerColor(kBlue);
+	trajetoria_teorica->SetLineColor(kBlue);
 
 	momentos->SetTitle(";px;py;pz");
 	momentos->SetMarkerColor(kRed);
 	momentos_teoricos->SetMarkerColor(kBlue);
+	momentos_teoricos->SetLineColor(kBlue);
+
 
 
 	/*
@@ -97,11 +100,11 @@ void plotOut0(){
 
 	c1->cd(1);
 	trajetoria->Draw("AP");
-	//trajetoria_teorica->Draw("SAME");
+	trajetoria_teorica->Draw("SAME");
 
 	c1->cd(2);
 	momentos->Draw("AP");
-	//momentos_teoricos->Draw("SAME");
+	momentos_teoricos->Draw("SAME");
 
 
 	/*

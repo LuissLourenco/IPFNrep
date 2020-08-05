@@ -330,8 +330,8 @@ int main()
  
  foo=fopen("InputTotBatch.txt","r");
  fscanf(foo,"%lf %lf %lf %lf %lf %lf %lf %lf %lld %i %lf %lf ", &p01, &p02, &p03, &Eo, &delta, &kdamp,&k, &T, &N, &pri, &xgrid, &ygrid);
- tfwhm = 100.;
- stable = 50.;
+ tfwhm = 50.;
+ stable = 40.;
  
  w=k; Bo=Eo; 
  //p01 = -Eo*Eo/4.;

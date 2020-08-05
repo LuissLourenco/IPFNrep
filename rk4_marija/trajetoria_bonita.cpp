@@ -1,7 +1,7 @@
 
 #include "Read.cpp"
 
-double tfwhm=30.0;
+double tfwhm=50.0;
 double stable=40.0;
 
 double Poly(double x)
@@ -25,7 +25,7 @@ double Envelope(double x,double t){
 double w0 = 10;
 double lambda = 1;
 double n = 1;
-double E0 = 1;
+double E0 = 2;
 double omega = 1;
 
 double zr = M_PI * w0 * w0 * n / lambda;
@@ -48,27 +48,37 @@ void trajetoria_bonita(){
 	vector<vector<double>> sol = ReadFile2Vec("Out0.txt");
 	int n = sol.size();
 
-	TF2* f1 = new TF2("f1", myfunc1, 0, 5, -20, 20, 1); 
+	double xmin=0;
+	double xmax=0;
+	double ymax=0;
+
+	for(int i=0; i<n; i++){
+		if(sol[i][1]<xmin) xmin = sol[i][1];
+		if(sol[i][1]>xmax) xmax = sol[i][1];
+		if(abs(sol[i][2])>ymax) ymax = abs(sol[i][2]);
+	}
+
+	TF2* f1 = new TF2("f1", myfunc1, xmin, xmax, -ymax, ymax, 1); 
 	f1->SetTitle("Beam;x;y;");
 	gStyle->SetPalette(kBlueYellow);
-	f1->SetNpx(150);
-	f1->SetNpy(150);
+	f1->SetNpx(300);
+	f1->SetNpy(300);
 
-	f1->SetMinimum(-10);
-	f1->SetMaximum(10);
+	f1->SetMinimum(-E0);
+	f1->SetMaximum(E0);
 
 	TGraph* trajetoria = new TGraph(n);
 
 	trajetoria->SetTitle(";x;y;z");
 	trajetoria->SetMarkerStyle(8);
-	trajetoria->SetMarkerSize(2);
+	trajetoria->SetMarkerSize(0.2);
 	trajetoria->SetMarkerColor(kRed);
 
 
 	TCanvas* c1 = new TCanvas("c", "", 1200, 600);
 
-
-	for(int i=0; i<n; i+=10){
+	int frame = 1;
+	for(int i=0; i<n; i+=200){
 
 		cout<<" "<<sol[i][0]<<endl;
 
@@ -78,6 +88,9 @@ void trajetoria_bonita(){
 
 		f1->Draw("colz");
 		trajetoria->Draw("SAME P");
+
+		//c1->SaveAs((string("saved/frame")+to_string(frame)+string(".png")).c_str());
+		//frame++;
 
 		c1->Update();
 		c1->Modified();

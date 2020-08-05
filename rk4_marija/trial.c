@@ -340,12 +340,13 @@ int main()
  dx=xgrid/2.;dy=ygrid/2.;
 
 
- /*lambda = 0;
+ wave_type = 1;
+ lambda = 1;
  w0 = 10;
  n = 1;
  eta = 1;
- Eo = 1;
-	*/
+ Eo = 2;
+	
 
  RK(T, N, p01, p02, p03, x01, x02, x03);
 

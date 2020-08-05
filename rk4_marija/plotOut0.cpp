@@ -93,18 +93,17 @@ void plotOut0(){
 	momentos_teoricos->SetMaximum(1.);
 	*/
 
-	trajetoria->GetXaxis()->SetRangeUser(-1.5, -1.2);
 
 	TCanvas* c1 = new TCanvas("c1", "", 2400, 1200);
 	c1->Divide(2,1);
 
 	c1->cd(1);
 	trajetoria->Draw("AP");
-	trajetoria_teorica->Draw("SAME");
+	//trajetoria_teorica->Draw("SAME");
 
 	c1->cd(2);
 	momentos->Draw("AP");
-	momentos_teoricos->Draw("SAME");
+	//momentos_teoricos->Draw("SAME");
 
 
 	/*

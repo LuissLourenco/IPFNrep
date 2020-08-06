@@ -4,7 +4,7 @@
 double t, xgrid, ygrid,gam,Fx,Fy,Fz,pE,k,dx,dy,w,Eo,Bo,delta,kdamp, tfwhm, stable;  
 int pri, Ni, Nj;
 
-int wave_type = 0; // 0-> Plane Wave; 1-> Gaussian Beam
+int wave_type = 1; // 0-> Plane Wave; 1-> Gaussian Beam
 double lambda, w0, n, eta;
 
 double Poly(double x){
@@ -329,28 +329,24 @@ int main(){
 	char trash[64];
  
 	foo=fopen("InputToBatch.txt","r");
-	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lli %i ", 
-				trash, &x01, &x02, &x03, &p01, &p02, &p03, &T, &N, &pri);
+	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %lf %lf %lf", 
+				trash, &x01, &x02, &x03, &p01, &p02, &p03, &kdamp, &T, &N, &pri, &dx, &dy, &Eo, &w0);
 	fclose(foo);
+
+	//trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|E0|w0
 
 	tfwhm = 50.;
 	stable = 10.;
  
- 	Eo = 30;
- 	delta = 1; // TEM DE SER 1 PQ EQUAÇÕES ACHO
  	k = 1;
  	w = k; 
  	Bo = Eo; 
 
 	wave_type = 1;
+	delta = 1; // TEM DE SER 1 PQ EQUAÇÕES ACHO
 	lambda = 1;
-	w0 = 15;
 	n = 1;
 	eta = 1;
-
-	kdamp = 1.18E-8;
-	dx = 5E-3; // COMO ESTAVA NO ANTERIOR
-	dy = 5E-3; // COMO ESTAVA NO ANTERIOR
 
  	RK(T, N, p01, p02, p03, x01, x02, x03);
 

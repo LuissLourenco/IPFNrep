@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<math.h>
 #include<stdlib.h>
+#include<string.h>
+
 double t, xgrid, ygrid,gam,Fx,Fy,Fz,pE,k,dx,dy,w,Eo,Bo,delta,kdamp, tfwhm, stable;  
 int pri, Ni, Nj;
 
@@ -346,12 +348,12 @@ int main(){
 	char trash[64];
  
 	foo=fopen("InputToBatch.txt","r");
-	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lli %i ", 
-				trash, &x01, &x02, &x03, &p01, &p02, &p03, &T, &N, &pri);
+
+	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %lf", 
+				trash, &x01, &x02, &x03, &p01, &p02, &p03, &T, &N, &pri, &Eo, &w0);
 	tfwhm = 50.;
 	stable = 10.;
  
- 	Eo = 10;
  	delta = 1;
  	k = 1;
  	w = k; 
@@ -360,7 +362,6 @@ int main(){
 
  	wave_type = 1;
  	lambda = 1;
- 	w0 = 10.;
  	n = 1;
  	eta = 1;
 

@@ -351,28 +351,18 @@ int main(){
 	tfwhm = 50.;
 	stable = 10.;
  
- 	Eo = -1;
+ 	Eo = 10;
  	delta = 1;
  	k = 1;
  	w = k; 
  	Bo = Eo; 
  	fclose(foo);
 
-<<<<<<< HEAD
  	wave_type = 1;
  	lambda = 1;
- 	w0 = 15;
+ 	w0 = 10.;
  	n = 1;
  	eta = 1;
-=======
- wave_type = 1;
- lambda = 1;
- w0 = 10;
- n = 1;
- eta = 1;
- Eo = 2;
-	
->>>>>>> 604c68f14b994d0ea48247179647cd6d93cca215
 
  	RK(T, N, p01, p02, p03, x01, x02, x03);
 

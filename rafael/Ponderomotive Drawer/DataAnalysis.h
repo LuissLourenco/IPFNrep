@@ -91,7 +91,7 @@ class DataSet{
 			var = new Var[n];
 			for(int i = 0; i < n; i++) var[i] = Var(v, e);
 		};
-		DataSet(int n, double *values, double error):n(n){
+		DataSet(int n, double *values, double error=0):n(n){
 			var = new Var[n];
 			for(int i = 0; i < n; i++) var[i] = Var(values[i], error);
 		};
@@ -287,6 +287,7 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header);
 
 TGraphErrors *GetTGraphErrors(int n_points, Var* X, Var* Y);
 TGraphErrors *GetTGraphErrors(DataSet X, DataSet Y);
+TGraph *GetTGraph(DataSet X, DataSet Y);
 
 
 TGraph2DErrors *GetTGraph2DErrors(DataSet X, DataSet Y, DataSet Z);

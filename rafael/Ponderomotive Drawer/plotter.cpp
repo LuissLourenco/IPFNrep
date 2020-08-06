@@ -2,7 +2,7 @@
 #include "DataAnalysis.cpp"
 
 void plotter(){
-
+	
 	int n_cols, n_points;
 	double** values;
 
@@ -20,31 +20,29 @@ void plotter(){
 		P[i-1] = DataSet(n_points, values[2], 0.);
 	}
 
+
+
+	DataSet* RM = new DataSet[3];
+	DataSet* YM = new DataSet[3];
+	DataSet* PM = new DataSet[3];
+
+	TGraph** graph_ym = new TGraph*[3];
+	TGraph** graph_pm = new TGraph*[3];
+
+	for(int i = 0; i < 3; i++){
+		RM[i] = (R[2*i] + R[2*i+1]) / Var(2);
+		YM[i] = (Y[2*i] + Y[2*i+1]) / Var(2);
+		PM[i] = (P[2*i] + P[2*i+1]) / Var(2);
+	}
+
+
+
+
+
+
+
 	TCanvas* c1 = new TCanvas("c1", "", 1500, 1000);
-	/*
-	TMultiGraph* multi1 = new TMultiGraph();
-	TGraphErrors* graph_y[6];
-	for(int i = 0; i < 6; i++){
-		graph_y[i] = GetTGraphErrors(R[i], Y[i]);
-		graph_y[i]->SetLineColor(1+i);
-		multi1->Add(graph_y[i]);
-	}
-
-	TMultiGraph* multi2 = new TMultiGraph();
-	TGraphErrors* graph_p[6];
-	for(int i = 0; i < 6; i++){
-		graph_p[i] = GetTGraphErrors(R[i], P[i]);
-		graph_p[i]->SetLineColor(1+i);
-		multi2->Add(graph_p[i]);
-	}
-
-	c1->Divide(2, 1);
-	c1->cd(1);
-	multi1->Draw("APC");
-	c1->cd(2);
-	multi2->Draw("APC");
-	*/
-
+	
 	TPad** pads = new TPad*[6]; 
 	TMultiGraph** multi = new TMultiGraph*[6];
 	TGraphErrors** graph_y = new TGraphErrors*[6];
@@ -66,6 +64,11 @@ void plotter(){
 		graph_y[2*i] = GetTGraphErrors(R[2*i], Y[2*i]);
 		graph_y[2*i+1] = GetTGraphErrors(R[2*i+1], Y[2*i+1]);
 
+		graph_ym[i] = GetTGraphErrors(RM[i], YM[i]);
+		graph_ym[i]->SetLineColor(3);
+		graph_ym[i]->SetLineWidth(3);
+		multi[2*i]->Add(graph_ym[i]);
+
 		graph_y[2*i]->SetLineColor(2);
 		graph_y[2*i+1]->SetLineColor(4);
 
@@ -84,12 +87,13 @@ void plotter(){
 		multi[2*i]->GetYaxis()->SetTitleOffset(0.3);
 		multi[2*i]->GetYaxis()->CenterTitle(true);
 
-		multi[2*i]->Draw("ACP");
+		multi[2*i]->Draw("AC");
 
-		if(i != 2) leg[2*i] = new TLegend(0.1, 0.75, 0.4, 0.92);
-		else leg[2*i] = new TLegend(0.1, 0.81, 0.4, 0.95);
-		leg[2*i]->AddEntry(graph_y[2*i]  , (string("E_{0} = 1  & w_{0} = ")+to_string(i*5+5)).c_str());
-		leg[2*i]->AddEntry(graph_y[2*i+1], (string("E_{0} = -1 & w_{0} = ")+to_string(i*5+5)).c_str());
+		if(i != 2) leg[2*i] = new TLegend(0.1, 0.7, 0.4, 0.92);
+		else leg[2*i] = new TLegend(0.1, 0.76, 0.4, 0.95);
+		leg[2*i]->AddEntry(graph_y[2*i]  , (string("E_{0} = 10  & w_{0} = ")+to_string(i*5+5)).c_str());
+		leg[2*i]->AddEntry(graph_y[2*i+1], (string("E_{0} = -10 & w_{0} = ")+to_string(i*5+5)).c_str());
+		leg[2*i]->AddEntry(graph_ym[i], "Average");
 		leg[2*i]->DrawClone("SAME");
 
 		//=============================================================
@@ -107,6 +111,11 @@ void plotter(){
 		multi[2*i+1] = new TMultiGraph();
 		graph_p[2*i] = GetTGraphErrors(R[2*i], P[2*i]);
 		graph_p[2*i+1] = GetTGraphErrors(R[2*i+1], P[2*i+1]);
+
+		graph_pm[i] = GetTGraphErrors(RM[i], PM[i]);		
+		graph_pm[i]->SetLineWidth(3);
+		graph_pm[i]->SetLineColor(3);
+		multi[2*i+1]->Add(graph_pm[i]);
 
 		graph_p[2*i]->SetLineColor(2);
 		graph_p[2*i+1]->SetLineColor(4);
@@ -126,7 +135,7 @@ void plotter(){
 		multi[2*i+1]->GetYaxis()->SetTitleOffset(0.35);
 		multi[2*i+1]->GetYaxis()->CenterTitle(true);
 
-		multi[2*i+1]->Draw("ACP");
+		multi[2*i+1]->Draw("AC");
 
 	}
 
@@ -134,5 +143,62 @@ void plotter(){
 	for(int i = 0; i < 6; i++) pads[i]->Draw();
 
 	c1->SaveAs("Plot.png");
+	
+	/*
+
+	int r_min = -20;
+	int n_data = 41;
+
+	DataSet* X = new DataSet[n_data];
+	DataSet* Y = new DataSet[n_data];
+	DataSet* PX = new DataSet[n_data];
+	DataSet* PY = new DataSet[n_data];
+
+	int n_cols, n_points;
+	double** values;
+
+	for(int i = 0; i < n_data; i++){
+		values = ReadFile(("Movement_r"+to_string(r_min+i)+".000000.txt").c_str(), &n_cols, &n_points, true);
+		X[i] = DataSet(n_points, values[1]);
+		Y[i] = DataSet(n_points, values[2]);
+		PX[i] = DataSet(n_points, values[3]);
+		PY[i] = DataSet(n_points, values[4]);
+	}
+
+	TCanvas* c1 = new TCanvas("c1", "", 1500, 500);
+	TMultiGraph* multi = new TMultiGraph();
+	TGraph** graph = new TGraph*[n_data];
+	for(int i = 0; i < n_data; i++){
+		graph[i] = GetTGraph(X[i], Y[i]);
+		graph[i]->SetLineColor(i%3+2);
+		graph[i]->SetLineWidth(2);
+		multi->Add(graph[i]);
+	}
+
+	multi->SetTitle(";x;y");
+
+  	multi->GetXaxis()->SetLabelSize(0.06);
+	multi->GetXaxis()->SetTitleSize(0.08);
+	multi->GetXaxis()->SetTitleOffset(0.2);
+
+	multi->GetYaxis()->SetLabelSize(0.06);
+	multi->GetYaxis()->SetTitleSize(0.08);
+	multi->GetYaxis()->SetTitleOffset(0.2);
+	multi->GetYaxis()->CenterTitle(true);
+
+	multi->GetXaxis()->SetLimits(0, 75);
+	multi->GetYaxis()->SetRangeUser(-85, 85);
+
+	c1->cd();
+	c1->SetGrid();
+	c1->SetRightMargin(0.01);
+	c1->SetLeftMargin(0.04);
+	c1->SetBottomMargin(0.08);
+	c1->SetTopMargin(0.01);
+	multi->Draw("AC");
+
+	c1->SaveAs("PlotTrajectories.png");
+*/
+	// E0 = 10 w0 = 10 lambda = 1 t = 150
 
 }

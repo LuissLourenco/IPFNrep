@@ -16,7 +16,6 @@ double Poly(double x)
 }
 
 double Envelope(double x,double t){
-	return 1;
 	double res,x1,x2; 
 	x1=(x-t+2*tfwhm+stable)/tfwhm; 
 	x2=(t-x)/tfwhm;

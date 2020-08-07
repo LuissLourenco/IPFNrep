@@ -316,6 +316,7 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 	 }
  	}
  	fclose(fo);
+ 	return 0;
 }
 
 
@@ -336,7 +337,7 @@ int main(){
 	//trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|E0|w0
 
 	tfwhm = 50.;
-	stable = 10.;
+	stable = 0.;
  
  	k = 1;
  	w = k; 

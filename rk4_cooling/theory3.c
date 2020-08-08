@@ -351,7 +351,7 @@ int main(){
 
  	RK(T, N, p01, p02, p03, x01, x02, x03);
 
- 	//printf("gotovo\n");
+ 	printf("gotovo\n");
 
  	return 1;
 

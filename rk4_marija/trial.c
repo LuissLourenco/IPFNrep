@@ -18,6 +18,9 @@ double Poly(double x)
 }
 
 double Envelope(double x,double t){
+	
+	return 1.;
+
 	double res,x1,x2; 
 	x1=(x-t+2*tfwhm+stable)/tfwhm; 
 	x2=(t-x)/tfwhm;
@@ -354,20 +357,21 @@ int main(){
 	tfwhm = 50.;
 	stable = 10.;
  
+
  	delta = 1;
  	k = 1;
  	w = k; 
  	Bo = Eo; 
  	fclose(foo);
 
- 	wave_type = 1;
+ 	wave_type = 0;
  	lambda = 1;
  	n = 1;
  	eta = 1;
 
  	RK(T, N, p01, p02, p03, x01, x02, x03);
 
- 	//printf("gotovo\n");
+ 	printf("gotovo\n");
 
  	return 1;
 

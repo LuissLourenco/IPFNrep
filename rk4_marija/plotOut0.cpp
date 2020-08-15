@@ -22,6 +22,7 @@ void plotOut0(){
 	Eo = 10;
 
 
+	/*
 	double avgx=0;
 	TGraph2D* trajetoria = new TGraph2D(n);
 	for (int i=0; i<n; i++){
@@ -35,7 +36,7 @@ void plotOut0(){
 	}		
 
 	//LAB FRAME
-	/*TGraph2D* trajetoria_teorica = new TGraph2D(n);
+	TGraph2D* trajetoria_teorica = new TGraph2D(n);
 	for (int i=0; i<n; i++){
 		trajetoria_teorica->SetPoint(i, Eo*Eo/4.*(sol[i][0]-sol[i][1]+(delta*delta-1./2.)*sin(2.*(sol[i][0]-sol[i][1]))),
 										delta*Eo*sin(sol[i][0]-sol[i][1]),
@@ -47,7 +48,7 @@ void plotOut0(){
 		momentos_teoricos->SetPoint(i, Eo*Eo/4.*(1.+(2.*delta*delta-1.)*cos(2.*(sol[i][0]-sol[i][1]))),
 										delta*Eo*cos(sol[i][0]-sol[i][1]),
 										sqrt(1-delta*delta)*Eo*sin(sol[i][0]-sol[i][1]));
-	}*/
+	}
 	//REST FRAME
 	TPolyLine3D* trajetoria_teorica = new TPolyLine3D(n);
 	double gama0 = sqrt(1.+Eo*Eo/2.);
@@ -63,8 +64,8 @@ void plotOut0(){
 										delta*Eo*cos(sol[i][0]-sol[i][1]),
 										sqrt(1-delta*delta)*Eo*sin(sol[i][0]-sol[i][1]));
 	}
-
-	/*
+	*/
+	
 	double avgx=0;
 
 	TGraph* trajetoria = new TGraph(n);
@@ -94,6 +95,7 @@ void plotOut0(){
 	}
 
 	//REST FRAME
+	/*
 	TGraph* trajetoria_teorica = new TGraph(n);
 	double gama0 = sqrt(1.+Eo*Eo/2.);
 	double q = Eo/2./gama0;
@@ -109,6 +111,7 @@ void plotOut0(){
 										);
 	}
 	*/
+	
 
 	trajetoria->SetTitle(";x;y;z");
 	trajetoria->SetMarkerColor(kPink);
@@ -128,8 +131,8 @@ void plotOut0(){
 	//trajetoria_teorica->SetMarkerSize(0.5);
 	momentos_teoricos->SetMarkerStyle(8);
 	momentos_teoricos->SetMarkerSize(0.5);
-	trajetoria->GetXaxis()->SetTitleOffset(1.5);
-	trajetoria->GetYaxis()->SetTitleOffset(0.5);
+	trajetoria->GetXaxis()->SetTitleOffset(0.8);
+	trajetoria->GetYaxis()->SetTitleOffset(1.1);
 
 	/*
 	trajetoria->SetMinimum(-1.);
@@ -145,36 +148,20 @@ void plotOut0(){
 
 
 	TCanvas* c1 = new TCanvas("c1", "", 1800, 600);
-	c1->Divide(3,1);
+	c1->Divide(2,1);
 
-	c1->cd(1)->SetPad(0, 0, 0.45, 1);
-	c1->cd(2)->SetPad(0.44, 0, 0.9, 1);
-	c1->cd(3)->SetPad(0.9, 0, 1, 1);
-
+	
 	c1->cd(1);
 	c1->cd(1)->SetGrid();
-	trajetoria->Draw("P");
-	trajetoria_teorica->Draw("SAME4");
+	trajetoria->Draw("AP");
+	//trajetoria_teorica->Draw("SAME4");
 
 	c1->cd(2);
 	c1->cd(2)->SetGrid();
-	momentos->Draw("P");
-	momentos_teoricos->Draw("SAME P");
+	momentos->Draw("AP");
+	//momentos_teoricos->Draw("SAME P");
 
 
-
-	TLatex* t[5];
-	t[0] = new TLatex(.0, .8, "a_{0} = 10");
-	t[1] = new TLatex(.0, .77, "delta = 0.7071");
-	t[2] = new TLatex(.0, .74, "#vec{x}_{0}=0, #vec{p}_{0}=-3.5#hat{x}");
-	t[3] = new TLatex(.0, .71, "t_{subida}=20pi");
-	t[4] = new TLatex(.0, .68, "t_{stable}=300");
-
-	for(int i=0; i<5; i++) t[i]->SetTextSize(0.1);
-
-	c1->cd(3);
-	for(int i=0; i<5; i++)
-		t[i]->Draw();
 
 	/*
 	momentos->GetXaxis()->SetTitleOffset(1.75);

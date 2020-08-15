@@ -64,7 +64,7 @@ void ponderomotive(){
 	, w0_list[counter], E0_list[counter], kdamp); 
     for(int i = 0; i <= n_data; i++){
       fprintf(file, "\n%lf\t%.10e\t%.10e\t%.10e\t%.10e\t%.10e", 
-	  r_arr[i], y_f[i]-r, p_y_max[i], p_x_f[i], p_y_f[i], gama_f[i]);
+	  r_arr[i], y_f[i]-r_arr[i], p_y_max[i], p_x_f[i], p_y_f[i], gama_f[i]);
     }
     fclose(file);
 

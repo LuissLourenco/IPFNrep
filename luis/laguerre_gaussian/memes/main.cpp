@@ -82,8 +82,8 @@ int main(){
 
 	auto f1 = new TF2("f1",fun1,-50,50,-50,50,4);
 	f1->SetParameter(0,0); //x
-	f1->SetParameter(1,100); //l
-	f1->SetParameter(2,100); //p
+	f1->SetParameter(1,5); //l
+	f1->SetParameter(2,5); //p
 	f1->SetParameter(3,0); //t
 	f1->SetNpx(1000);
 	f1->SetNpy(1000);

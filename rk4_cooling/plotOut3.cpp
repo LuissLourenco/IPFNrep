@@ -6,7 +6,7 @@ void plotOut3(){
 	double** values = ReadFile("Out3.txt", &n_cols, &n_points, false);
 
 	TGraph* graph_y = GetTGraph(DataSet(n_points, values[1]), DataSet(n_points, values[2]));
-	TGraph* graph_p = GetTGraph(DataSet(n_points, values[3]), DataSet(n_points, values[4]));
+	TGraph* graph_p = GetTGraph(DataSet(n_points, values[4]), DataSet(n_points, values[5]));
 	
 	graph_y->SetTitle(";x;y");
 	graph_p->SetTitle(";px;py");

@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
+#include <chrono>
+#include <ctime> 
 
 #include "theory3.c"
 #include "DataAnalysis.cpp"
@@ -37,14 +39,16 @@ int main(int argc, char **argv){
 		p = 0;
 	}
 
-	cout << l << " " << p << endl;
+	time_t start_time = chrono::system_clock::to_time_t(chrono::system_clock::now());
+	cout << "Simulating l = " << l << " and p = " << p;
+	cout << " starting " << ctime(&start_time);
 
-	int n_cols, n_points;
+    int n_cols, n_points;
 	double** values;
 
 	double y_min = -20;
 	double y_max = 20;
-	double dy = 1;
+	double dy = 10;
 	double y = y_min;
 
 	double z_min = y_min;
@@ -54,9 +58,9 @@ int main(int argc, char **argv){
 
 	FILE *input, *output;
 
-	DataSet X(1);
-	DataSet Y(1);
-	DataSet Z(1);
+	//DataSet X(1);
+	//DataSet Y(1);
+	//DataSet Z(1);
 
 	output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+".txt").c_str(),"w");
 	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_perp_max\tE_f\t"); 
@@ -74,6 +78,7 @@ int main(int argc, char **argv){
 	fprintf(output, "l=%i|", l);	//l
 	fprintf(output, "p=%i", p);	//p
 
+	int progress = 0;
 	while(y <= y_max){
 		z = z_min;
 		while(z <= z_max){
@@ -123,11 +128,12 @@ int main(int argc, char **argv){
 											+ values[5][n_points-1]*values[5][n_points-1]
 											+ values[6][n_points-1]*values[6][n_points-1]));	// E_f
 
-			X.append(Var(y));
-			Y.append(Var(z));
-			Z.append(Var(values[2][n_points-1]-y));
-
-			cout << "y = " << y << "\t z = " << z << endl;
+			//X.append(Var(y));
+			//Y.append(Var(z));
+			//Z.append(Var(values[2][n_points-1]-y));
+			
+			progress++;
+			printProgress((double)progress / (((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1)));
 
 			z += dz;
 		}
@@ -136,6 +142,9 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
+	cout << "Saved file <Output_p" << p << "l" << l << ".txt>" << endl;
+
+	/*
     TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
@@ -146,7 +155,7 @@ int main(int argc, char **argv){
 	c1->SaveAs("Laguerre_Trajectories.png");
 
 	MyRootApp->Run();
-
+	*/
 	return 0;
 
 }

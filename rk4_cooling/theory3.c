@@ -26,7 +26,7 @@ double Envelope(double x,double t){
 }
 
 
-double A_aux_lg(double x,double y,double z, double fase){
+double Alg(double x,double y,double z, double fase){
 
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
@@ -40,12 +40,12 @@ double A_aux_lg(double x,double y,double z, double fase){
 	res *= pow(r*sqrt(2)/wz, abs(l));
 	res *= assoc_laguerre(abs(p), abs(l), 2*r*r/wz/wz);
 	res *= exp(-r*r/wz/wz);
-	res *= cos(k*x-w*t+k*r*r*x/2/(x*x+zr*zr)+(double)l*phi-(double)(2.*p+abs(l)+1.)*atan(x/zr) + fase);
-	res *= Envelope(x,t);
+	res *= cos(w*t-k*x-k*r*r*x/2/(x*x+zr*zr)-(double)l*phi+(double)(2.*p+abs(l)+1.)*atan(x/zr) + fase);
 
 	return res;
 }
 
+double der_coef[9] = {1./280., -4./105., 1./5., -4./5., 0, 4./5., -1./5., 4./105., -1./280.};
 
 /*
 double Ax(double phi){return 0;}
@@ -110,7 +110,7 @@ double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
  	double psi = atan(x/zr);
  	return Eo * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
- if(wave_type == 2) return -w*A_aux_lg(x,y,z, -M_PI/2.);
+ if(wave_type == 2) return w*Alg(x,y,z, -M_PI/2.)*Envelope(x,t);
  else return 0.;
 }
 
@@ -125,7 +125,7 @@ double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
  	double psi = atan(x/zr);
  	return w * Eo * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
- if(wave_type == 2) return w*w*A_aux_lg(x,y,z,0.);
+ if(wave_type == 2) return w*w*Alg(x,y,z,0.)*Envelope(x,t);
  else return 0.;
 }
 
@@ -182,7 +182,14 @@ double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
  	double psi = atan(x/zr);
  	return Eo / eta * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
- if(wave_type == 2) return Efy(x,y,z);
+ if(wave_type == 2){
+ 	double h=1e-5;
+ 	//Bz=dAy/dx -> finite difference derivative, 8th order
+ 	double res=0;
+ 	for(int i=0; i<9; i++) res += 1./h * der_coef[i] * Alg(x+(double)(i-4)*h,y,z,0.);
+ 	res *= Envelope(x,t);
+ 	return res;
+ }
  else return 0.;
 }
 
@@ -197,7 +204,18 @@ double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
  	double psi = atan(x/zr);
  	return w * Eo / eta * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
- if(wave_type == 2) return DerEfy(x,y,y);
+ if(wave_type == 2){
+ 	double h=1e-5;
+ 	//dBz/dt -> finite difference derivative, 8th order
+ 	double res=0;
+ 	for(int i=0; i<9; i++){
+ 		t += (double)(i-4) *h;
+ 		res += 1./h * der_coef[i]*Bfz(x,y,z);
+ 		t -= (double)(i-4) *h;
+ 	}
+ 	res *= Envelope(x,t);
+ 	return res;
+ }
  else return 0.;
 }
 

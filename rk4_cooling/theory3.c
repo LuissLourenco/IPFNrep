@@ -45,7 +45,8 @@ double Alg(double x,double y,double z, double fase){
 	return res;
 }
 
-double der_coef[9] = {1./280., -4./105., 1./5., -4./5., 0, 4./5., -1./5., 4./105., -1./280.};
+double der_coef8[9] = {1./280., -4./105., 1./5., -4./5., 0., 4./5., -1./5., 4./105., -1./280.};
+double der_coef4[5] = {1./12., -2./3., 0., 2./3., -1./12.};
 
 /*
 double Ax(double phi){return 0;}
@@ -184,9 +185,10 @@ double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
  }
  if(wave_type == 2){
  	double h=1e-5;
- 	//Bz=dAy/dx -> finite difference derivative, 8th order
+ 	//Bz=dAy/dx -> finite difference derivative, 4th/8th order
  	double res=0;
- 	for(int i=0; i<9; i++) res += 1./h * der_coef[i] * Alg(x+(double)(i-4)*h,y,z,0.);
+ 	//for(int i=0; i<9; i++) res += 1./h * der_coef8[i] * Alg(x+(double)(i-4)*h,y,z,0.);
+ 	for(int i=0; i<5; i++) res += 1./h * der_coef4[i] * Alg(x+(double)(i-2)*h,y,z,0.);
  	res *= Envelope(x,t);
  	return res;
  }
@@ -206,12 +208,17 @@ double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
  }
  if(wave_type == 2){
  	double h=1e-5;
- 	//dBz/dt -> finite difference derivative, 8th order
+ 	//dBz/dt -> finite difference derivative, 4th/8th order
  	double res=0;
- 	for(int i=0; i<9; i++){
+ 	/*for(int i=0; i<9; i++){
  		t += (double)(i-4) *h;
- 		res += 1./h * der_coef[i]*Bfz(x,y,z);
+ 		res += 1./h * der_coef8[i]*Bfz(x,y,z);
  		t -= (double)(i-4) *h;
+ 	}*/
+ 	for(int i=0; i<5; i++){
+ 		t += (double)(i-2) *h;
+ 		res += 1./h * der_coef4[i]*Bfz(x,y,z);
+ 		t -= (double)(i-2) *h;
  	}
  	res *= Envelope(x,t);
  	return res;

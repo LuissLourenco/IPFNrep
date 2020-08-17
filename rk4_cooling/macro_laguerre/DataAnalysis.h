@@ -273,6 +273,14 @@ class DataSet{
 			return res;
 		};
 
+		friend DataSet abs(const DataSet& v){
+			Var *aux = new Var[v.size()];
+			for(int i = 0; i < v.size(); i++) aux[i] = abs(v[i]);
+			DataSet res(v.size(), aux);
+			delete[] aux;
+			return res;
+		};
+
 	private:
 		int n;
 		Var *var;

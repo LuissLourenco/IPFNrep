@@ -14,71 +14,127 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char **argv){
+
+	double px0 = -2000;
+	double kdamp = 0;
+	double T = 100;
+	int N = 10000;
+	int pri = 10;
+	double tfwhm = 50;
+	double stable = 0;
+	double Eo = 1;
+	double delta = 0;
+	double w0 = 10;
+	double lambda = 1;
+
+	int l, p;
+	if(argc == 3){
+		sscanf(argv[1], "%i", &l);
+		sscanf(argv[2], "%i", &p);
+	}else{
+		l = 0;
+		p = 0;
+	}
+
+	cout << l << " " << p << endl;
 
 	int n_cols, n_points;
 	double** values;
 
-	double r_min = 0;
-	double r_max = 20;
-	double dr = 1;
-	double r = r_min;
+	double y_min = -20;
+	double y_max = 20;
+	double dy = 1;
+	double y = y_min;
 
-	double phi_min = 0;
-	double phi_max = 2*M_PI;
-	double dphi = M_PI/16;
-	double phi = phi_min;
+	double z_min = y_min;
+	double z_max = y_max;
+	double dz = dy;
+	double z = z_min;
 
-	FILE *file;
+	FILE *input, *output;
 
 	DataSet X(1);
 	DataSet Y(1);
 	DataSet Z(1);
 
-	while(phi <= phi_max){
-		r = r_min;
-		while(r <= r_max){
-			file = fopen("InputToBatch.txt","w");
-			fprintf(file, "trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p\n"); 
-			fprintf(file, "%.10e\n", 0.);	//x01
-			fprintf(file, "%.10e\n", r*cos(phi));	//x02
-			fprintf(file, "%.10e\n", r*sin(phi));	//x03
-			fprintf(file, "%.10e\n", 0.);	//p01
-			fprintf(file, "%.10e\n", 0.);	//p02
-			fprintf(file, "%.10e\n", 0.);	//p03
-			fprintf(file, "%.10e\n", 0.);	//kdamp
-			fprintf(file, "%.10e\n", 100.);	//T
-			fprintf(file, "%i\n", 10000);	//N
-			fprintf(file, "%i\n", 10);	//pri
-			fprintf(file, "%.10e\n", 5E-3);	//dx
-			fprintf(file, "%.10e\n", 5E-3);	//dy
-			fprintf(file, "%i\n", 2);	//wave_t
-			fprintf(file, "%.10e\n", 50.);	//tfwhm
-			fprintf(file, "%.10e\n", 0.);	//stable
-			fprintf(file, "%.10e\n", 1.);	//Eo
-			fprintf(file, "%.10e\n", 0.);	//delta
-			fprintf(file, "%.10e\n", 10.);	//w0
-			fprintf(file, "%.10e\n", 1.);	//lambda
-			fprintf(file, "%.10e\n", 1.);	//n
-			fprintf(file, "%.10e\n", 1.);	//eta
-			fprintf(file, "%i\n", 4);	//l
-			fprintf(file, "%i\n", 4);	//p
-			fclose(file);
+	output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+".txt").c_str(),"w");
+	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_perp_max\tE_f\t"); 
+	fprintf(output, "px0=%.10e|", px0);	//p01
+	fprintf(output, "kdamp=%.10e|", kdamp);	//kdamp
+	fprintf(output, "T=%.10e|", T);	//T
+	fprintf(output, "N=%i|", N);	//N
+	fprintf(output, "pri=%i|", pri);	//pri
+	fprintf(output, "tfwhm=%.10e|", tfwhm);	//tfwhm
+	fprintf(output, "stable=%.10e|", stable);	//stable
+	fprintf(output, "Eo=%.10e|", Eo);	//Eo
+	fprintf(output, "delta=%.10e|", delta);	//delta
+	fprintf(output, "w0=%.10e|", w0);	//w0
+	fprintf(output, "lambda=%.10e|", lambda);	//lambda
+	fprintf(output, "l=%i|", l);	//l
+	fprintf(output, "p=%i", p);	//p
+
+	while(y <= y_max){
+		z = z_min;
+		while(z <= z_max){
+			input = fopen("InputToBatch.txt","w");
+			fprintf(input, "trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p\n"); 
+			fprintf(input, "%.10e\n", 0.);	//x01
+			fprintf(input, "%.10e\n", y);	//x02
+			fprintf(input, "%.10e\n", z);	//x03
+			fprintf(input, "%.10e\n", px0);	//p01
+			fprintf(input, "%.10e\n", 0.);	//p02
+			fprintf(input, "%.10e\n", 0.);	//p03
+			fprintf(input, "%.10e\n", kdamp);	//kdamp
+			fprintf(input, "%.10e\n", T);	//T
+			fprintf(input, "%i\n", N);	//N
+			fprintf(input, "%i\n", pri);	//pri
+			fprintf(input, "%.10e\n", 5E-3);	//dx
+			fprintf(input, "%.10e\n", 5E-3);	//dy
+			fprintf(input, "%i\n", 2);	//wave_type
+			fprintf(input, "%.10e\n", tfwhm);	//tfwhm
+			fprintf(input, "%.10e\n", stable);	//stable
+			fprintf(input, "%.10e\n", Eo);	//Eo
+			fprintf(input, "%.10e\n", delta);	//delta
+			fprintf(input, "%.10e\n", w0);	//w0
+			fprintf(input, "%.10e\n", lambda);	//lambda
+			fprintf(input, "%.10e\n", 1.);	//n
+			fprintf(input, "%.10e\n", 1.);	//eta
+			fprintf(input, "%i\n", l);	//l
+			fprintf(input, "%i", p);	//p
+			fclose(input);
 
 			run_theory3();
 
 			values = ReadFile("Out3.txt", &n_cols, &n_points, false, false);
+			// <Out3.txt> t x y z px py pz gamma
 
-			X = X.concat(DataSet(n_points, values[1], 0));
-			Y = Y.concat(DataSet(n_points, values[2], 0));
-			Z = Z.concat(DataSet(n_points, values[3], 0));
+			fprintf(output, "\n");
+			fprintf(output, "%.10e\t", y);	// y
+			fprintf(output, "%.10e\t", z);	// z
+			fprintf(output, "%.10e\t", values[1][n_points-1]);	// x_f
+			fprintf(output, "%.10e\t", values[2][n_points-1]);	// y_f
+			fprintf(output, "%.10e\t", values[3][n_points-1]);	// z_f
+			fprintf(output, "%.10e\t", values[4][n_points-1]);	// px_f
+			fprintf(output, "%.10e\t", values[5][n_points-1]);	// py_f
+			fprintf(output, "%.10e\t", values[6][n_points-1]);	// pz_f
+			fprintf(output, "%.10e\t", (abs(DataSet(n_points, values[5]))).getMax().val());	// p_perp_max
+			fprintf(output, "%.10e", sqrt(1 + values[4][n_points-1]*values[4][n_points-1]
+											+ values[5][n_points-1]*values[5][n_points-1]
+											+ values[6][n_points-1]*values[6][n_points-1]));	// E_f
 
-			cout << "phi = " << phi << "\t r = " << r << endl;
+			X.append(Var(y));
+			Y.append(Var(z));
+			Z.append(Var(values[2][n_points-1]-y));
 
-			r += dr;
+			cout << "y = " << y << "\t z = " << z << endl;
+
+			z += dz;
 		}
-		phi += dphi;
+		y += dy;
 	}
+
+	fclose(output);
 
     TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
@@ -86,7 +142,7 @@ int main(){
 	TCanvas* c1 = new TCanvas("c1", "", 1500, 1000);
 	TGraph2D* graph = GetTGraph2D(X, Y, Z);
 	c1->cd();
-	graph->Draw("P");
+	graph->Draw("TRI");
 	c1->SaveAs("Laguerre_Trajectories.png");
 
 	MyRootApp->Run();

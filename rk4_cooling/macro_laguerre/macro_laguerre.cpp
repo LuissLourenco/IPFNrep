@@ -23,7 +23,7 @@ int main(int argc, char **argv){
 	double px0 = 0;
 	double kdamp = 0;
 	double T = 200;
-	int N = 100000;
+	int N = 10;
 	int pri = 100;
 	double tfwhm = 50;
 	double stable = 0;
@@ -135,8 +135,7 @@ int main(int argc, char **argv){
 			//Z.append(Var(values[2][n_points-1]-y));
 			
 			progress++;
-
-			printf("\rSTEP %i of %i \t  %.5lf %%  \t RUN = %.3lf s \t TIME LEFT = %.2lf min      ", progress, 
+			printf("\rSTEP %i of %i  |  %.5lf %%  |  RUN = %.3lf s  |  TIME LEFT = %.2lf min      ", progress, 
 								(int)(((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1)), 
 								progress/(((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1))*100, 
 								(double)(clock()-c1)/(double)CLOCKS_PER_SEC,  

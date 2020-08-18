@@ -18,10 +18,12 @@ using namespace std;
 
 int main(int argc, char **argv){
 
-	double px0 = -2000;
+	clock_t c1 = clock();
+
+	double px0 = 0;
 	double kdamp = 0;
-	double T = 100;
-	int N = 100000;
+	double T = 200;
+	int N = 10;
 	int pri = 100;
 	double tfwhm = 50;
 	double stable = 0;
@@ -133,7 +135,13 @@ int main(int argc, char **argv){
 			//Z.append(Var(values[2][n_points-1]-y));
 			
 			progress++;
-			printProgress((double)progress / (((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1)));
+			printf("\rSTEP %i of %i  |  %.5lf %%  |  RUN = %.3lf s  |  TIME LEFT = %.2lf min      ", progress, 
+								(int)(((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1)), 
+								progress/(((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1))*100, 
+								(double)(clock()-c1)/(double)CLOCKS_PER_SEC,  
+								((((y_max-y_min)/dy+1)*((z_max-z_min)/dz+1))-progress)*(double)(clock()-c1)/(double)CLOCKS_PER_SEC/60);
+			fflush(stdout);
+			c1 = clock();
 
 			z += dz;
 		}
@@ -142,7 +150,7 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
-	cout << "Saved file <Output_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
+	cout << endl << "Saved file <Output_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
 
 	/*
     TApplication* MyRootApp;

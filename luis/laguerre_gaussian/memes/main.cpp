@@ -65,7 +65,7 @@ complex<double> magnetic_field(double x, double y, double z, double p, double l,
 	double phi = atan2(z,y);
 	double h=1e-5;
  	complex<double> res=0;
- 	for(int i=0; i<5; i++) res += 1./h * der_coef4[i] * Alg(r,phi,z+(double)(i-2)*h,p,l,t);   
+ 	for(int i=0; i<5; i++) res += 1./h * der_coef4[i] * Alg(r,phi,x+(double)(i-2)*h,p,l,t);   
  	return res;
 }
 

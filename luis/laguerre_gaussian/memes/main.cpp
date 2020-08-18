@@ -20,77 +20,86 @@ complex<double> imu(0,1);
 
 double n=1;
 double eta=1;
-double w0=5;
+double w0=10;
 double lambda=1;
 double w =1;
 complex<double> Eo=imu;
 double kg = 2*M_PI*n/lambda;
+double zr = M_PI*w0*w0*n/lambda;
+
+double der_coef4[5] = {1./12., -2./3., 0., 2./3., -1./12.};
 
 
-complex<double> u_aux(double x, double y, double z, double l, double p){
+
+
+
+
+complex<double> upl(double r, double phi, double z, double p, double l){
 
 	complex<double> res(1,0);
-
-	double r = sqrt(y*y+z*z);
-	double phi = atan2(z,y);
-	double kg = 2.*M_PI*n/lambda;
-	double zr = M_PI*w0*w0*n/lambda;
-	double wz = w0*sqrt(1+x*x/zr/zr);
+	double wz = w0*sqrt(1+z*z/zr/zr);
 
 	res *= Eo*w0/wz;
 	res *= pow(r*sqrt(2.)/wz, abs(l));
-	res *= assoc_laguerre(abs(p), abs(l), 2*r*r/wz/wz);
+	res *= assoc_laguerre((int)abs(p), (int)abs(l), 2.*r*r/wz/wz);
 	res *= exp(-r*r/wz/wz);
-	res *= exp(-imu*kg*r*r*x/2./(x*x+zr*zr));
-	res *= exp(-imu*l*phi);
-	res *= exp(imu*(2.*p+abs(l)+1.)*atan(x/zr));
+	double aux = -kg*r*r*z/2./(z*z+zr*zr)-l*phi+(2.*p+abs(l)+1.)*atan(z/zr);
+	res *= exp(imu*aux);
 
 	return res;
 }
-
-double nao_delta(int a, int b){
-	if(a!=b) return 1;
-	else return 0;
+complex<double> Alg(double r, double phi, double z, double p, double l, double t){
+	return upl(r,phi,z,p,l)*exp(imu*(w*t-kg*z));
 }
 
-
-complex<double> magnetic_field_luis(double x, double y, double z, double l, double p, double t){
-	//\vec{B} = B \hat{z}
+complex<double> electric_field(double x, double y, double z, double p, double l, double t){
 	complex<double> res;
+	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	res = -imu*w*upl(r,phi,x,p,l)*exp(imu*(w*t-kg*x));
+	return res;
+}
+
+complex<double> magnetic_field(double x, double y, double z, double p, double l, double t){
+	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	double h=1e-5;
+ 	complex<double> res=0;
+ 	for(int i=0; i<5; i++) res += 1./h * der_coef4[i] * Alg(r,phi,z+(double)(i-2)*h,p,l,t);   
+ 	return res;
+}
+
+complex<double> magnetic_field_luis(double x, double y, double z, double p, double l, double t){
+	
+	complex<double> res(0,0);
 
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
-	double zr = M_PI*w0*w0*n/lambda;
 	double wz = w0*sqrt(1+x*x/zr/zr);
 
-	complex<double> mood, mood1(0,0), mood2(0,0);
+	//adicionar mood = du/dz-iku
+	res += -w0*w0*x/zr/zr/wz/wz * upl(r,phi,x,p,l);
+	if((int)l != 0) res *= 1.+abs(l);
+	if((int)p != 0){
+		complex<double> upl_gay(1,0);
+		upl_gay *= Eo*w0/wz;
+		upl_gay *= pow(r*sqrt(2.)/wz, abs(l));
+		upl_gay *= assoc_laguerre((int)abs(p)-1, (int)abs(l)+1, 2.*r*r/wz/wz); //<<<===
+		upl_gay *= exp(-r*r/wz/wz);
+		double aux = -kg*r*r*x/2./(z*z+zr*zr)-l*phi+(2.*p+abs(l)+1.)*atan(x/zr);
+		upl_gay *= exp(imu*aux);
 
-	mood1 = -x/(x*x+zr*zr)+2*r*r*x*zr*zr/w0/w0/(x*x+zr*zr)/(x*x+zr*zr)-imu*kg*r*r*(0.5-x*x/(x*x+zr*zr))/(x*x+zr*zr)+imu*(2.*p+abs(l)+1.)*zr/(x*x+zr*zr)-imu*kg;
-	if((int)l!=0) mood1 += -fabs(l)*x/(x*x+zr*zr);
-	mood1 *= u_aux(x,y,z,l,p);
-	if (p!=0) mood2 = u_aux(x,y,z,l+1,p-1)*4.*r*r*x*zr*zr/w0/w0/(x*x+zr*zr)/(x*x+zr*zr);
-	mood = mood1+mood2;
+		res += 4*r*r*w0*w0*x/zr/zr/wz/wz/wz/wz*upl_gay;
+	}
+	double aux = -kg*r*r/2.*(zr*zr-x*x)/(x*x+zr*zr)/(x*x+zr*zr)+(2.*p+abs(l)+1.)*zr/(x*x+zr*zr)-kg;
+	res += imu*aux*upl(r,phi,x,p,l);
 
-	res=mood*exp(imu*(w*t-kg*x));
-
-	return res;
-}
-
-complex<double> electric_field(double x, double y, double z, double l, double p, double t){
-	complex<double> res;
-	double r = sqrt(y*y+z*z);
-	double phi = atan2(z,y);
-	res = -imu*w*u_aux(x,y,z,l,p)*exp(imu*(w*t-kg*x));
-	return res;
-}
-
-complex<double> magnetic_field(double x, double y, double z, double l, double p, double t){
-	complex<double> res;
-	double h=1e-5;
-	res = (u_aux(x+h/2.,y,z,l,p)-u_aux(x-h/2.,y,z,l,p))/h - imu*kg*u_aux(x,y,z,l,p);
 	res *= exp(imu*(w*t-kg*x));
+
 	return res;
 }
+
+
 
 double funBluis(double*x,double*par){
 	return magnetic_field_luis(par[0],x[0],x[1],par[1],par[2],par[3]).real();
@@ -132,8 +141,8 @@ int main(int argc, char** argv){
 		t1[p] = new TLatex*[n_l];
 		for(int l=0; l<n_l; l++){
 			f1[p][l] = new TF2("",teste,-20,20,-20,20,4);
-			f1[p][l]->SetParameter(1,l);
-			f1[p][l]->SetParameter(2,p);
+			f1[p][l]->SetParameter(1,p);
+			f1[p][l]->SetParameter(2,l);
 			f1[p][l]->SetParameter(0,0); //x
 			f1[p][l]->SetParameter(3,0); //t
 			f1[p][l]->SetNpx(500);

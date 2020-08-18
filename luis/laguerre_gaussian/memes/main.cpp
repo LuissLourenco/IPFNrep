@@ -86,7 +86,7 @@ complex<double> magnetic_field_luis(double x, double y, double z, double p, doub
 		upl_gay *= pow(r*sqrt(2.)/wz, abs(l));
 		upl_gay *= assoc_laguerre((int)abs(p)-1, (int)abs(l)+1, 2.*r*r/wz/wz); //<<<===
 		upl_gay *= exp(-r*r/wz/wz);
-		double aux = -kg*r*r*x/2./(z*z+zr*zr)-l*phi+(2.*p+abs(l)+1.)*atan(x/zr);
+		double aux = -kg*r*r*x/2./(x*x+zr*zr)-l*phi+(2.*p+abs(l)+1.)*atan(x/zr);
 		upl_gay *= exp(imu*aux);
 
 		res += 4*r*r*w0*w0*x/zr/zr/wz/wz/wz/wz*upl_gay;

@@ -21,8 +21,8 @@ int main(int argc, char **argv){
 	double px0 = -2000;
 	double kdamp = 0;
 	double T = 100;
-	int N = 10000;
-	int pri = 10;
+	int N = 100000;
+	int pri = 100;
 	double tfwhm = 50;
 	double stable = 0;
 	double Eo = 1;
@@ -48,7 +48,7 @@ int main(int argc, char **argv){
 
 	double y_min = -20;
 	double y_max = 20;
-	double dy = 10;
+	double dy = 0.5;
 	double y = y_min;
 
 	double z_min = y_min;
@@ -62,8 +62,8 @@ int main(int argc, char **argv){
 	//DataSet Y(1);
 	//DataSet Z(1);
 
-	output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+".txt").c_str(),"w");
-	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_perp_max\tE_f\t"); 
+	output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
+	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tE_f\t"); 
 	fprintf(output, "px0=%.10e|", px0);	//p01
 	fprintf(output, "kdamp=%.10e|", kdamp);	//kdamp
 	fprintf(output, "T=%.10e|", T);	//T
@@ -142,7 +142,7 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
-	cout << "Saved file <Output_p" << p << "l" << l << ".txt>" << endl;
+	cout << "Saved file <Output_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
 
 	/*
     TApplication* MyRootApp;
@@ -159,3 +159,4 @@ int main(int argc, char **argv){
 	return 0;
 
 }
+

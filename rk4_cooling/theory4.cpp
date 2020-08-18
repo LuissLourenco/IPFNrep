@@ -149,7 +149,7 @@ double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
  	return Eo * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
  if(wave_type == 2){
- 	return electric_field_luis(x,y,z).real();
+ 	return electric_field_luis(x,y,z).real()*Envelope(x,t);
  } 
  else return 0.;
 }
@@ -166,7 +166,7 @@ double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
  	return w * Eo * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
  if(wave_type == 2){
- 	return (imu*w*electric_field_luis(x,y,z)).real();
+ 	return (imu*w*electric_field_luis(x,y,z)).real()*Envelope(x,t);
  }
  else return 0.;
 }
@@ -225,7 +225,7 @@ double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
  	return Eo / eta * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
  if(wave_type == 2){
- 	return magnetic_field_luis(x,y,z).real();
+ 	return magnetic_field_luis(x,y,z).real() * Envelope(x,t);
  }
  else return 0.;
 }
@@ -242,7 +242,7 @@ double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
  	return w * Eo / eta * w0/wz * exp(-r*r/(wz*wz)) * cos(w*t - kg*x - kg*r*r*R_1/2 + psi) * Envelope(x, t);
  }
  if(wave_type == 2){
- 	return (imu*w*magnetic_field_luis(x,y,z)).real();
+ 	return (imu*w*magnetic_field_luis(x,y,z)).real() * Envelope(x,t);
  }
  else return 0.;
 }

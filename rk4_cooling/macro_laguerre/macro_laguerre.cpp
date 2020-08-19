@@ -20,16 +20,16 @@ int main(int argc, char **argv){
 
 	clock_t c1 = clock();
 
-	double px0 = 0;
+	double px0 = -2000;
 	double kdamp = 0;
-	double T = 200;
-	int N = 10;
+	double T = 100;
+	int N = 100000;
 	int pri = 100;
 	double tfwhm = 50;
 	double stable = 0;
 	double Eo = 1;
 	double delta = 0;
-	double w0 = 10;
+	double w0 = 5;
 	double lambda = 1;
 
 	int l, p;

@@ -177,5 +177,27 @@ TGraph2DErrors *GetTGraph2DErrors(DataSet X, DataSet Y, DataSet Z){
 	
 }
 
+TGraph2D *GetTGraph2D(DataSet X, DataSet Y, DataSet Z){
+
+	if(X.size() != Y.size() || X.size() != Z.size() || Y.size() != Z.size()){
+		cout << "Tamanho incompatível para TGraph2D" << endl;
+		return new TGraph2D();
+	}
+
+	int n_points = X.size();
+
+	double *x = new double[n_points];
+	double *y = new double[n_points];
+	double *z = new double[n_points];
+	for(int i = 0; i < n_points; i++){
+		x[i] = X[i].val();
+		y[i] = Y[i].val();
+		z[i] = Z[i].val();
+	}
+
+	return new TGraph2D(n_points, x, y, z);
+	
+}
+
 Var GetVar(TF1 *f, int par){return Var(f->GetParameter(par), f->GetParError(par));};
 double GetChi2NDF(TF1* f){return f->GetChisquare() / f->GetNDF();}

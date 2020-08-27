@@ -305,6 +305,7 @@ TGraph *GetTGraph(DataSet X, DataSet Y);
 
 
 TGraph2DErrors *GetTGraph2DErrors(DataSet X, DataSet Y, DataSet Z);
+TGraph2D *GetTGraph2D(DataSet X, DataSet Y, DataSet Z);
 Var GetVar(TF1 *f, int par);
 double GetChi2NDF(TF1* f);
 

@@ -20,11 +20,12 @@ int main(int argc, char **argv){
 
 	clock_t c1 = clock();
 
-	double px0 = -0;
+	double px0 = 0;
 	double kdamp = 0;
-	double T = 300;
+	double T = 120;
 	int N = 100000;
 	int pri = 100;
+	int wave_type = 3;
 	double tfwhm = 50;
 	double stable = 0;
 	double Eo = 1;
@@ -33,23 +34,24 @@ int main(int argc, char **argv){
 	double lambda = 1;
 
 	int l, p;
-	if(argc == 3){
+	if(argc == 4){
 		sscanf(argv[1], "%i", &l);
 		sscanf(argv[2], "%i", &p);
+		sscanf(argv[3], "%lf", &px0);
 	}else{
 		l = 0;
 		p = 0;
 	}
 
 	time_t start_time = chrono::system_clock::to_time_t(chrono::system_clock::now());
-	cout << "Simulating l = " << l << " and p = " << p;
+	cout << "Simulating l = " << l << " and p = " << p << " with px0 = " << px0;
 	cout << " starting " << ctime(&start_time);
 
     int n_cols, n_points;
 	double** values;
 
-	double y_min = -3;
-	double y_max = 3;
+	double y_min = -20;
+	double y_max = 20;
 	double dy = 0.5;
 	double y = y_min;
 
@@ -59,15 +61,14 @@ int main(int argc, char **argv){
 	double z = z_min;
 
 	FILE *input, *output;
-
-	double bog[1] = {0};
-	DataSet X(1,bog);
-	DataSet Y(1,bog);
-	DataSet Z(1,bog);
-
-	//output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
-	output = fopen("teste","w");
-	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tE_f\t"); 
+/*
+	DataSet X(1);
+	DataSet Y(1);
+	DataSet Z(1);
+*/
+	output = fopen(("Output_wv3_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
+	//output = fopen("teste","w");
+	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tp_z_max\tE_f\tL_x_max\tL_x_f\t"); 
 	fprintf(output, "px0=%.10e|", px0);	//p01
 	fprintf(output, "kdamp=%.10e|", kdamp);	//kdamp
 	fprintf(output, "T=%.10e|", T);	//T
@@ -100,7 +101,7 @@ int main(int argc, char **argv){
 			fprintf(input, "%i\n", pri);	//pri
 			fprintf(input, "%.10e\n", 5E-3);	//dx
 			fprintf(input, "%.10e\n", 5E-3);	//dy
-			fprintf(input, "%i\n", 3);	//wave_type
+			fprintf(input, "%i\n", wave_type);	//wave_type
 			fprintf(input, "%.10e\n", tfwhm);	//tfwhm
 			fprintf(input, "%.10e\n", stable);	//stable
 			fprintf(input, "%.10e\n", Eo);	//Eo
@@ -127,14 +128,20 @@ int main(int argc, char **argv){
 			fprintf(output, "%.10e\t", values[4][n_points-1]);	// px_f
 			fprintf(output, "%.10e\t", values[5][n_points-1]);	// py_f
 			fprintf(output, "%.10e\t", values[6][n_points-1]);	// pz_f
-			fprintf(output, "%.10e\t", (abs(DataSet(n_points, values[5]))).getMax().val());	// p_perp_max
-			fprintf(output, "%.10e", sqrt(1 + values[4][n_points-1]*values[4][n_points-1]
+			fprintf(output, "%.10e\t", (abs(DataSet(n_points, values[5]))).getMax().val());	// p_y_max
+			fprintf(output, "%.10e\t", (abs(DataSet(n_points, values[6]))).getMax().val());	// p_z_max
+			fprintf(output, "%.10e\t", sqrt(1 + values[4][n_points-1]*values[4][n_points-1]
 											+ values[5][n_points-1]*values[5][n_points-1]
 											+ values[6][n_points-1]*values[6][n_points-1]));	// E_f
+			DataSet L_X = abs(DataSet(n_points, values[2]) * DataSet(n_points, values[6]) - DataSet(n_points, values[3]) * DataSet(n_points, values[5]));
+			fprintf(output, "%.10e\t", L_X.getMax().val());	// L_x_max
+			fprintf(output, "%.10e", L_X[-1].val());	// L_x_f
 
+			/*
 			X = X.concat(DataSet(n_points, values[1]));
 			Y = Y.concat(DataSet(n_points, values[2]));
 			Z = Z.concat(DataSet(n_points, values[3]));
+			*/
 			
 			progress++;
 			printf("\rSTEP %i of %i  |  %.5lf %%  |  RUN = %.3lf s  |  TIME LEFT = %.2lf min      ", progress, 
@@ -152,9 +159,9 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
-	//cout << endl << "Saved file <Output_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
+	cout << endl << "Saved file <Output_wv3_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
 
-	
+	/*
     TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
@@ -168,7 +175,7 @@ int main(int argc, char **argv){
 	ca1->SaveAs("Laguerre_Trajectories.png");
 
 	MyRootApp->Run();
-	
+	*/
 	return 0;
 
 }

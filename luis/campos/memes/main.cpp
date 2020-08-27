@@ -1,4 +1,6 @@
 
+//#include "laguerre_gaussian.cpp"
+
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 #include <iostream>
 #include <iomanip>
@@ -26,6 +28,7 @@ char trash[128];
 
 
 double der_coef4[5] = {1./12., -2./3., 0., 2./3., -1./12.};
+
 
 double Envelope(double x, double t){return 1;}
 
@@ -151,8 +154,9 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	
- 	double amp = Eo * exp(-r*r/w0/w0);
+ 	double amp; 
+ 	amp *= Eo;
+ 	amp *= exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
  	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
@@ -163,7 +167,7 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	}
  	res *= amp;
  	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l))*pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
  		res += amp2*(-abs(l)*cos(arg)*sin(phi) -l*sin(arg)*cos(phi));
  	}
 
@@ -181,20 +185,21 @@ double DerBfx(double x, double y, double z, double p, double l, double t){ //Bx 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	
- 	double amp = Eo * exp(-r*r/w0/w0);
+ 	double amp; 
+ 	amp *= Eo;
+ 	amp *= exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
  	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
- 	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
+ 	double res = 2.*r/w0/w0 * (-w*sin(arg))*sin(phi);
  	if(p!=0){
  		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
  		amp += 2.*amp3;
  	}
  	res *= amp;
  	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
- 		res += amp2*w*(abs(l)*sin(arg)*sin(phi) -l*cos(arg)*cos(phi));
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l))*pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		res += amp2*(-abs(l)*(-w*sin(arg))*sin(phi) -l*w*cos(arg)*cos(phi));
  	}
 
  	return res*Envelope(x,t);
@@ -329,22 +334,7 @@ double DerBfz(double x, double y, double z, double p, double l, double t){ //Bz 
 
 
 
-double A3(double r, double phi, double x, double p, double l, double t){
-	double arg = w*t-k*x-l*phi;
-	return Eo*exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0, abs(l)) * assoc_laguerre(p,abs(l), 2*r*r/w0/w0) * cos(arg);
-}
-double Bfx3(double x, double y, double z, double p, double l, double t){
-	double h=1e-5;
-	double r = sqrt(y*y+z*z);
-	double phi = atan2(z,y);
-	double der1 = ((r+h/2)*A3(r+h/2,phi,x,p,l,t)-(r-h/2)*A3(r-h/2,phi,x,p,l,t))/h * (-sin(phi));
-	double der2 = (A3(r,phi+h/2,x,p,l,t)*cos(phi+h/2)-A3(r,phi-h/2,x,p,l,t)*cos(phi-h/2))/h;
-	return 1./r * (der1-der2);
-}
-double DerBfx3(double x, double y, double z, double p, double l, double t){
-	double h=1e-5;
-	return (Bfx3(x,y,z,p,l,t+h/2)-Bfx3(x,y,z,p,l,t-h/2))/h;
-}
+
 
 
 
@@ -487,11 +477,23 @@ double funBtrig(double*x,double*par){
 }
 
 double teste(double*x,double*par){
+	wave_type=1;
+	double a1 = Efy(par[0],x[0],x[1],par[1],par[2],par[3]);
 	wave_type=3;
-	double a1 = Bfx(par[0],x[0],x[1],par[1],par[2],par[3]);
-	double a2 = Bfx3(par[0],x[0],x[1],par[1],par[2],par[3]);
+	double a2 = Efy(par[0],x[0],x[1],par[1],par[2],par[3]);
 	return a1-a2;
 }
+
+
+double teste1(double*x,double*par){
+	wave_type=1;
+	return Bfx(par[0],x[0],0.,par[1],par[2],par[3]);
+}
+double teste2(double*x,double*par){
+	wave_type=3;
+	return Bfx(par[0],x[0],0.,par[1],par[2],par[3]);
+}
+
 
 
 int main(int argc, char** argv){
@@ -508,72 +510,58 @@ int main(int argc, char** argv){
 	kg = 2*M_PI*n/lambda;
 	if(wave_type != 0) k = kg;
 	zr = M_PI*w0*w0*n/lambda;
-	w=k;
+	w=1;
 
 
-	cout<<"WAVE_TYPE = "<<wave_type<<endl;
-	cout<<"Ao = "<<Eo<<endl;
-	cout<<"zr = "<<zr<<endl;
-	cout<<"delta = "<<delta<<endl;
-	cout<<"w,k = "<<w<<endl;
+	cout<<"WAVE_TYPE="<<wave_type<<endl;
+	cout<<"Ao="<<Eo<<endl;
+	cout<<"zr="<<zr<<endl;
+	cout<<"delta="<<delta<<endl;
 
 
 
-	double range=1;
-
-	int n_l=6; n_l=1;
-	int n_p=4; n_p=1;
-	int side=500;
-
-	auto f1 = new TF2**[n_p];
-	auto t1 = new TLatex**[n_p];
 
 	TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
-	auto c1 = new TCanvas("c1", "", n_l*side, n_p*side);
-	c1->Divide(n_l,n_p);
-	c1->SetRightMargin(0.0);
-	c1->SetLeftMargin(0.0);
-	c1->SetBottomMargin(0.0);
-	c1->SetTopMargin(0.0);
+	auto c1 = new TCanvas("c1", "", 500,500);
+	c1->SetGrid();
 
-	gStyle->SetPalette(kBird);
+	auto f1 = new TF1*[2];
+	f1[0] = new TF1("f1", teste1, -20,20,4);
+	f1[1] = new TF1("f2", teste2, -20,20,4);
+
+	for(int i=0; i<2; i++){
+		f1[i]->SetParameter(0,0);
+		f1[i]->SetParameter(1,pr);
+		f1[i]->SetParameter(2,lr);
+	}
+
+	f1[0]->SetLineColor(kRed);
+	f1[1]->SetLineColor(kBlue);
+
+	f1[0]->SetMinimum(-10);
+	f1[0]->SetMaximum(10);
 
 
-	double t=0; double dt=0.05; double tempo=1000;
+	double t=0, dt=0.04, tempo=1000;
 	while(t<tempo){
-	for(int p=0; p<n_p; p++){
-		f1[p] = new TF2*[n_l];
-		t1[p] = new TLatex*[n_l];
-		for(int l=0; l<n_l; l++){
-			f1[p][l] = new TF2("",teste,-20,20,-20,20,4);
-			f1[p][l]->SetParameter(1,pr);
-			f1[p][l]->SetParameter(2,lr);
-			f1[p][l]->SetParameter(0,0); //x
-			f1[p][l]->SetParameter(3,t); //t
-			f1[p][l]->SetMinimum(-range); 
-			f1[p][l]->SetMaximum(range); 
-			f1[p][l]->SetNpx(500);
-			f1[p][l]->SetNpy(500);
-			cout<<f1[p][l]->GetMaximum()<<"\t"<<f1[p][l]->GetMinimum()<<endl;
-			c1->cd(1+l+p*n_l);
-			//c1->cd(1+l+p*n_l)->SetRightMargin(0.0);
-			//c1->cd(1+l+p*n_l)->SetLeftMargin(0.0);
-			//c1->cd(1+l+p*n_l)->SetBottomMargin(0.0);
-			//c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
-			f1[p][l]->Draw("colz");
-			t1[p][l] = new TLatex(-5,17,("#font[132]{p = "+to_string(p)+" | l = "+to_string(l)+"}").c_str());
-			t1[p][l]->Draw("SAME");
-		}
-	}
-	c1->Update();
-	t+=dt;
-	}
 
+		f1[0]->SetParameter(3,t);
+		f1[1]->SetParameter(3,t);
+
+		f1[0]->Draw();	
+		f1[1]->Draw("same");
+		
+
+		c1->Update();
+
+		t+=dt;
+	}
 
 	c1->SaveAs("Plot.png");
 
 
 	return 0;
+	
 }

@@ -52,11 +52,11 @@ void plotOut3(){
 	TCanvas* c1 = new TCanvas("c1", (string("wave_type=")+to_string(wave_type)).c_str(), 1500, 1000);
 	c1->Divide(2, 1);	
 	c1->cd(1);
-	graph_y->Draw("AP");
-	//graph_y2->Draw("P");
+	//graph_y->Draw("AP");
+	graph_y2->Draw("P");
 	c1->cd(2);
-	graph_p->Draw("AP");
-	//graph_p2->Draw("P");
+	//graph_p->Draw("AP");
+	graph_p2->Draw("P");
 
 	c1->SaveAs("Plot.png");
 }

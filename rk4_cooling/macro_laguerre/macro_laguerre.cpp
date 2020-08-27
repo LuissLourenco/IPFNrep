@@ -20,9 +20,9 @@ int main(int argc, char **argv){
 
 	clock_t c1 = clock();
 
-	double px0 = -2000;
+	double px0 = -0;
 	double kdamp = 0;
-	double T = 100;
+	double T = 300;
 	int N = 100000;
 	int pri = 100;
 	double tfwhm = 50;
@@ -48,8 +48,8 @@ int main(int argc, char **argv){
     int n_cols, n_points;
 	double** values;
 
-	double y_min = -20;
-	double y_max = 20;
+	double y_min = -3;
+	double y_max = 3;
 	double dy = 0.5;
 	double y = y_min;
 
@@ -60,11 +60,13 @@ int main(int argc, char **argv){
 
 	FILE *input, *output;
 
-	//DataSet X(1);
-	//DataSet Y(1);
-	//DataSet Z(1);
+	double bog[1] = {0};
+	DataSet X(1,bog);
+	DataSet Y(1,bog);
+	DataSet Z(1,bog);
 
-	output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
+	//output = fopen(("Output_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
+	output = fopen("teste","w");
 	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tE_f\t"); 
 	fprintf(output, "px0=%.10e|", px0);	//p01
 	fprintf(output, "kdamp=%.10e|", kdamp);	//kdamp
@@ -98,7 +100,7 @@ int main(int argc, char **argv){
 			fprintf(input, "%i\n", pri);	//pri
 			fprintf(input, "%.10e\n", 5E-3);	//dx
 			fprintf(input, "%.10e\n", 5E-3);	//dy
-			fprintf(input, "%i\n", 2);	//wave_type
+			fprintf(input, "%i\n", 3);	//wave_type
 			fprintf(input, "%.10e\n", tfwhm);	//tfwhm
 			fprintf(input, "%.10e\n", stable);	//stable
 			fprintf(input, "%.10e\n", Eo);	//Eo
@@ -130,9 +132,9 @@ int main(int argc, char **argv){
 											+ values[5][n_points-1]*values[5][n_points-1]
 											+ values[6][n_points-1]*values[6][n_points-1]));	// E_f
 
-			//X.append(Var(y));
-			//Y.append(Var(z));
-			//Z.append(Var(values[2][n_points-1]-y));
+			X = X.concat(DataSet(n_points, values[1]));
+			Y = Y.concat(DataSet(n_points, values[2]));
+			Z = Z.concat(DataSet(n_points, values[3]));
 			
 			progress++;
 			printf("\rSTEP %i of %i  |  %.5lf %%  |  RUN = %.3lf s  |  TIME LEFT = %.2lf min      ", progress, 
@@ -150,20 +152,23 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
-	cout << endl << "Saved file <Output_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
+	//cout << endl << "Saved file <Output_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
 
-	/*
+	
     TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
-	TCanvas* c1 = new TCanvas("c1", "", 1500, 1000);
+	TCanvas* ca1 = new TCanvas("ca1", "", 1500, 1000);
 	TGraph2D* graph = GetTGraph2D(X, Y, Z);
-	c1->cd();
-	graph->Draw("TRI");
-	c1->SaveAs("Laguerre_Trajectories.png");
+	graph->SetMarkerStyle(8);
+	graph->SetMarkerSize(0.1);
+	graph->SetMarkerColor(kRed);
+	ca1->cd();
+	graph->Draw("P");
+	ca1->SaveAs("Laguerre_Trajectories.png");
 
 	MyRootApp->Run();
-	*/
+	
 	return 0;
 
 }

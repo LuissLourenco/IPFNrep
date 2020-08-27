@@ -1,6 +1,4 @@
 
-//#include "laguerre_gaussian.cpp"
-
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 #include <iostream>
 #include <iomanip>
@@ -153,9 +151,8 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	double amp; 
- 	amp *= Eo;
- 	amp *= exp(-r*r/w0/w0);
+ 	
+ 	double amp = Eo * exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
  	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
@@ -166,7 +163,7 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	}
  	res *= amp;
  	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l))*pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
  		res += amp2*(-abs(l)*cos(arg)*sin(phi) -l*sin(arg)*cos(phi));
  	}
 
@@ -184,21 +181,20 @@ double DerBfx(double x, double y, double z, double p, double l, double t){ //Bx 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	double amp; 
- 	amp *= Eo;
- 	amp *= exp(-r*r/w0/w0);
+ 	
+ 	double amp = Eo * exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
  	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
- 	double res = 2.*r/w0/w0 * (-w*sin(arg))*sin(phi);
+ 	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
  	if(p!=0){
  		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
  		amp += 2.*amp3;
  	}
  	res *= amp;
  	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l))*pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
- 		res += amp2*(-abs(l)*(-w*sin(arg))*sin(phi) -l*w*cos(arg)*cos(phi));
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		res += amp2*w*(abs(l)*sin(arg)*sin(phi) -l*cos(arg)*cos(phi));
  	}
 
  	return res*Envelope(x,t);
@@ -333,6 +329,22 @@ double DerBfz(double x, double y, double z, double p, double l, double t){ //Bz 
 
 
 
+double A3(double r, double phi, double x, double p, double l, double t){
+	double arg = w*t-k*x-l*phi;
+	return Eo*exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0, abs(l)) * assoc_laguerre(p,abs(l), 2*r*r/w0/w0) * cos(arg);
+}
+double Bfx3(double x, double y, double z, double p, double l, double t){
+	double h=1e-5;
+	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	double der1 = ((r+h/2)*A3(r+h/2,phi,x,p,l,t)-(r-h/2)*A3(r-h/2,phi,x,p,l,t))/h * (-sin(phi));
+	double der2 = (A3(r,phi+h/2,x,p,l,t)*cos(phi+h/2)-A3(r,phi-h/2,x,p,l,t)*cos(phi-h/2))/h;
+	return 1./r * (der1-der2);
+}
+double DerBfx3(double x, double y, double z, double p, double l, double t){
+	double h=1e-5;
+	return (Bfx3(x,y,z,p,l,t+h/2)-Bfx3(x,y,z,p,l,t-h/2))/h;
+}
 
 
 
@@ -475,9 +487,9 @@ double funBtrig(double*x,double*par){
 }
 
 double teste(double*x,double*par){
-	wave_type=1;
-	double a1 = DerEfy(par[0],x[0],x[1],par[1],par[2],par[3]);
-	double a2 = DerBfz(par[0],x[0],x[1],par[1],par[2],par[3]);
+	wave_type=3;
+	double a1 = Bfx(par[0],x[0],x[1],par[1],par[2],par[3]);
+	double a2 = Bfx3(par[0],x[0],x[1],par[1],par[2],par[3]);
 	return a1-a2;
 }
 

@@ -64,7 +64,7 @@ int mood(string file, int p, int l, string bottom){
 	DataSet DY = sqrt(YF*YF+ZF*ZF) - sqrt(Y*Y+Z*Z);
 	DataSet PYM = atan2(YF, ZF) - atan2(Y, Z);
 
-	TCanvas* c1 = new TCanvas("c", "", 1500, 550);
+	TCanvas* c1 = new TCanvas("c", "", 1500, 1050);
 	//c1->Divide(3, 1);
 	c1->SetRightMargin(0.0);
 	c1->SetLeftMargin(0.0);
@@ -73,10 +73,13 @@ int mood(string file, int p, int l, string bottom){
 
 	gStyle->SetPalette(kBird);
 
-	TPad* pad1 = new TPad("", "", 0, 1./11, 1./3, 1);
-	TPad* pad2 = new TPad("", "", 1./3, 1./11, 2./3, 1);
-	TPad* pad3 = new TPad("", "", 2./3, 1./11, 1, 1);
-	TPad* pad4 = new TPad("", "", 0, 0, 1, 1./11);
+	TPad* pad1 = new TPad("", "", 0, 11./21, 1./3, 1);
+	TPad* pad2 = new TPad("", "", 1./3, 11./21, 2./3, 1);
+	TPad* pad3 = new TPad("", "", 2./3, 11./21, 1, 1);
+	TPad* pad4 = new TPad("", "", 0, 1./21, 1./3, 11./21);
+	TPad* pad5 = new TPad("", "", 1./3, 1./21, 2./3, 11./21);
+	TPad* pad6 = new TPad("", "", 2./3, 1./21, 1, 11./21);
+	TPad* pad7 = new TPad("", "", 0, 0, 1, 1./21);
 
 	//=====================================
 
@@ -169,7 +172,7 @@ int mood(string file, int p, int l, string bottom){
 	//=====================================
 
 
-	pad4->cd();
+	pad7->cd();
 
 	TLatex* bottom_string = new TLatex(0.01, 0.4, bottom.c_str());
 	bottom_string->SetTextSize(0.4);
@@ -184,6 +187,9 @@ int mood(string file, int p, int l, string bottom){
 	pad2->Draw();
 	pad3->Draw();
 	pad4->Draw();
+	pad5->Draw();
+	pad6->Draw();
+	pad7->Draw();
 
 	c1->SaveAs((file + ".png").c_str());
 
@@ -200,7 +206,7 @@ int mood(string file, int p, int l, string bottom){
 int main(){
 
 	mood("Output_Laguerre_wv3_data/Output_wv3_p0l0_px-0.000000"    , 0, 0, "Laguerre Gaussian Mode ( p = 0 | l = 0 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l1_px-0.000000"    , 0, 1, "Laguerre Gaussian Mode ( p = 0 | l = 1 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	/*mood("Output_Laguerre_wv3_data/Output_wv3_p0l1_px-0.000000"    , 0, 1, "Laguerre Gaussian Mode ( p = 0 | l = 1 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 	mood("Output_Laguerre_wv3_data/Output_wv3_p0l2_px-0.000000"    , 0, 2, "Laguerre Gaussian Mode ( p = 0 | l = 2 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 	mood("Output_Laguerre_wv3_data/Output_wv3_p0l3_px-0.000000"    , 0, 3, "Laguerre Gaussian Mode ( p = 0 | l = 3 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 	mood("Output_Laguerre_wv3_data/Output_wv3_p1l0_px-0.000000"    , 1, 0, "Laguerre Gaussian Mode ( p = 1 | l = 0 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
@@ -215,6 +221,6 @@ int main(){
 	mood("Output_Laguerre_wv3_data/Output_wv3_p3l1_px-0.000000"    , 3, 1, "Laguerre Gaussian Mode ( p = 3 | l = 1 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 	mood("Output_Laguerre_wv3_data/Output_wv3_p3l2_px-0.000000"    , 3, 2, "Laguerre Gaussian Mode ( p = 3 | l = 2 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 	mood("Output_Laguerre_wv3_data/Output_wv3_p3l3_px-0.000000"    , 3, 3, "Laguerre Gaussian Mode ( p = 3 | l = 3 ) without Longitudinal B field; Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-
+*/
 }
 

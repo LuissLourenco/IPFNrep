@@ -38,20 +38,20 @@ MOOD
 ./macro_laguerre 0 3 -2000
 
 # LUIS 2
-./macro_laguerre 1 0 -2000
-./macro_laguerre 1 1 -2000
-./macro_laguerre 1 2 -2000
-./macro_laguerre 1 3 -2000
+#./macro_laguerre 1 0 -2000
+#./macro_laguerre 1 1 -2000
+#./macro_laguerre 1 2 -2000
+#./macro_laguerre 1 3 -2000
 
 # LUIS 3
-./macro_laguerre 2 0 -2000
-./macro_laguerre 2 1 -2000
-./macro_laguerre 2 2 -2000
-./macro_laguerre 2 3 -2000
+#./macro_laguerre 2 0 -2000
+#./macro_laguerre 2 1 -2000
+#./macro_laguerre 2 2 -2000
+#./macro_laguerre 2 3 -2000
 
 # LUIS 4
-./macro_laguerre 3 0 -2000
-./macro_laguerre 3 1 -2000
-./macro_laguerre 3 2 -2000
-./macro_laguerre 3 3 -2000
+#./macro_laguerre 3 0 -2000
+#./macro_laguerre 3 1 -2000
+#./macro_laguerre 3 2 -2000
+#./macro_laguerre 3 3 -2000
 

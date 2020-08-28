@@ -20,7 +20,7 @@ int main(int argc, char **argv){
 
 	clock_t c1 = clock();
 
-	double px0 = 0;
+	double px0 = -2000;
 	double kdamp = 0;
 	double T = 120;
 	int N = 100000;

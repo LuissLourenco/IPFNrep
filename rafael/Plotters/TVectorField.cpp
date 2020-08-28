@@ -84,6 +84,22 @@ void TVectorField::Draw(string options=""){
 
 }
 
+void TVectorField::ReDraw(string options=""){
+	
+	if(options == "A"){
+		f->Draw("");
+		for(int i = 0; i < n; i++) arr[i]->Draw("SAME >");
+	}else if(options == "F"){
+		f->Draw("");
+		graph->Draw("SAME COLZ");
+		for(int i = 0; i < n; i++) arr[i]->Draw("SAME >");
+	}else{
+		f->Draw("");
+		for(int i = 0; i < n; i++) arr[i]->Draw("SAME >");
+	}
+
+}
+
 void TVectorField::SetLimits(double v1, double v2, double v3, double v4){
 	x_min = v1;
 	y_min = v2;
@@ -103,16 +119,17 @@ void TVectorField::Draw_A(){
 
 	for(int i = 0; i < n; i++){
 		r = atan2(y2[i], x2[i]);
-		arr[i] = new TArrow(x1[i], y1[i], x1[i]+cos(r)*scale, y1[i]+sin(r)*scale, 0.005, ">");
+		arr[i] = new TArrow(x1[i], y1[i], x1[i]+cos(r)*scale, y1[i]+sin(r)*scale, arrow_length, ">");
 		color = sqrt(x2[i]*x2[i]+y2[i]*y2[i]) / maxAmp * TColor::GetNumberOfColors();
 		arr[i]->SetLineColor(TColor::GetColorPalette(color));
+		arr[i]->SetLineWidth(arrow_width);
 		if(sqrt(x2[i]*x2[i]+y2[i]*y2[i]) <= 1E-10) arr[i]->SetLineWidth(0);
 	}
 
 	f = new TH1D("", "", 100, x_min, x_max);
 	f->GetYaxis()->SetRangeUser(y_min, y_max);
 	f->SetStats(0);
-	f->Draw("AXIS");
+	f->Draw("");
 	for(int i = 0; i < n; i++) arr[i]->Draw("SAME >");
 
 }
@@ -125,10 +142,13 @@ void TVectorField::Draw_F(){
 	double dx, dy, r;
 	for(int i = 0; i < n; i++){
 		r = atan2(y2[i], x2[i]);
-		arr[i] = new TArrow(x1[i], y1[i], x1[i]+cos(r)*scale, y1[i]+sin(r)*scale, 0.008, ">");
-		arr[i]->SetLineColor(0);
+		arr[i] = new TArrow(x1[i], y1[i], x1[i]+cos(r)*scale, y1[i]+sin(r)*scale, arrow_length, ">");
+		arr[i]->SetLineColor(arrow_color);
+		arr[i]->SetLineWidth(arrow_width);
 
 		aux[i] = sqrt(x2[i]*x2[i]+y2[i]*y2[i]);
+		if(sqrt(x2[i]*x2[i]+y2[i]*y2[i]) <= 1E-10) arr[i]->SetLineWidth(0.001);
+
 	}
 
 	graph = new TGraph2D(n, x1, y1, aux);
@@ -138,7 +158,7 @@ void TVectorField::Draw_F(){
 	f = new TH1D("", "", 100, x_min, x_max);
 	f->GetYaxis()->SetRangeUser(y_min, y_max);
 	f->SetStats(0);
-	f->Draw("AXIS");
+	f->Draw("");
 	graph->Draw("SAME COLZ");
 	for(int i = 0; i < n; i++) arr[i]->Draw("SAME >");
 

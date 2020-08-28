@@ -48,9 +48,12 @@ class TVectorField{
 		~TVectorField();
 
 		void Draw(string options);
+		void ReDraw(string options);
 		TH1D* GetTH1(){return f;}
 
 		void SetLimits(double v1, double v2, double v3, double v4);
+		void SetArrowColor(int c){arrow_color = c;}
+		void SetArrowSize(double v1=0.5, double v2=0.005, double v3=1){scale = v1; arrow_length = v2; arrow_width = v3;}
 		
 	private:
 		int n;
@@ -63,6 +66,9 @@ class TVectorField{
 		TArrow** arr;
 		double x_min, x_max, y_min, y_max;
 		double scale = 0.5;
+		int arrow_color = 0;
+		double arrow_length = 0.005;
+		double arrow_width = 1;
 
 		void Draw_A();
 		void Draw_F();

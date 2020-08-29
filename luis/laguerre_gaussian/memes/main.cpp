@@ -488,8 +488,7 @@ double funBtrig(double*x,double*par){
 
 double teste(double*x,double*par){
 	wave_type=3;
-	double a1 = Bfx(par[0],x[0],x[1],par[1],par[2],par[3]);
-	double a2 = Efy(par[0],x[0],x[1],par[1],par[2],par[3]);
+	double a1 = Efy(par[0],x[0],x[1],par[1],par[2],par[3]);
 	return a1;
 }
 
@@ -565,7 +564,8 @@ int main(int argc, char** argv){
 			c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
 			
 			f1[p][l]->Draw("colz");
-			t1[p][l] = new TLatex(-5,17,("#font[132]{p = "+to_string(p)+" | l = "+to_string(l)+"}").c_str());
+			t1[p][l] = new TLatex(-10,16,("#font[132]{p = "+to_string(p)+" | l = "+to_string(l)+"}").c_str());
+			t1[p][l]->SetTextSize(0.12);
 			t1[p][l]->Draw("SAME");
 		}
 	}
@@ -573,7 +573,8 @@ int main(int argc, char** argv){
 	//t+=dt;
 	//}
 
-	c1->SaveAs("LaguerreGaussianSimplifiedModes_Bfx.png");
+	//c1->SaveAs("LaguerreGaussianSimplifiedModes_Bfx.png");
+	c1->SaveAs("LaguerreGaussianSimplifiedModes.png");
 	//c1->SaveAs("plot.png");
 
 

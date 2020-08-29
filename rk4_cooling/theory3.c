@@ -190,7 +190,7 @@ double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){
+ if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;

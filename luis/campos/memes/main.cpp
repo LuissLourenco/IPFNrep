@@ -15,21 +15,27 @@ using namespace std;
 
 complex<double> imu(0,1);
 
-
 char trash[128];
-	double x01,x02,x03,p01,p02,p03, kdamp, T;
-	long long int N; int pri;
-	double dx, dy; int wave_type;
-	double tfwhm, stable, Eo, delta, w0, lambda, n, eta;
-	int lr,pr;
-	double k,kg,zr,w,Bo;
-
+double x01,x02,x03,p01,p02,p03, kdamp, T;
+long long int N; int pri;
+double dx, dy; int wave_type;
+double tfwhm, stable, Eo, delta, w0, lambda, n, eta;
+int lr,pr;
+double k,kg,zr,w,Bo;
 
 double der_coef4[5] = {1./12., -2./3., 0., 2./3., -1./12.};
 
+double p,l,t;
+
+
+
+
+
+//FIELDS FROM RK4--------------------------------------------------------------
+
 double Envelope(double x, double t){return 1;}
 
-double Efx(double x, double y, double z, double p, double l, double t){  //Ex interpolation to (x,y,z)
+double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
@@ -37,7 +43,7 @@ double Efx(double x, double y, double z, double p, double l, double t){  //Ex in
  else return 0.;
 }
 
-double DerEfx(double x, double y, double z, double p, double l, double t){ //Ex time derivative at (x,y,z)
+double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
@@ -45,14 +51,14 @@ double DerEfx(double x, double y, double z, double p, double l, double t){ //Ex 
  else return 0.;
 }
 
-double Efy(double x, double y, double z, double p, double l, double t){  //Ey interpolation to (x,y,z)
+double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
  if(wave_type == 0) return delta*w*Eo*sin(w*t-k*x)*Envelope(x,t);
  if(wave_type == 1){
  	double r = sqrt(y*y+z*z);
  	double wz = w0 * sqrt(1 + x*x/(zr*zr));
  	double R_1 = x / (x*x + zr*zr);
  	double psi = atan(x/zr); 
- 	return w*Eo * w0/wz * exp(-r*r/(wz*wz)) * sin(w*t - kg*x - kg*r*r*R_1/2. + psi) * Envelope(x, t);
+ 	return w *Eo*w0/wz * exp(-r*r/(wz*wz)) * sin(w*t - kg*x - kg*r*r*R_1/2. + psi) * Envelope(x, t);
  }
  if(wave_type == 2){
  	double r = sqrt(y*y+z*z);
@@ -66,7 +72,7 @@ double Efy(double x, double y, double z, double p, double l, double t){  //Ey in
  	res *= w;
  	res *= Eo*w0/wz;
  	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 || p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
+ 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
  	res *= exp(-r*r/wz/wz); 	
  	res *= sin(arg);
  	return res*Envelope(x,t);
@@ -86,7 +92,7 @@ double Efy(double x, double y, double z, double p, double l, double t){  //Ey in
  else return 0.;
 }
 
-double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey time derivative at (x,y,z)
+double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
  if(wave_type == 0) return delta*w*w*Eo*cos(w*t-k*x)*Envelope(x,t); 
  if(wave_type == 1){
  	double r = sqrt(y*y+z*z);
@@ -107,7 +113,7 @@ double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey 
  	res *= w*w;
  	res *= Eo*w0/wz;
  	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 || p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
+ 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
  	res *= exp(-r*r/wz/wz); 	
  	res *= cos(arg);
  	return res*Envelope(x,t);
@@ -127,7 +133,7 @@ double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey 
  else return 0.;
 }
 
-double Efz(double x, double y, double z, double p, double l, double t){  //Ez interpolation to (x,y,z)
+double Efz(double x, double y, double z){  //Ez interpolation to (x,y,z)
  if(wave_type == 0) return -sqrt(1-delta*delta)*w*Eo*cos(w*t-k*x)*Envelope(x,t); 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
@@ -135,7 +141,7 @@ double Efz(double x, double y, double z, double p, double l, double t){  //Ez in
  else return 0.;
 }
 
-double DerEfz(double x, double y, double z, double p, double l, double t){ //Ez time derivative at (x,y,z)
+double DerEfz(double x, double y, double z){ //Ez time derivative at (x,y,z)
  if(wave_type == 0) return sqrt(1-delta*delta)*w*w*Eo*sin(w*t-k*x)*Envelope(x,t);
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
@@ -143,11 +149,11 @@ double DerEfz(double x, double y, double z, double p, double l, double t){ //Ez 
  else return 0.;
 }
 
-double Bfx( double x, double y, double z, double p, double l, double t){  //Bx interpolation to (x,y,z)
+double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){
+ if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -173,11 +179,11 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  else return 0.;
 }
 
-double DerBfx(double x, double y, double z, double p, double l, double t){ //Bx time derivative at (x,y,z)
+double DerBfx(double x, double y, double z){ //Bx time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){
+ if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -202,7 +208,7 @@ double DerBfx(double x, double y, double z, double p, double l, double t){ //Bx 
  else return 0.;
 }
 
-double Bfy(double x, double y, double z, double p, double l, double t){  //By interpolation to (x,y,z)
+double Bfy(double x, double y, double z){  //By interpolation to (x,y,z)
  if(wave_type == 0) return sqrt(1-delta*delta)*k*Bo*cos(w*t-k*x)*Envelope(x,t);
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
@@ -210,7 +216,7 @@ double Bfy(double x, double y, double z, double p, double l, double t){  //By in
  else return 0.;
 }
 
-double DerBfy(double x, double y, double z, double p, double l, double t){ //By time derivative at (x,y,z)
+double DerBfy(double x, double y, double z){ //By time derivative at (x,y,z)
  if(wave_type == 0) return -sqrt(1-delta*delta)*w*k*Bo*sin(w*t-k*x)*Envelope(x,t);
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
@@ -218,7 +224,7 @@ double DerBfy(double x, double y, double z, double p, double l, double t){ //By 
  else return 0.;
 }
 
-double Bfz(double x, double y, double z, double p, double l, double t){  //Bz interpolation to (x,y,z)
+double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
  if(wave_type == 0) return delta*k*Bo*sin(w*t-k*x)*Envelope(x,t);
  if(wave_type == 1){
  	double r = sqrt(y*y+z*z);
@@ -273,7 +279,7 @@ double Bfz(double x, double y, double z, double p, double l, double t){  //Bz in
  else return 0.;
 }
 
-double DerBfz(double x, double y, double z, double p, double l, double t){ //Bz time derivative at (x,y,z)
+double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
  if(wave_type == 0) return delta*w*k*Bo*cos(w*t-k*x)*Envelope(x,t); 
  if(wave_type == 1){
  	double r = sqrt(y*y+z*z);
@@ -327,23 +333,28 @@ double DerBfz(double x, double y, double z, double p, double l, double t){ //Bz 
  else return 0.;
 }
 
+//----------------------------------------------------------------------------
 
 
-double A3(double r, double phi, double x, double p, double l, double t){
+
+double A3(double r, double phi, double x){
 	double arg = w*t-k*x-l*phi;
 	return Eo*exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0, abs(l)) * assoc_laguerre(p,abs(l), 2*r*r/w0/w0) * cos(arg);
 }
-double Bfx3(double x, double y, double z, double p, double l, double t){
+double Bfx3(double x, double y, double z){
 	double h=1e-5;
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
-	double der1 = ((r+h/2)*A3(r+h/2,phi,x,p,l,t)-(r-h/2)*A3(r-h/2,phi,x,p,l,t))/h * (-sin(phi));
-	double der2 = (A3(r,phi+h/2,x,p,l,t)*cos(phi+h/2)-A3(r,phi-h/2,x,p,l,t)*cos(phi-h/2))/h;
+	double der1 = ((r+h/2)*A3(r+h/2,phi,x)-(r-h/2)*A3(r-h/2,phi,x))/h * (-sin(phi));
+	double der2 = (A3(r,phi+h/2,x)*cos(phi+h/2)-A3(r,phi-h/2,x)*cos(phi-h/2))/h;
 	return 1./r * (der1-der2);
 }
-double DerBfx3(double x, double y, double z, double p, double l, double t){
+double DerBfx3(double x, double y, double z){
 	double h=1e-5;
-	return (Bfx3(x,y,z,p,l,t+h/2)-Bfx3(x,y,z,p,l,t-h/2))/h;
+	t+=h/2; double a1=Bfx3(x,y,z);
+	t-=h; double a2=Bfx3(x,y,z);
+	t+=h/2;
+	return (a1-a2)/h;
 }
 
 
@@ -363,11 +374,11 @@ complex<double> upl(double r, double phi, double z, double p, double l){
 
 	return res;
 }
-complex<double> Alg(double r, double phi, double z, double p, double l, double t){
+complex<double> Alg(double r, double phi, double z){
 	return upl(r,phi,z,p,l)*exp(imu*(w*t-kg*z));
 }
 
-complex<double> electric_field(double x, double y, double z, double p, double l, double t){
+complex<double> electric_field(double x, double y, double z){
 	complex<double> res;
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
@@ -375,16 +386,16 @@ complex<double> electric_field(double x, double y, double z, double p, double l,
 	return res;
 }
 
-complex<double> magnetic_field(double x, double y, double z, double p, double l, double t){
+complex<double> magnetic_field(double x, double y, double z){
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double h=1e-5;
  	complex<double> res=0;
- 	for(int i=0; i<5; i++) res += 1./h * der_coef4[i] * Alg(r,phi,x+(double)(i-2)*h,p,l,t);   
+ 	for(int i=0; i<5; i++) res += 1./h * der_coef4[i] * Alg(r,phi,x+(double)(i-2)*h);   
  	return res;
 }
 
-complex<double> magnetic_field_luis(double x, double y, double z, double p, double l, double t){
+complex<double> magnetic_field_luis(double x, double y, double z){
 	
 	complex<double> res(0,0);
 
@@ -415,7 +426,7 @@ complex<double> magnetic_field_luis(double x, double y, double z, double p, doub
 }
 
 
-double electric_field_trig(double x, double y, double z, double p, double l, double t){
+double electric_field_trig(double x, double y, double z){
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double wz = w0*sqrt(1+x*x/zr/zr);
@@ -433,7 +444,7 @@ double electric_field_trig(double x, double y, double z, double p, double l, dou
 
  	return res;
 }
-double magnetic_field_trig(double x, double y, double z, double p, double l, double t){
+double magnetic_field_trig(double x, double y, double z){
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double wz = w0*sqrt(1+x*x/zr/zr);
@@ -467,28 +478,28 @@ double magnetic_field_trig(double x, double y, double z, double p, double l, dou
 
 
 double funBluis(double*x,double*par){
-	return magnetic_field_luis(par[0],x[0],x[1],par[1],par[2],par[3]).real();
+	return magnetic_field_luis(par[0],x[0],x[1]).real();
 }
 
 double funB(double*x,double*par){
-	return magnetic_field(par[0],x[0],x[1],par[1],par[2],par[3]).real();
+	return magnetic_field(par[0],x[0],x[1]).real();
 }
 
 double funE(double*x,double*par){
-	return electric_field(par[0],x[0],x[1],par[1],par[2],par[3]).real();
+	return electric_field(par[0],x[0],x[1]).real();
 }
 
 double funEtrig(double*x,double*par){
-	return electric_field_trig(par[0],x[0],x[1],par[1],par[2],par[3]);
+	return electric_field_trig(par[0],x[0],x[1]);
 }
 
 double funBtrig(double*x,double*par){
-	return magnetic_field_trig(par[0],x[0],x[1],par[1],par[2],par[3]);
+	return magnetic_field_trig(par[0],x[0],x[1]);
 }
 
 double teste(double*x,double*par){
 	wave_type=3;
-	double a1 = Efy(par[0],x[0],x[1],par[1],par[2],par[3]);
+	double a1 = Efy(par[0],x[0],x[1]);
 	return a1;
 }
 
@@ -542,40 +553,37 @@ int main(int argc, char** argv){
 
 	//double t=0; double dt=0.05; double tempo=1000;
 	//while(t<tempo){
-	for(int p=0; p<n_p; p++){
-		f1[p] = new TF2*[n_l];
-		t1[p] = new TLatex*[n_l];
-		for(int l=0; l<n_l; l++){
-			f1[p][l] = new TF2("",teste,-20,20,-20,20,4);
-			f1[p][l]->SetParameter(1,p);
-			f1[p][l]->SetParameter(2,l);
-			f1[p][l]->SetParameter(0,0); //x
-			f1[p][l]->SetParameter(3,M_PI/2/w); //t
-			//f1[p][l]->SetMinimum(-range); 
-			//f1[p][l]->SetMaximum(range); 
-			f1[p][l]->SetNpx(500);
-			f1[p][l]->SetNpy(500);
-			cout<<f1[p][l]->GetMaximum()<<"\t"<<f1[p][l]->GetMinimum()<<endl;
-			c1->cd(1+l+p*n_l);
+	for(int pi=0; pi<n_p; pi++){
+		f1[pi] = new TF2*[n_l];
+		t1[pi] = new TLatex*[n_l];
+		for(int li=0; li<n_l; li++){
+			f1[pi][li] = new TF2("",teste,-20,20,-20,20,1);
+			p=pi; l=li;
+			t = M_PI/2./w;
+			f1[pi][li]->SetParameter(0,0); //x
+			//f1[pi][li]->SetMinimum(-range); 
+			//f1[pi][li]->SetMaximum(range); 
+			f1[pi][li]->SetNpx(500);
+			f1[pi][li]->SetNpy(500);
+			cout<<f1[pi][li]->GetMaximum()<<"\t"<<f1[pi][li]->GetMinimum()<<endl;
+			c1->cd(1+li+pi*n_l);
 			
-			c1->cd(1+l+p*n_l)->SetRightMargin(0.0);
-			c1->cd(1+l+p*n_l)->SetLeftMargin(0.0);
-			c1->cd(1+l+p*n_l)->SetBottomMargin(0.0);
-			c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
+			c1->cd(1+li+pi*n_l)->SetRightMargin(0.0);
+			c1->cd(1+li+pi*n_l)->SetLeftMargin(0.0);
+			c1->cd(1+li+pi*n_l)->SetBottomMargin(0.0);
+			c1->cd(1+li+pi*n_l)->SetTopMargin(0.0);
 			
-			f1[p][l]->Draw("colz");
-			t1[p][l] = new TLatex(-10,16,("#font[132]{p = "+to_string(p)+" | l = "+to_string(l)+"}").c_str());
-			t1[p][l]->SetTextSize(0.12);
-			t1[p][l]->Draw("SAME");
+			f1[pi][li]->Draw("colz");
+			t1[pi][li] = new TLatex(-10,16,("#font[132]{p = "+to_string(pi)+" | l = "+to_string(li)+"}").c_str());
+			t1[pi][li]->SetTextSize(0.12);
+			t1[pi][li]->Draw("SAME");
 		}
 	}
 	//c1->Update();
 	//t+=dt;
 	//}
 
-	//c1->SaveAs("LaguerreGaussianSimplifiedModes_Bfx.png");
-	c1->SaveAs("LaguerreGaussianSimplifiedModes.png");
-	//c1->SaveAs("plot.png");
+	c1->SaveAs("plot.png");
 
 
 

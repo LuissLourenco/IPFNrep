@@ -66,7 +66,7 @@ double Efy(double x, double y, double z, double p, double l, double t){  //Ey in
  	res *= w;
  	res *= Eo*w0/wz;
  	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
+ 	if(l!=0 || p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
  	res *= exp(-r*r/wz/wz); 	
  	res *= sin(arg);
  	return res*Envelope(x,t);
@@ -79,7 +79,7 @@ double Efy(double x, double y, double z, double p, double l, double t){  //Ey in
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = w*amp*sin(arg); 
  	return res*Envelope(x,t);
  } 
@@ -107,7 +107,7 @@ double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey 
  	res *= w*w;
  	res *= Eo*w0/wz;
  	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
+ 	if(l!=0 || p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
  	res *= exp(-r*r/wz/wz); 	
  	res *= cos(arg);
  	return res*Envelope(x,t);
@@ -120,7 +120,7 @@ double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey 
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = w*w*amp*cos(arg); 
  	return res*Envelope(x,t);
  } 
@@ -154,7 +154,7 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	
  	double amp = Eo * exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
- 	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
+ 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
  	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
  	if(p!=0){
@@ -184,7 +184,7 @@ double DerBfx(double x, double y, double z, double p, double l, double t){ //Bx 
  	
  	double amp = Eo * exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
- 	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
+ 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
  	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
  	if(p!=0){
@@ -265,7 +265,7 @@ double Bfz(double x, double y, double z, double p, double l, double t){  //Bz in
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = k*amp*sin(arg); 
  	return res*Envelope(x,t);
  } 
@@ -320,7 +320,7 @@ double DerBfz(double x, double y, double z, double p, double l, double t){ //Bz 
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = k*w*amp*cos(arg); 
  	return res*Envelope(x,t);
  } 
@@ -489,8 +489,8 @@ double funBtrig(double*x,double*par){
 double teste(double*x,double*par){
 	wave_type=3;
 	double a1 = Bfx(par[0],x[0],x[1],par[1],par[2],par[3]);
-	double a2 = Bfx3(par[0],x[0],x[1],par[1],par[2],par[3]);
-	return a1-a2;
+	double a2 = Efy(par[0],x[0],x[1],par[1],par[2],par[3]);
+	return a1;
 }
 
 
@@ -521,15 +521,15 @@ int main(int argc, char** argv){
 
 	double range=1;
 
-	int n_l=6; n_l=1;
-	int n_p=4; n_p=1;
+	int n_l=6; n_l=6;
+	int n_p=4; n_p=4;
 	int side=500;
 
 	auto f1 = new TF2**[n_p];
 	auto t1 = new TLatex**[n_p];
 
-	TApplication* MyRootApp;
-	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
+	//TApplication* MyRootApp;
+	//MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
 	auto c1 = new TCanvas("c1", "", n_l*side, n_p*side);
 	c1->Divide(n_l,n_p);
@@ -541,38 +541,41 @@ int main(int argc, char** argv){
 	gStyle->SetPalette(kBird);
 
 
-	double t=0; double dt=0.05; double tempo=1000;
-	while(t<tempo){
+	//double t=0; double dt=0.05; double tempo=1000;
+	//while(t<tempo){
 	for(int p=0; p<n_p; p++){
 		f1[p] = new TF2*[n_l];
 		t1[p] = new TLatex*[n_l];
 		for(int l=0; l<n_l; l++){
 			f1[p][l] = new TF2("",teste,-20,20,-20,20,4);
-			f1[p][l]->SetParameter(1,pr);
-			f1[p][l]->SetParameter(2,lr);
+			f1[p][l]->SetParameter(1,p);
+			f1[p][l]->SetParameter(2,l);
 			f1[p][l]->SetParameter(0,0); //x
-			f1[p][l]->SetParameter(3,t); //t
-			f1[p][l]->SetMinimum(-range); 
-			f1[p][l]->SetMaximum(range); 
+			f1[p][l]->SetParameter(3,M_PI/2/w); //t
+			//f1[p][l]->SetMinimum(-range); 
+			//f1[p][l]->SetMaximum(range); 
 			f1[p][l]->SetNpx(500);
 			f1[p][l]->SetNpy(500);
 			cout<<f1[p][l]->GetMaximum()<<"\t"<<f1[p][l]->GetMinimum()<<endl;
 			c1->cd(1+l+p*n_l);
-			//c1->cd(1+l+p*n_l)->SetRightMargin(0.0);
-			//c1->cd(1+l+p*n_l)->SetLeftMargin(0.0);
-			//c1->cd(1+l+p*n_l)->SetBottomMargin(0.0);
-			//c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
+			
+			c1->cd(1+l+p*n_l)->SetRightMargin(0.0);
+			c1->cd(1+l+p*n_l)->SetLeftMargin(0.0);
+			c1->cd(1+l+p*n_l)->SetBottomMargin(0.0);
+			c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
+			
 			f1[p][l]->Draw("colz");
 			t1[p][l] = new TLatex(-5,17,("#font[132]{p = "+to_string(p)+" | l = "+to_string(l)+"}").c_str());
 			t1[p][l]->Draw("SAME");
 		}
 	}
-	c1->Update();
-	t+=dt;
-	}
+	//c1->Update();
+	//t+=dt;
+	//}
 
+	c1->SaveAs("LaguerreGaussianSimplifiedModes_Bfx.png");
+	//c1->SaveAs("plot.png");
 
-	c1->SaveAs("Plot.png");
 
 
 	return 0;

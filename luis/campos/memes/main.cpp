@@ -69,7 +69,7 @@ double Efy(double x, double y, double z, double p, double l, double t){  //Ey in
  	res *= w;
  	res *= Eo*w0/wz;
  	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
+ 	if(l!=0 || p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
  	res *= exp(-r*r/wz/wz); 	
  	res *= sin(arg);
  	return res*Envelope(x,t);
@@ -82,7 +82,7 @@ double Efy(double x, double y, double z, double p, double l, double t){  //Ey in
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = w*amp*sin(arg); 
  	return res*Envelope(x,t);
  } 
@@ -110,7 +110,7 @@ double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey 
  	res *= w*w;
  	res *= Eo*w0/wz;
  	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
+ 	if(l!=0 || p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
  	res *= exp(-r*r/wz/wz); 	
  	res *= cos(arg);
  	return res*Envelope(x,t);
@@ -123,7 +123,7 @@ double DerEfy(double x, double y, double z, double p, double l, double t){ //Ey 
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = w*w*amp*cos(arg); 
  	return res*Envelope(x,t);
  } 
@@ -154,11 +154,10 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	double amp; 
- 	amp *= Eo;
- 	amp *= exp(-r*r/w0/w0);
+ 	
+ 	double amp = Eo * exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
- 	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
+ 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
  	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
  	if(p!=0){
@@ -167,7 +166,7 @@ double Bfx( double x, double y, double z, double p, double l, double t){  //Bx i
  	}
  	res *= amp;
  	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l))*pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
  		res += amp2*(-abs(l)*cos(arg)*sin(phi) -l*sin(arg)*cos(phi));
  	}
 
@@ -185,21 +184,20 @@ double DerBfx(double x, double y, double z, double p, double l, double t){ //Bx 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	double amp; 
- 	amp *= Eo;
- 	amp *= exp(-r*r/w0/w0);
+ 	
+ 	double amp = Eo * exp(-r*r/w0/w0);
  	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
- 	if(l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
+ 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
 
- 	double res = 2.*r/w0/w0 * (-w*sin(arg))*sin(phi);
+ 	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
  	if(p!=0){
  		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
  		amp += 2.*amp3;
  	}
  	res *= amp;
  	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l))*pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
- 		res += amp2*(-abs(l)*(-w*sin(arg))*sin(phi) -l*w*cos(arg)*cos(phi));
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		res += amp2*w*(abs(l)*sin(arg)*sin(phi) -l*cos(arg)*cos(phi));
  	}
 
  	return res*Envelope(x,t);
@@ -270,7 +268,7 @@ double Bfz(double x, double y, double z, double p, double l, double t){  //Bz in
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = k*amp*sin(arg); 
  	return res*Envelope(x,t);
  } 
@@ -325,13 +323,12 @@ double DerBfz(double x, double y, double z, double p, double l, double t){ //Bz 
 	amp *= Eo;
 	amp *= exp(-r*r/w0/w0);
 	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 && p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
  	double res = k*w*amp*cos(arg); 
  	return res*Envelope(x,t);
  } 
  else return 0.;
 }
-
 
 
 

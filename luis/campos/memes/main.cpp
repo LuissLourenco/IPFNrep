@@ -4,12 +4,17 @@
 #include <iomanip>
 #include <cmath>
 #include <complex>
+#include <unistd.h>
 
 #include <TF2.h>
 #include <TCanvas.h>
 #include <TLatex.h>
 #include <TStyle.h>
 #include <TApplication.h>
+#include <TPad.h>
+#include <TPadPainter.h>
+#include <TImage.h>
+#include <TROOT.h>
 
 using namespace std;
 
@@ -538,8 +543,8 @@ int main(int argc, char** argv){
 	auto f1 = new TF2**[n_p];
 	auto t1 = new TLatex**[n_p];
 
-	//TApplication* MyRootApp;
-	//MyRootApp = new TApplication("MyRootApp", NULL, NULL);
+	TApplication* MyRootApp;
+	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
 	auto c1 = new TCanvas("c1", "", n_l*side, n_p*side);
 	c1->Divide(n_l,n_p);
@@ -548,44 +553,45 @@ int main(int argc, char** argv){
 	c1->SetBottomMargin(0.0);
 	c1->SetTopMargin(0.0);
 
+
 	gStyle->SetPalette(kBird);
 
 
-	//double t=0; double dt=0.05; double tempo=1000;
-	//while(t<tempo){
+	t = M_PI/2./w;
+	//double ti=0; double dt=0.05; double tempo=1000;
+	//while(ti<tempo){
 	for(int pi=0; pi<n_p; pi++){
 		f1[pi] = new TF2*[n_l];
 		t1[pi] = new TLatex*[n_l];
 		for(int li=0; li<n_l; li++){
 			f1[pi][li] = new TF2("",teste,-20,20,-20,20,1);
 			p=pi; l=li;
-			t = M_PI/2./w;
 			f1[pi][li]->SetParameter(0,0); //x
 			//f1[pi][li]->SetMinimum(-range); 
 			//f1[pi][li]->SetMaximum(range); 
 			f1[pi][li]->SetNpx(500);
 			f1[pi][li]->SetNpy(500);
-			cout<<f1[pi][li]->GetMaximum()<<"\t"<<f1[pi][li]->GetMinimum()<<endl;
+			//cout<<f1[pi][li]->GetMaximum()<<"\t"<<f1[pi][li]->GetMinimum()<<endl;
 			c1->cd(1+li+pi*n_l);
 			
-			c1->cd(1+li+pi*n_l)->SetRightMargin(0.0);
-			c1->cd(1+li+pi*n_l)->SetLeftMargin(0.0);
-			c1->cd(1+li+pi*n_l)->SetBottomMargin(0.0);
-			c1->cd(1+li+pi*n_l)->SetTopMargin(0.0);
+			//c1->cd(1+li+pi*n_l)->SetRightMargin(0.0);
+			//c1->cd(1+li+pi*n_l)->SetLeftMargin(0.0);
+			//c1->cd(1+li+pi*n_l)->SetBottomMargin(0.0);
+			//c1->cd(1+li+pi*n_l)->SetTopMargin(0.0);
 			
 			f1[pi][li]->Draw("colz");
+				
 			t1[pi][li] = new TLatex(-10,16,("#font[132]{p = "+to_string(pi)+" | l = "+to_string(li)+"}").c_str());
 			t1[pi][li]->SetTextSize(0.12);
 			t1[pi][li]->Draw("SAME");
+			
+			c1->cd(1+li+pi*n_l)->Update();
+			c1->SaveAs("plot.png");
 		}
 	}
 	//c1->Update();
-	//t+=dt;
+	//ti+=dt;
 	//}
-
-	c1->SaveAs("plot.png");
-
-
-
+	
 	return 0;
 }

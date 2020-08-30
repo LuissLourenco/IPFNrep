@@ -6,6 +6,8 @@
 #include <complex>
 #include <unistd.h>
 
+#include "ram.h"
+
 #include <TF2.h>
 #include <TCanvas.h>
 #include <TLatex.h>
@@ -15,6 +17,8 @@
 #include <TPadPainter.h>
 #include <TImage.h>
 #include <TROOT.h>
+#include <TPaletteAxis.h>
+#include <TH1.h>
 
 using namespace std;
 
@@ -341,6 +345,39 @@ double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
 //----------------------------------------------------------------------------
 
 
+double divEf(double x, double y, double z){
+	double h=1e-5;
+	double a1 = (Efx(x+h/2,y,z)-Efx(x-h/2,y,z))/h;
+	double a2 = (Efy(x,y+h/2,z)-Efy(x,y-h/2,z))/h;
+	double a3 = (Efz(x,y,z+h/2)-Efz(x,y,z-h/2))/h;
+	return a1+a2+a3;
+}
+double divBf(double x, double y, double z){
+	double h=1e-5;
+	double a1 = (Bfx(x+h/2,y,z)-Bfx(x-h/2,y,z))/h;
+	double a2 = (Bfy(x,y+h/2,z)-Bfy(x,y-h/2,z))/h;
+	double a3 = (Bfz(x,y,z+h/2)-Bfz(x,y,z-h/2))/h;
+	return a1+a2+a3;
+}
+double* curlEf(double x, double y, double z){
+	double h=1e-5;
+	double* res = new double[3];
+	res[0] = (Efz(x,y+h/2,z)-Efz(x,y-h/2,z))/h - (Efy(x,y,z+h/2)-Efy(x,y,z-h/2))/h;
+	res[1] = (Efx(x,y,z+h/2)-Efx(x,y,z-h/2))/h - (Efz(x+h/2,y,z)-Efz(x-h/2,y,z))/h;
+	res[2] = (Efy(x+h/2,y,z)-Efy(x-h/2,y,z))/h - (Efx(x,y+h/2,z)-Efx(x,y-h/2,z))/h;
+	return res;
+}
+double* curlBf(double x, double y, double z){
+	double h=1e-5;
+	double* res = new double[3];
+	res[0] = (Bfz(x,y+h/2,z)-Bfz(x,y-h/2,z))/h - (Bfy(x,y,z+h/2)-Bfy(x,y,z-h/2))/h;
+	res[1] = (Bfx(x,y,z+h/2)-Bfx(x,y,z-h/2))/h - (Bfz(x+h/2,y,z)-Bfz(x-h/2,y,z))/h;
+	res[2] = (Bfy(x+h/2,y,z)-Bfy(x-h/2,y,z))/h - (Bfx(x,y+h/2,z)-Bfx(x,y-h/2,z))/h;
+	return res;
+}
+
+//--------------------------------------------------------------------------
+
 
 double A3(double r, double phi, double x){
 	double arg = w*t-k*x-l*phi;
@@ -365,7 +402,7 @@ double DerBfx3(double x, double y, double z){
 
 
 
-complex<double> upl(double r, double phi, double z, double p, double l){
+complex<double> upl(double r, double phi, double z){
 
 	complex<double> res(1,0);
 	double wz = w0*sqrt(1+z*z/zr/zr);
@@ -380,14 +417,14 @@ complex<double> upl(double r, double phi, double z, double p, double l){
 	return res;
 }
 complex<double> Alg(double r, double phi, double z){
-	return upl(r,phi,z,p,l)*exp(imu*(w*t-kg*z));
+	return upl(r,phi,z)*exp(imu*(w*t-kg*z));
 }
 
 complex<double> electric_field(double x, double y, double z){
 	complex<double> res;
 	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
-	res = -imu*w*upl(r,phi,x,p,l)*exp(imu*(w*t-kg*x));
+	res = -imu*w*upl(r,phi,x)*exp(imu*(w*t-kg*x));
 	return res;
 }
 
@@ -409,7 +446,7 @@ complex<double> magnetic_field_luis(double x, double y, double z){
 	double wz = w0*sqrt(1+x*x/zr/zr);
 
 	//adicionar mood = du/dz-iku
-	res += -w0*w0*x/zr/zr/wz/wz * upl(r,phi,x,p,l);
+	res += -w0*w0*x/zr/zr/wz/wz * upl(r,phi,x);
 	if((int)l != 0) res *= 1.+abs(l);
 	if((int)p != 0){
 		complex<double> upl_gay(1,0);
@@ -423,7 +460,7 @@ complex<double> magnetic_field_luis(double x, double y, double z){
 		res += 4*r*r*w0*w0*x/zr/zr/wz/wz/wz/wz*upl_gay;
 	}
 	double aux = -kg*r*r/2.*(zr*zr-x*x)/(x*x+zr*zr)/(x*x+zr*zr)+(2.*p+abs(l)+1.)*zr/(x*x+zr*zr)-kg;
-	res += imu*aux*upl(r,phi,x,p,l);
+	res += imu*aux*upl(r,phi,x);
 
 	res *= exp(imu*(w*t-kg*x));
 
@@ -504,8 +541,20 @@ double funBtrig(double*x,double*par){
 
 double teste(double*x,double*par){
 	wave_type=3;
-	double a1 = Efy(par[0],x[0],x[1]);
-	return a1;
+
+	double a1,a2,a3;
+	//check curlE
+	//a1 = pow(curlEf(par[0],x[0],x[1])[0]+DerBfx(par[0],x[0],x[1]),2);
+	//a2 = pow(curlEf(par[0],x[0],x[1])[1]+DerBfy(par[0],x[0],x[1]),2);
+	//a3 = pow(curlEf(par[0],x[0],x[1])[2]+DerBfz(par[0],x[0],x[1]),2);
+	//check curlB
+	a1 = pow( curlBf(par[0],x[0],x[1])[0]-DerEfx(par[0],x[0],x[1]) ,2);
+	a2 = pow( curlBf(par[0],x[0],x[1])[1]-DerEfy(par[0],x[0],x[1]) ,2);
+	a3 = pow( curlBf(par[0],x[0],x[1])[2]-DerEfz(par[0],x[0],x[1]) ,2);
+	return a1+a2+a3;
+
+	//return divEf(par[0],x[0],x[1]);
+	//return divBf(par[0],x[0],x[1]);
 }
 
 
@@ -536,8 +585,8 @@ int main(int argc, char** argv){
 
 	double range=1;
 
-	int n_l=6; n_l=6;
-	int n_p=4; n_p=4;
+	int n_l=6; n_l=1;
+	int n_p=4; n_p=1;
 	int side=500;
 
 	auto f1 = new TF2**[n_p];
@@ -558,14 +607,16 @@ int main(int argc, char** argv){
 
 
 	t = M_PI/2./w;
-	//double ti=0; double dt=0.05; double tempo=1000;
-	//while(ti<tempo){
+	double ti=0; double dt=0.05; double tempo=50;
+	cout<<endl;
+	while(ti<tempo){
 	for(int pi=0; pi<n_p; pi++){
 		f1[pi] = new TF2*[n_l];
 		t1[pi] = new TLatex*[n_l];
 		for(int li=0; li<n_l; li++){
 			f1[pi][li] = new TF2("",teste,-20,20,-20,20,1);
-			p=pi; l=li;
+			p=pr; l=lr;
+			t=ti;
 			f1[pi][li]->SetParameter(0,0); //x
 			//f1[pi][li]->SetMinimum(-range); 
 			//f1[pi][li]->SetMaximum(range); 
@@ -581,17 +632,30 @@ int main(int argc, char** argv){
 			
 			f1[pi][li]->Draw("colz");
 				
-			t1[pi][li] = new TLatex(-10,16,("#font[132]{p = "+to_string(pi)+" | l = "+to_string(li)+"}").c_str());
-			t1[pi][li]->SetTextSize(0.12);
+			//t1[pi][li] = new TLatex(-10,16,("#font[132]{p = "+to_string((int)p)+" | l = "+to_string((int)l)+"}").c_str());
+			//t1[pi][li]->SetTextSize(0.12);
+			t1[pi][li] = new TLatex(-7,16,("#font[132]{p = "+to_string((int)p)+" | l = "+to_string((int)l)+"}").c_str());
+			t1[pi][li]->SetTextSize(0.07);
 			t1[pi][li]->Draw("SAME");
 			
-			c1->cd(1+li+pi*n_l)->Update();
-			c1->SaveAs("plot.png");
+			//c1->cd(1+li+pi*n_l)->Update();
+			gPad->Update();
+
+			//c1->SaveAs("plot.png");
 		}
 	}
-	//c1->Update();
-	//ti+=dt;
-	//}
+	c1->Update();
+	ti+=dt;
+
+	cout<<"\33[2K\r";
+	cout<<"TIME:  "<<ti<<"\t( "<<f1[0][0]->GetMinimum()<<" , "<<f1[0][0]->GetMaximum()<<" )"<<flush;
+	
+	if(situacao()>97){ cout<<endl<<endl<<"DEATH BY RAM"<<endl<<endl; return 1;}
+	
+	}
+
+	//gPad->WaitPrimitive();
 
 	return 0;
 }
+

@@ -36,19 +36,18 @@ int main(int argc, char **argv){
 	double lambda = 1;
 
 	int l, p;
-	if(argc == 5){
+	if(argc == 6){
 		sscanf(argv[1], "%i", &process);
 		sscanf(argv[2], "%i", &l);
 		sscanf(argv[3], "%i", &p);
 		sscanf(argv[4], "%lf", &px0);
+		sscanf(argv[5], "%lf", &kdamp);
 	}else{
 		cout << "ARGUMENT ERROR!" << argc << endl;
-		cout << argv[0] << endl;
-		cout << argv[1] << endl;
-		cout << argv[2] << endl;
-		cout << argv[3] << endl;
 		return 1;
 	}
+
+	cout << kdamp << endl;
 
 	time_t start_time = chrono::system_clock::to_time_t(chrono::system_clock::now());
 	cout << "Simulating l = " << l << " and p = " << p << " with px0 = " << px0;
@@ -57,9 +56,9 @@ int main(int argc, char **argv){
     int n_cols, n_points;
 	double** values;
 
-	double y_min = -5;//-20;
-	double y_max = 5;//20;
-	double dy = 5;//10;
+	double y_min = -20;
+	double y_max = 20;
+	double dy = 0.5;
 	double y = y_min;
 
 	double z_min = y_min;
@@ -165,9 +164,9 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
-	cout << endl << "Saved file <Output_wv3_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
+	cout << endl << "Saved file <Output_wv3_l" << l << "p" << p << "_px" << to_string(px0) << ".txt>" << endl;
 
-	/*
+	
     TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
@@ -181,7 +180,7 @@ int main(int argc, char **argv){
 	ca1->SaveAs("Laguerre_Trajectories.png");
 
 	MyRootApp->Run();
-	*/
+	
 	return 0;
 
 }

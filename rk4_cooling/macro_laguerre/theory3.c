@@ -5,6 +5,7 @@
 using namespace std;
 double t, xgrid, ygrid,gam,Fx,Fy,Fz,pE,k,dx,dy,dz,w,Eo,Bo,delta,kdamp, tfwhm, stable;  
 int pri, Ni, Nj;
+int process;
 
 int wave_type = 1; // 0-> Plane Wave; 1-> Gaussian Beam; 
 					//2->Laguerre-Gaussian Beam; 
@@ -485,7 +486,7 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
  FILE *fo;
  
  
- fo=fopen("Out3.txt","w");
+ fo=fopen(("Out"+to_string(process)+".txt").c_str(),"w");
  //fprintf(fo,"t	 x		 y      z	   px		 py		  pz	 gamma\n");
  h=T/N; 
  
@@ -583,7 +584,9 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 }
 
 
-int run_theory3(){ 
+int run_theory3(int process_in){ 
+
+	process = process_in;
 
 	double p01, p02, p03, x01, x02, x03;
   	double T; 
@@ -592,7 +595,7 @@ int run_theory3(){
 
 	char trash[128];
  
-	foo=fopen("InputToBatch.txt","r");
+	foo=fopen(("InputToBatch"+to_string(process)+".txt").c_str(),"r");
 	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %i %lf %lf %lf %lf %lf %lf %lf %lf %i %i", 
 				trash, &x01, &x02, &x03, &p01, &p02, &p03, &kdamp, &T, &N, &pri, &dx, 
 				&wave_type, &tfwhm, &stable, &Eo, &delta, &w0, &lambda, &n, &eta, &l, &p);
@@ -609,6 +612,8 @@ int run_theory3(){
  	}
  	w=k;
  	zr = M_PI*w0*w0*n/lambda;
+
+ 	if(kdamp == 0) run_kdamp = false;
 
  	RK(T, N, p01, p02, p03, x01, x02, x03);
 

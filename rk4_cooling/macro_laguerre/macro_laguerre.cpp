@@ -20,6 +20,8 @@ int main(int argc, char **argv){
 
 	clock_t c1 = clock();
 
+	int process;
+
 	double px0 = -2000;
 	double kdamp = 0;
 	double T = 120;
@@ -34,13 +36,18 @@ int main(int argc, char **argv){
 	double lambda = 1;
 
 	int l, p;
-	if(argc == 4){
-		sscanf(argv[1], "%i", &l);
-		sscanf(argv[2], "%i", &p);
-		sscanf(argv[3], "%lf", &px0);
+	if(argc == 5){
+		sscanf(argv[1], "%i", &process);
+		sscanf(argv[2], "%i", &l);
+		sscanf(argv[3], "%i", &p);
+		sscanf(argv[4], "%lf", &px0);
 	}else{
-		l = 0;
-		p = 0;
+		cout << "ARGUMENT ERROR!" << argc << endl;
+		cout << argv[0] << endl;
+		cout << argv[1] << endl;
+		cout << argv[2] << endl;
+		cout << argv[3] << endl;
+		return 1;
 	}
 
 	time_t start_time = chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -50,9 +57,9 @@ int main(int argc, char **argv){
     int n_cols, n_points;
 	double** values;
 
-	double y_min = -20;
-	double y_max = 20;
-	double dy = 0.5;
+	double y_min = -5;//-20;
+	double y_max = 5;//20;
+	double dy = 5;//10;
 	double y = y_min;
 
 	double z_min = y_min;
@@ -61,12 +68,12 @@ int main(int argc, char **argv){
 	double z = z_min;
 
 	FILE *input, *output;
-/*
+
 	DataSet X(1);
 	DataSet Y(1);
 	DataSet Z(1);
-*/
-	output = fopen(("Output_wv3_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
+
+	output = fopen(("Output_wv3_l"+to_string(l)+"p"+to_string(p)+"_px"+to_string(px0)+".txt").c_str(),"w");
 	//output = fopen("teste","w");
 	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tp_z_max\tE_f\tL_x_max\tL_x_f\t"); 
 	fprintf(output, "px0=%.10e|", px0);	//p01
@@ -87,7 +94,7 @@ int main(int argc, char **argv){
 	while(y <= y_max){
 		z = z_min;
 		while(z <= z_max){
-			input = fopen("InputToBatch.txt","w");
+			input = fopen(("InputToBatch"+to_string(process)+".txt").c_str(),"w");
 			fprintf(input, "trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p\n"); 
 			fprintf(input, "%.10e\n", 0.);	//x01
 			fprintf(input, "%.10e\n", y);	//x02
@@ -113,9 +120,9 @@ int main(int argc, char **argv){
 			fprintf(input, "%i", p);	//p
 			fclose(input);
 
-			run_theory3();
+			run_theory3(process);
 
-			values = ReadFile("Out3.txt", &n_cols, &n_points, false, false);
+			values = ReadFile(("Out"+to_string(process)+".txt").c_str(), &n_cols, &n_points, false, false);
 			// <Out3.txt> t x y z px py pz gamma
 
 			fprintf(output, "\n");
@@ -136,11 +143,11 @@ int main(int argc, char **argv){
 			fprintf(output, "%.10e\t", L_X.getMax().val());	// L_x_max
 			fprintf(output, "%.10e", L_X[-1].val());	// L_x_f
 
-			/*
+			
 			X = X.concat(DataSet(n_points, values[1]));
 			Y = Y.concat(DataSet(n_points, values[2]));
 			Z = Z.concat(DataSet(n_points, values[3]));
-			*/
+			
 			
 			progress++;
 			printf("\rSTEP %i of %i  |  %.5lf %%  |  RUN = %.3lf s  |  TIME LEFT = %.2lf min      ", progress, 

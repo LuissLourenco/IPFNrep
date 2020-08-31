@@ -110,6 +110,16 @@ class DataSet{
 					res = var[i];
 			return res;
 		}
+		int getMaxI(){
+			Var res = var[0];
+			int resi = 0;
+			for(int i = 1; i < n; i++)
+				if(var[i] > res){
+					res = var[i];
+					resi = i;
+				}
+			return resi;
+		}
 		Var getMin(){
 			Var res = var[0];
 			for(int i = 1; i < n; i++)

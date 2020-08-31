@@ -1,57 +1,20 @@
+#!/bin/bash
+
+# NEEDS TO BE RUN WITH bash macro_laguerre.sh
+
 g++ -o2 macro_laguerre.cpp -lm -o macro_laguerre `root-config --cflags --glibs`
 
-<<COMMENT
-USE THIS SINTAX TO COMMENT
-#fmriofergnue
-COMMENT
+PX=-2000
+KDAMP=1.18E-8
 
-<<MOOD
-# RAFA 1
-./macro_laguerre 0 0 -0
-./macro_laguerre 0 1 -0
-./macro_laguerre 0 2 -0
-./macro_laguerre 0 3 -0
+PROCESS=0
+for l in {1..3}			# RUN FOR RAFAEL
+#for l in {0..0} 		# RUN FOR LUIS
+do
+	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 0 $PX $KDAMP;	./macro_laguerre $PROCESS $l 1 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+	let "PROCESS= $PROCESS + 1"
+	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 2 $PX $KDAMP;	./macro_laguerre $PROCESS $l 3 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+	let "PROCESS= $PROCESS + 1"
+done
 
-# RAFA 2
-./macro_laguerre 1 0 -0
-./macro_laguerre 1 1 -0
-./macro_laguerre 1 2 -0
-./macro_laguerre 1 3 -0
-
-# RAFA 3
-./macro_laguerre 2 0 -0
-./macro_laguerre 2 1 -0
-./macro_laguerre 2 2 -0
-./macro_laguerre 2 3 -0
-
-# RAFA 4
-./macro_laguerre 3 0 -0
-./macro_laguerre 3 1 -0
-./macro_laguerre 3 2 -0
-./macro_laguerre 3 3 -0
-MOOD
-
-# LUIS 1
-./macro_laguerre 0 0 -2000
-./macro_laguerre 0 1 -2000
-./macro_laguerre 0 2 -2000
-./macro_laguerre 0 3 -2000
-
-# LUIS 2
-#./macro_laguerre 1 0 -2000
-#./macro_laguerre 1 1 -2000
-#./macro_laguerre 1 2 -2000
-#./macro_laguerre 1 3 -2000
-
-# LUIS 3
-#./macro_laguerre 2 0 -2000
-#./macro_laguerre 2 1 -2000
-#./macro_laguerre 2 2 -2000
-#./macro_laguerre 2 3 -2000
-
-# LUIS 4
-#./macro_laguerre 3 0 -2000
-#./macro_laguerre 3 1 -2000
-#./macro_laguerre 3 2 -2000
-#./macro_laguerre 3 3 -2000
 

@@ -1,7 +1,7 @@
-trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p
+trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p
 0.0000000000e+00
-2.0000000000e+01
-2.0000000000e+01
+-2.0000000000e+01
+-1.9000000000e+01
 -2.0000000000e+03
 0.0000000000e+00
 0.0000000000e+00
@@ -9,7 +9,6 @@ trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|wave_type|tfwhm|stable|E0|delt
 1.2000000000e+02
 100000
 100
-5.0000000000e-03
 5.0000000000e-03
 3
 5.0000000000e+01
@@ -20,5 +19,5 @@ trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|wave_type|tfwhm|stable|E0|delt
 1.0000000000e+00
 1.0000000000e+00
 1.0000000000e+00
-0
+3
 3

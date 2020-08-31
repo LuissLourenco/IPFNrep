@@ -88,7 +88,7 @@ int main(int argc, char **argv){
 		z = z_min;
 		while(z <= z_max){
 			input = fopen("InputToBatch.txt","w");
-			fprintf(input, "trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|dy|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p\n"); 
+			fprintf(input, "trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|wave_type|tfwhm|stable|E0|delta|w0|lambda|n|eta|l|p\n"); 
 			fprintf(input, "%.10e\n", 0.);	//x01
 			fprintf(input, "%.10e\n", y);	//x02
 			fprintf(input, "%.10e\n", z);	//x03
@@ -100,7 +100,6 @@ int main(int argc, char **argv){
 			fprintf(input, "%i\n", N);	//N
 			fprintf(input, "%i\n", pri);	//pri
 			fprintf(input, "%.10e\n", 5E-3);	//dx
-			fprintf(input, "%.10e\n", 5E-3);	//dy
 			fprintf(input, "%i\n", wave_type);	//wave_type
 			fprintf(input, "%.10e\n", tfwhm);	//tfwhm
 			fprintf(input, "%.10e\n", stable);	//stable

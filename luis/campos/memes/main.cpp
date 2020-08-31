@@ -48,7 +48,28 @@ double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3) return 0;
+ if(wave_type == 3){ //return 0;
+ 	double r = sqrt(y*y+z*z);
+	double phi = atan2(y,z);;
+ 	double arg = w*(t+0.75)-k*x-l*phi;
+ 	
+ 	double amp = Eo * exp(-r*r/w0/w0);
+ 	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
+ 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
+
+ 	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
+ 	if(p!=0){
+ 		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
+ 		amp += 2.*amp3;
+ 	}
+ 	res *= amp;
+ 	if(l!=0){
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		res += amp2*(-abs(l)*cos(arg)*sin(phi) -l*sin(arg)*cos(phi));
+ 	}
+
+ 	return res*Envelope(x,t);
+ }
  else return 0.;
 }
 
@@ -56,7 +77,28 @@ double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3) return 0;
+ if(wave_type == 3){ 
+ 	double r = sqrt(y*y+z*z);
+	double phi = atan2(y,z);
+ 	double arg = w*t-k*x-l*phi; 
+ 	
+ 	double amp = Eo * exp(-r*r/w0/w0);
+ 	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
+ 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
+
+ 	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
+ 	if(p!=0){
+ 		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
+ 		amp += 2.*amp3;
+ 	}
+ 	res *= amp;
+ 	if(l!=0){
+ 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
+ 		res += amp2*w*(abs(l)*sin(arg)*sin(phi) -l*cos(arg)*cos(phi));
+ 	}
+
+ 	return res*Envelope(x,t);
+ }
  else return 0.;
 }
 
@@ -86,7 +128,7 @@ double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
  	res *= sin(arg);
  	return res*Envelope(x,t);
  }
- if(wave_type==3){
+ if(wave_type==3){ return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double arg = w*t-k*x-l*phi;
@@ -127,7 +169,7 @@ double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
  	res *= cos(arg);
  	return res*Envelope(x,t);
  }
- if(wave_type==3){
+ if(wave_type==3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double arg = w*t-k*x-l*phi;
@@ -162,7 +204,7 @@ double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ 
+ if(wave_type == 3){ //return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -272,7 +314,7 @@ double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
 	res = cos(w*t-k*x)*(A1_re+A2_re+A3_re) - sin(w*t-k*x)*(A1_im+A2_im+A3_im);
  	return res*Envelope(x,t);
  }
- if(wave_type==3){
+ if(wave_type==3){ //return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double arg = w*t-k*x-l*phi;
@@ -548,12 +590,12 @@ double teste(double*x,double*par){
 	//a2 = pow(curlEf(par[0],x[0],x[1])[1]+DerBfy(par[0],x[0],x[1]),2);
 	//a3 = pow(curlEf(par[0],x[0],x[1])[2]+DerBfz(par[0],x[0],x[1]),2);
 	//check curlB
-	a1 = pow( curlBf(par[0],x[0],x[1])[0]-DerEfx(par[0],x[0],x[1]) ,2);
-	a2 = pow( curlBf(par[0],x[0],x[1])[1]-DerEfy(par[0],x[0],x[1]) ,2);
-	a3 = pow( curlBf(par[0],x[0],x[1])[2]-DerEfz(par[0],x[0],x[1]) ,2);
-	return a1+a2+a3;
+	//a1 = pow( curlBf(par[0],x[0],x[1])[0]-DerEfx(par[0],x[0],x[1]) ,2);
+	//a2 = pow( curlBf(par[0],x[0],x[1])[1]-DerEfy(par[0],x[0],x[1]) ,2);
+	//a3 = pow( curlBf(par[0],x[0],x[1])[2]-DerEfz(par[0],x[0],x[1]) ,2);
+	//return sqrt(a1+a2+a3);
 
-	//return divEf(par[0],x[0],x[1]);
+	return divEf(par[0],x[0],x[1]);
 	//return divBf(par[0],x[0],x[1]);
 }
 

@@ -67,11 +67,11 @@ int main(int argc, char **argv){
 	double z = z_min;
 
 	FILE *input, *output;
-
+	/*
 	DataSet X(1);
 	DataSet Y(1);
 	DataSet Z(1);
-
+	*/
 	output = fopen(("Output_wv3_l"+to_string(l)+"p"+to_string(p)+"_px"+to_string(px0)+".txt").c_str(),"w");
 	//output = fopen("teste","w");
 	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tp_z_max\tE_f\tL_x_max\tL_x_f\t"); 
@@ -142,11 +142,11 @@ int main(int argc, char **argv){
 			fprintf(output, "%.10e\t", L_X.getMax().val());	// L_x_max
 			fprintf(output, "%.10e", L_X[-1].val());	// L_x_f
 
-			
+			/*
 			X = X.concat(DataSet(n_points, values[1]));
 			Y = Y.concat(DataSet(n_points, values[2]));
 			Z = Z.concat(DataSet(n_points, values[3]));
-			
+			*/
 			
 			progress++;
 			printf("\rSTEP %i of %i  |  %.5lf %%  |  RUN = %.3lf s  |  TIME LEFT = %.2lf min      ", progress, 
@@ -166,7 +166,7 @@ int main(int argc, char **argv){
 
 	cout << endl << "Saved file <Output_wv3_l" << l << "p" << p << "_px" << to_string(px0) << ".txt>" << endl;
 
-	
+	/*
     TApplication* MyRootApp;
 	MyRootApp = new TApplication("MyRootApp", NULL, NULL);
 
@@ -180,7 +180,8 @@ int main(int argc, char **argv){
 	ca1->SaveAs("Laguerre_Trajectories.png");
 
 	MyRootApp->Run();
-	
+	*/
+
 	return 0;
 
 }

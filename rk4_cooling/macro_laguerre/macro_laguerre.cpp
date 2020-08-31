@@ -133,8 +133,12 @@ int main(int argc, char **argv){
 			fprintf(output, "%.10e\t", values[4][n_points-1]);	// px_f
 			fprintf(output, "%.10e\t", values[5][n_points-1]);	// py_f
 			fprintf(output, "%.10e\t", values[6][n_points-1]);	// pz_f
-			fprintf(output, "%.10e\t", (abs(DataSet(n_points, values[5]))).getMax().val());	// p_y_max
-			fprintf(output, "%.10e\t", (abs(DataSet(n_points, values[6]))).getMax().val());	// p_z_max
+
+			DataSet PPERP = DataSet(n_points, values[5])*DataSet(n_points, values[5])+DataSet(n_points, values[6])*DataSet(n_points, values[6]);
+			int pperpmaxi = PPERP.getMaxI();
+
+			fprintf(output, "%.10e\t", DataSet(n_points, values[5])[pperpmaxi].val());	// p_y_max
+			fprintf(output, "%.10e\t", DataSet(n_points, values[6])[pperpmaxi].val());	// p_z_max
 			fprintf(output, "%.10e\t", sqrt(1 + values[4][n_points-1]*values[4][n_points-1]
 											+ values[5][n_points-1]*values[5][n_points-1]
 											+ values[6][n_points-1]*values[6][n_points-1]));	// E_f

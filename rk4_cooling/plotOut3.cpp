@@ -7,12 +7,12 @@ void plotOut3(){
 	char trash[128];
 	double x01,x02,x03,p01,p02,p03, kdamp, T;
 	long long int N; int pri;
-	double dx, dy; int wave_type;
+	double dx; int wave_type;
 	double tfwhm, stable, Eo, delta, w0, lambda, n, eta;
 	int l,p;
 	foo=fopen("InputToBatch.txt","r");
-	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %lf %i %lf %lf %lf %lf %lf %lf %lf %lf %i %i", 
-				trash, &x01, &x02, &x03, &p01, &p02, &p03, &kdamp, &T, &N, &pri, &dx, &dy, 
+	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %i %lf %lf %lf %lf %lf %lf %lf %lf %i %i", 
+				trash, &x01, &x02, &x03, &p01, &p02, &p03, &kdamp, &T, &N, &pri, &dx, 
 				&wave_type, &tfwhm, &stable, &Eo, &delta, &w0, &lambda, &n, &eta, &l, &p);
 	fclose(foo);
 
@@ -46,10 +46,7 @@ void plotOut3(){
 	graph_y2->SetMarkerColor(kRed);
 	graph_p2->SetMarkerColor(kRed);
 
-	graph_y2->GetZaxis()->SetRange(-1,1);
-	graph_p2->GetZaxis()->SetRangeUser(-1,1);
-
-	graph_y2->GetYaxis()->SetRangeUser(0, 5.5);
+	
 
 	TCanvas* c1 = new TCanvas("c1", (string("wave_type=")+to_string(wave_type)).c_str(), 1500, 1000);
 	c1->Divide(2, 1);	
@@ -59,6 +56,9 @@ void plotOut3(){
 	c1->cd(2);
 	//graph_p->Draw("AP");
 	graph_p2->Draw("P");
+
+
+	graph_y2->GetZaxis()->SetRange(-10,10);
 
 	c1->SaveAs("Plot.png");
 }

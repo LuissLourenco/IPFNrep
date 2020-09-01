@@ -78,7 +78,18 @@ double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3) return 0;
+ if(wave_type == 3){ 
+ 	double r = sqrt(y*y+z*z);
+	double phi = atan2(y,z);
+ 	double arg = (-M_PI+l*M_PI/2)-w*t-k*x-l*phi;
+ 	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
+ 	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
+ 	double amp2=amp;
+ 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
+ 	res*=amp2;
+ 	if(l!=0)res += -abs(l)*amp/r*cos(arg)*sin(phi)-l*amp/r*sin(arg)*cos(phi);
+ 	return res*Envelope(x,t);
+ }
  else return 0.;
 }
 
@@ -86,7 +97,18 @@ double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3) return 0;
+ if(wave_type == 3){
+ 	double r = sqrt(y*y+z*z);
+	double phi = atan2(y,z);
+ 	double arg = (-M_PI+l*M_PI/2)-w*t-k*x-l*phi;
+ 	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
+ 	double res = 2.*r/w0/w0 * w*sin(arg)*sin(phi);
+ 	double amp2=amp;
+ 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
+ 	res*=amp2;
+ 	if(l!=0)res += -abs(l)*amp/r*w*sin(arg)*sin(phi)+l*amp/r*w*cos(arg)*cos(phi);
+ 	return res*Envelope(x,t);
+ }
  else return 0.;
 }
 
@@ -116,7 +138,7 @@ double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
  	res *= sin(arg);
  	return res*Envelope(x,t);
  }
- if(wave_type==3){
+ if(wave_type==3){ //return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double arg = w*t-k*x-l*phi;
@@ -157,7 +179,7 @@ double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
  	res *= cos(arg);
  	return res*Envelope(x,t);
  }
- if(wave_type==3){
+ if(wave_type==3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double arg = w*t-k*x-l*phi;
@@ -192,26 +214,16 @@ double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ 
+ if(wave_type == 3){ //return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	
- 	double amp = Eo * exp(-r*r/w0/w0);
- 	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
- 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
-
+ 	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
  	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
- 	if(p!=0){
- 		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
- 		amp += 2.*amp3;
- 	}
- 	res *= amp;
- 	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
- 		res += amp2*(-abs(l)*cos(arg)*sin(phi) -l*sin(arg)*cos(phi));
- 	}
-
+ 	double amp2=amp;
+ 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
+ 	res*=amp2;
+ 	if(l!=0)res += -abs(l)*amp/r*cos(arg)*sin(phi)-l*amp/r*sin(arg)*cos(phi);
  	return res*Envelope(x,t);
  }
 
@@ -226,22 +238,12 @@ double DerBfx(double x, double y, double z){ //Bx time derivative at (x,y,z)
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
- 	
- 	double amp = Eo * exp(-r*r/w0/w0);
- 	if(l!=0) amp*= pow(r*sqrt(2.)/w0 , abs(l));
- 	if(l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0);
-
+ 	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
  	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
- 	if(p!=0){
- 		double amp3 = Eo * exp(-r*r/w0/w0) * pow(r*sqrt(2.)/w0 , abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/w0/w0); //com Laguerre_(p-1)_(l+1)
- 		amp += 2.*amp3;
- 	}
- 	res *= amp;
- 	if(l!=0){
- 		double amp2 = Eo * exp(-r*r/w0/w0) * pow(sqrt(2.)/w0 , abs(l)) * pow(r, abs(l)-1) * assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); //com r^(|l|-1)
- 		res += amp2*w*(abs(l)*sin(arg)*sin(phi) -l*cos(arg)*cos(phi));
- 	}
-
+ 	double amp2=amp;
+ 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
+ 	res*=amp2;
+ 	if(l!=0)res += abs(l)*amp/r*w*sin(arg)*sin(phi)-l*amp/r*w*cos(arg)*cos(phi);
  	return res*Envelope(x,t);
  }
  else return 0.;
@@ -302,7 +304,7 @@ double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
 	res = cos(w*t-k*x)*(A1_re+A2_re+A3_re) - sin(w*t-k*x)*(A1_im+A2_im+A3_im);
  	return res*Envelope(x,t);
  }
- if(wave_type==3){
+ if(wave_type==3){ //eturn 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double arg = w*t-k*x-l*phi;
@@ -356,22 +358,21 @@ double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
 
 	res = -w*sin(w*t-k*x)*(A1_re+A2_re+A3_re) - w*cos(w*t-k*x)*(A1_im+A2_im+A3_im);
  	return res*Envelope(x,t);
- }
- if(wave_type==3){
- 	double r = sqrt(y*y+z*z);
-	double phi = atan2(z,y);
-	double arg = w*t-k*x-l*phi;
-	double amp=1;
-	amp *= Eo;
-	amp *= exp(-r*r/w0/w0);
-	if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
-	if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
- 	double res = k*w*amp*cos(arg); 
- 	return res*Envelope(x,t);
- } 
- else return 0.;
-}
-
+	 }
+	 if(wave_type==3){
+	 	double r = sqrt(y*y+z*z);
+		double phi = atan2(z,y);
+		double arg = w*t-k*x-l*phi;
+		double amp=1;
+		amp *= Eo;
+		amp *= exp(-r*r/w0/w0);
+		if(l!=0) amp *= pow(r*sqrt(2.)/w0 , abs(l));
+		if (l!=0 || p!=0) amp *= assoc_laguerre(abs(p), abs(l), 2.*r*r/w0/w0); 	
+	 	double res = k*w*amp*cos(arg); 
+	 	return res*Envelope(x,t);
+	 } 
+	 else return 0.;
+	}
 
 
 

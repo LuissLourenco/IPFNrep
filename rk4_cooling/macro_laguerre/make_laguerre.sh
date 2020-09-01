@@ -8,8 +8,8 @@ PX=-2000
 KDAMP=1.18E-8
 
 PROCESS=0
-for l in {1..3}			# RUN FOR RAFAEL
-#for l in {0..0} 		# RUN FOR LUIS
+#for l in {1..3}			# RUN FOR RAFAEL
+for l in {0..0} 		# RUN FOR LUIS
 do
 	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 0 $PX $KDAMP;	./macro_laguerre $PROCESS $l 1 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 	let "PROCESS= $PROCESS + 1"

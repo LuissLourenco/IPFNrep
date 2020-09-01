@@ -67,12 +67,14 @@ int main(int argc, char **argv){
 	double z = z_min;
 
 	FILE *input, *output;
+	
 	/*
 	DataSet X(1);
 	DataSet Y(1);
 	DataSet Z(1);
 	*/
-	output = fopen(("Output_wv3_l"+to_string(l)+"p"+to_string(p)+"_px"+to_string(px0)+".txt").c_str(),"w");
+	
+	output = fopen(("Output_wv3_p"+to_string(p)+"l"+to_string(l)+"_px"+to_string(px0)+".txt").c_str(),"w");
 	//output = fopen("teste","w");
 	fprintf(output, "y\tz\tx_f\ty_f\tz_f\tpx_f\tpy_f\tpz_f\tp_y_max\tp_z_max\tE_f\tL_x_max\tL_x_f\t"); 
 	fprintf(output, "px0=%.10e|", px0);	//p01
@@ -168,7 +170,7 @@ int main(int argc, char **argv){
 
 	fclose(output);
 
-	cout << endl << "Saved file <Output_wv3_l" << l << "p" << p << "_px" << to_string(px0) << ".txt>" << endl;
+	cout << endl << "Saved file <Output_wv3_p" << p << "l" << l << "_px" << to_string(px0) << ".txt>" << endl;
 
 	/*
     TApplication* MyRootApp;

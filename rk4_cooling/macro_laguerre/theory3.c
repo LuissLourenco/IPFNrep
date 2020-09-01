@@ -401,38 +401,40 @@ void calculate_optimizer(double x, double y, double z){
 	dtBf[2] = DerBfz(x, y, z);
 
 	dxEf[0] = (Efx(x+dx,y,z)-Efx(x-dx,y,z))/(2*dx);
-	dxEf[1] = (Efz(x+dx,y,z)-Efz(x-dx,y,z))/(2*dx);
-	dxEf[2] = (Efx(x+dx,y,z)-Efx(x-dx,y,z))/(2*dx);
+	dxEf[1] = (Efy(x+dx,y,z)-Efy(x-dx,y,z))/(2*dx);
+	dxEf[2] = (Efz(x+dx,y,z)-Efz(x-dx,y,z))/(2*dx);
 	
 	dyEf[0] = (Efx(x,y+dy,z)-Efx(x,y-dy,z))/(2*dy);
-	dyEf[1] = (Efz(x,y+dy,z)-Efz(x,y-dy,z))/(2*dy);
-	dyEf[2] = (Efx(x,y+dy,z)-Efx(x,y-dy,z))/(2*dy);
+	dyEf[1] = (Efy(x,y+dy,z)-Efy(x,y-dy,z))/(2*dy);
+	dyEf[2] = (Efz(x,y+dy,z)-Efz(x,y-dy,z))/(2*dy);
 	
 	dzEf[0] = (Efx(x,y,z+dz)-Efx(x,y,z-dz))/(2*dz);
-	dzEf[1] = (Efz(x,y,z+dz)-Efz(x,y,z-dz))/(2*dz);
-	dzEf[2] = (Efx(x,y,z+dz)-Efx(x,y,z-dz))/(2*dz);
+	dzEf[1] = (Efy(x,y,z+dz)-Efy(x,y,z-dz))/(2*dz);
+	dzEf[2] = (Efz(x,y,z+dz)-Efz(x,y,z-dz))/(2*dz);
 
 
 	dxBf[0] = (Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx);
-	dxBf[1] = (Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx);
-	dxBf[2] = (Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx);
+	dxBf[1] = (Bfy(x+dx,y,z)-Bfy(x-dx,y,z))/(2*dx);
+	dxBf[2] = (Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx);
 	
 	dyBf[0] = (Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy);
-	dyBf[1] = (Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy);
-	dyBf[2] = (Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy);
+	dyBf[1] = (Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy);
+	dyBf[2] = (Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy);
 	
 	dzBf[0] = (Bfx(x,y,z+dz)-Bfx(x,y,z-dz))/(2*dz);
-	dzBf[1] = (Bfz(x,y,z+dz)-Bfz(x,y,z-dz))/(2*dz);
-	dzBf[2] = (Bfx(x,y,z+dz)-Bfx(x,y,z-dz))/(2*dz);
+	dzBf[1] = (Bfy(x,y,z+dz)-Bfy(x,y,z-dz))/(2*dz);
+	dzBf[2] = (Bfz(x,y,z+dz)-Bfz(x,y,z-dz))/(2*dz);
 }
 
 
 double fun1( double px,double py,double pz,double x,double y, double z){   //  dpx/dt
 	if(run_kdamp){
 		double res,A,B,C,D;
-		//A=gam*DerEfx(x,y,z)+px*(Efx(x+dx,y,z)-Efx(x-dx,y,z))/(2*dx)+py*(Efx(x,y+dy,z)-Efx(x,y-dy,z))/(2*dy)+py*DerBfz(x,y,z)-pz*DerBfy(x,y,z);
-		//B=py*px*(Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx*gam)+py*py*(Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy*gam)-pz*px*(Bfy(x+dx,y,z)-Bfy(x-dx,y,z))/(2*dx*gam)-pz*py*(Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy*gam);
-		/*
+		/*A=gam*DerEfx(x,y,z)+
+		px*(Efx(x+dx,y,z)-Efx(x-dx,y,z))/(2*dx)+
+		py*(Efx(x,y+dy,z)-Efx(x,y-dy,z))/(2*dy)+
+		py*DerBfz(x,y,z)-pz*DerBfy(x,y,z);
+
 		A  = gam*DerEfx(x,y,z);
 		A += px*(Efx(x+dx,y,z)-Efx(x-dx,y,z))/(2*dx);
 		A += py*(Efx(x,y+dy,z)-Efx(x,y-dy,z))/(2*dy);
@@ -444,7 +446,13 @@ double fun1( double px,double py,double pz,double x,double y, double z){   //  d
 		A += py*dyEf[0];
 		A += pz*dzEf[0];
 		A += py*dtBf[2]-pz*dtBf[1];
-		/*
+		
+
+		/*B=py*px*(Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx*gam)+
+		py*py*(Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy*gam)-
+		pz*px*(Bfy(x+dx,y,z)-Bfy(x-dx,y,z))/(2*dx*gam)-
+		pz*py*(Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy*gam);
+
 		B  = py*px*(Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx*gam);
 		B += py*py*(Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy*gam);
 		B += py*pz*(Bfz(x,y,z+dz)-Bfz(x,y,z-dz))/(2*dz*gam);
@@ -452,8 +460,6 @@ double fun1( double px,double py,double pz,double x,double y, double z){   //  d
 		B -= pz*py*(Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy*gam);
 		B -= pz*pz*(Bfy(x,y,z+dz)-Bfy(x,y,z-dz))/(2*dz*gam);
 		*/
-
-
 		B  = py*px/gam*dxBf[2];
 		B += py*py/gam*dyBf[2];
 		B += py*pz/gam*dzBf[2];
@@ -477,9 +483,11 @@ double fun1( double px,double py,double pz,double x,double y, double z){   //  d
 double fun2( double px,double py,double pz,double x,double y, double z){   //  dpy/dt
 	if(run_kdamp){
 		double res,A,B,C,D;
-		//A=gam*DerEfy(x,y,z)+px*(Efy(x+dx,y,z)-Efy(x-dx,y,z))/(2*dx)+py*(Efy(x,y+dy,z)-Efy(x,y-dy,z))/(2*dy)+pz*DerBfx(x,y,z)-px*DerBfz(x,y,z);
-		//B=pz*px*(Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx*gam)+pz*py*(Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy*gam)-px*px*(Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx*gam)-px*py*(Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy*gam);
-		/*
+		/*A=gam*DerEfy(x,y,z)+
+		px*(Efy(x+dx,y,z)-Efy(x-dx,y,z))/(2*dx)+
+		py*(Efy(x,y+dy,z)-Efy(x,y-dy,z))/(2*dy)+
+		pz*DerBfx(x,y,z)-px*DerBfz(x,y,z);
+		
 		A  = gam*DerEfy(x,y,z);
 		A += px*(Efy(x+dx,y,z)-Efy(x-dx,y,z))/(2*dx);
 		A += py*(Efy(x,y+dy,z)-Efy(x,y-dy,z))/(2*dy);
@@ -490,8 +498,13 @@ double fun2( double px,double py,double pz,double x,double y, double z){   //  d
 		A += px*dxEf[1];
 		A += py*dyEf[1];
 		A += pz*dzEf[1];
-		A += py*dtBf[0]-pz*dtBf[2];
-		/*
+		A += pz*dtBf[0]-px*dtBf[2];
+		
+
+		/*B=pz*px*(Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx*gam)+
+		pz*py*(Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy*gam)-
+		px*px*(Bfz(x+dx,y,z)-Bfz(x-dx,y,z))/(2*dx*gam)-px*py*(Bfz(x,y+dy,z)-Bfz(x,y-dy,z))/(2*dy*gam);
+
 		B  = pz*px*(Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx*gam);
 		B += pz*py*(Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy*gam);
 		B += pz*pz*(Bfx(x,y,z+dz)-Bfx(x,y,z-dz))/(2*dz*gam);
@@ -500,18 +513,18 @@ double fun2( double px,double py,double pz,double x,double y, double z){   //  d
 		B -= px*pz*(Bfz(x,y,z+dz)-Bfz(x,y,z-dz))/(2*dz*gam);
 		*/
 
-		B  = py*px/gam*dxBf[0];
-		B += py*py/gam*dyBf[0];
-		B += py*pz/gam*dzBf[0];
-		B -= pz*px/gam*dxBf[2];
-		B -= pz*py/gam*dyBf[2];
-		B -= pz*pz/gam*dzBf[2];
+		B  = pz*px/gam*dxBf[0];
+		B += pz*py/gam*dyBf[0];
+		B += pz*pz/gam*dzBf[0];
+		B -= px*px/gam*dxBf[2];
+		B -= px*py/gam*dyBf[2];
+		B -= px*pz/gam*dzBf[2];
 
 		//C=Efz(x,y,z)*Bfx(x,y,z)-Efx(x,y,z)*Bfz(x,y,z)+(Bfz(x,y,z)*Bfy(x,y,z)*pz-Bfz(x,y,z)*Bfz(x,y,z)*py-Bfx(x,y,z)*Bfx(x,y,z)*py+Bfx(x,y,z)*Bfy(x,y,z)*px)/gam;
 		//D=Efy(x,y,z)*pE/gam+py*pE*pE/gam-gam*py*(Fx*Fx+Fy*Fy+Fz*Fz);
 
-		C=Ef[2]*Bf[0]-Ef[0]*Bf[2]+(Bf[2]*Bf[1]*py-Bf[2]*Bf[2]*px-Bf[0]*Bf[0]*px+Bf[0]*Bf[1]*pz)/gam;
-		D=Ef[1]*pE/gam+px*pE*pE/gam-gam*px*(Fx*Fx+Fy*Fy+Fz*Fz);
+		C=Ef[2]*Bf[0]-Ef[0]*Bf[2]+(Bf[2]*Bf[1]*pz-Bf[2]*Bf[2]*py-Bf[0]*Bf[0]*py+Bf[0]*Bf[1]*px)/gam;
+		D=Ef[1]*pE/gam+py*pE*pE/gam-gam*py*(Fx*Fx+Fy*Fy+Fz*Fz);
 
 		res=Fy+kdamp*(A+B+C+D);
 		return res;
@@ -521,9 +534,10 @@ double fun2( double px,double py,double pz,double x,double y, double z){   //  d
 double fun3( double px,double py,double pz,double x,double y, double z){   //  dpz/dt
 	if(run_kdamp){
 		double res,A,B,C,D;
-		//A=gam*DerEfz(x,y,z)+px*(Efz(x+dx,y,z)-Efz(x-dx,y,z))/(2*dx)+px*DerBfy(x,y,z)-py*DerBfx(x,y,z);
-		//B=px*px*(Bfy(x+dx,y,z)-Bfy(x-dx,y,z))/(2*dx*gam)+px*py*(Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy*gam)-py*px*(Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx*gam)-py*py*(Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy*gam);
-		/*
+		/*A=gam*DerEfz(x,y,z)+
+		px*(Efz(x+dx,y,z)-Efz(x-dx,y,z))/(2*dx)+
+		px*DerBfy(x,y,z)-py*DerBfx(x,y,z);
+		
 		A  = gam*DerEfz(x,y,z);
 		A += px*(Efz(x+dx,y,z)-Efz(x-dx,y,z))/(2*dx);
 		A += py*(Efz(x,y+dy,z)-Efz(x,y-dy,z))/(2*dy);
@@ -535,8 +549,14 @@ double fun3( double px,double py,double pz,double x,double y, double z){   //  d
 		A += px*dxEf[2];
 		A += py*dyEf[2];
 		A += pz*dzEf[2];
-		A += py*dtBf[1]-pz*dtBf[0];
-		/*
+		A += px*dtBf[1]-py*dtBf[0];
+		
+
+		/*B=px*px*(Bfy(x+dx,y,z)-Bfy(x-dx,y,z))/(2*dx*gam)+
+		px*py*(Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy*gam)-
+		py*px*(Bfx(x+dx,y,z)-Bfx(x-dx,y,z))/(2*dx*gam)-
+		py*py*(Bfx(x,y+dy,z)-Bfx(x,y-dy,z))/(2*dy*gam);
+		
 		B  = px*px*(Bfy(x+dx,y,z)-Bfy(x-dx,y,z))/(2*dx*gam);
 		B += px*py*(Bfy(x,y+dy,z)-Bfy(x,y-dy,z))/(2*dy*gam);
 		B += px*pz*(Bfy(x,y,z+dz)-Bfy(x,y,z-dz))/(2*dz*gam);
@@ -545,18 +565,18 @@ double fun3( double px,double py,double pz,double x,double y, double z){   //  d
 		B -= py*pz*(Bfx(x,y,z+dz)-Bfx(x,y,z-dz))/(2*dz*gam);
 		*/
 
-		B  = py*px/gam*dxBf[1];
-		B += py*py/gam*dyBf[1];
-		B += py*pz/gam*dzBf[1];
-		B -= pz*px/gam*dxBf[0];
-		B -= pz*py/gam*dyBf[0];
-		B -= pz*pz/gam*dzBf[0];
+		B  = px*px/gam*dxBf[1];
+		B += px*py/gam*dyBf[1];
+		B += px*pz/gam*dzBf[1];
+		B -= py*px/gam*dxBf[0];
+		B -= py*py/gam*dyBf[0];
+		B -= py*pz/gam*dzBf[0];
 		
 		//C=Efx(x,y,z)*Bfy(x,y,z)-Efy(x,y,z)*Bfx(x,y,z)+(Bfx(x,y,z)*Bfz(x,y,z)*px-Bfx(x,y,z)*Bfx(x,y,z)*pz-Bfy(x,y,z)*Bfy(x,y,z)*pz+Bfy(x,y,z)*Bfz(x,y,z)*py)/gam;
 		//D=Efz(x,y,z)*pE/gam+pz*pE*pE/gam-gam*pz*(Fx*Fx+Fy*Fy+Fz*Fz);
 
-		C=Ef[0]*Bf[1]-Ef[1]*Bf[0]+(Bf[0]*Bf[2]*py-Bf[0]*Bf[0]*px-Bf[1]*Bf[1]*px+Bf[1]*Bf[2]*pz)/gam;
-		D=Ef[0]*pE/gam+px*pE*pE/gam-gam*px*(Fx*Fx+Fy*Fy+Fz*Fz);
+		C=Ef[0]*Bf[1]-Ef[1]*Bf[0]+(Bf[0]*Bf[2]*px-Bf[0]*Bf[0]*pz-Bf[1]*Bf[1]*pz+Bf[1]*Bf[2]*py)/gam;
+		D=Ef[2]*pE/gam+pz*pE*pE/gam-gam*pz*(Fx*Fx+Fy*Fy+Fz*Fz);
 
 		res=Fz+kdamp*(A+B+C+D);
 		return res;

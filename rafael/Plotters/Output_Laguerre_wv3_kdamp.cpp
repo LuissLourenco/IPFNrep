@@ -305,8 +305,10 @@ int mood(string file, int p, int l, string bottom){
 
 int main(){
 
-	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_l1p0_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_l2p0_px-2000.000000" , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l0_px-2000.000000" , 0, 0, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	//mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_l1p0_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	//mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_l1p0_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	//mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_l2p0_px-2000.000000" , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 	
 }
 

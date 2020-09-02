@@ -50,14 +50,14 @@ double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 2) return 0;
  if(wave_type == 3){ //return 0;
  	double r = sqrt(y*y+z*z);
-	double phi = atan2(y,z);
- 	double arg = (-M_PI+l*M_PI/2)-w*t-k*x-l*phi;
+	double phi = atan2(z,y);
+ 	double arg = w*t-k*x-l*phi;
  	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
- 	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
- 	double amp2=amp;
- 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
- 	res*=amp2;
- 	if(l!=0)res += -abs(l)*amp/r*cos(arg)*sin(phi)-l*amp/r*sin(arg)*cos(phi);
+ 	double res = 2.*r/w0/w0*amp;
+ 	if(l!=0) res-= abs(l)*amp/r;
+ 	if(p!=0){double amp2 = Eo*exp(-r*r/w0/w0)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2 *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l)) : 1; res+=amp2*4*r/w0/w0;}
+ 	res *= cos(arg)*cos(phi);
+ 	if(l!=0) res+=l*amp/r*sin(arg)*sin(phi);
  	return res*Envelope(x,t);
  }
  else return 0.;
@@ -69,14 +69,14 @@ double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
  if(wave_type == 2) return 0;
  if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
-	double phi = atan2(y,z);
- 	double arg = (-M_PI+l*M_PI/2)-w*t-k*x-l*phi;
+	double phi = atan2(z,y);
+ 	double arg = w*t-k*x-l*phi;
  	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
- 	double res = 2.*r/w0/w0 * w*sin(arg)*sin(phi);
- 	double amp2=amp;
- 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
- 	res*=amp2;
- 	if(l!=0)res += -abs(l)*amp/r*w*sin(arg)*sin(phi)+l*amp/r*w*cos(arg)*cos(phi);
+ 	double res = 2.*r/w0/w0*amp;
+ 	if(l!=0) res-= abs(l)*amp/r;
+ 	if(p!=0){double amp2 = Eo*exp(-r*r/w0/w0)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2 *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l)) : 1; res+=amp2*4*r/w0/w0;}
+ 	res *= -w*sin(arg)*cos(phi);
+ 	if(l!=0) res+=w*l*amp/r*cos(arg)*sin(phi);
  	return res*Envelope(x,t);
  }
  else return 0.;
@@ -189,11 +189,11 @@ double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
  	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
- 	double res = 2.*r/w0/w0 * cos(arg)*sin(phi);
- 	double amp2=amp;
- 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
- 	res*=amp2;
- 	if(l!=0)res += -abs(l)*amp/r*cos(arg)*sin(phi)-l*amp/r*sin(arg)*cos(phi);
+ 	double res = 2.*r/w0/w0*amp;
+ 	if(l!=0) res-= abs(l)*amp/r;
+ 	if(p!=0){double amp2 = Eo*exp(-r*r/w0/w0)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2 *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l)) : 1; res+=amp2*4*r/w0/w0;}
+ 	res *= cos(arg)*sin(phi);
+ 	if(l!=0) res-=l*amp/r*sin(arg)*cos(phi);
  	return res*Envelope(x,t);
  }
 
@@ -209,11 +209,11 @@ double DerBfx(double x, double y, double z){ //Bx time derivative at (x,y,z)
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
  	double amp = Eo * exp(-r*r/w0/w0); amp *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : (p!=0) ? assoc_laguerre(p, abs(l), 2.*r*r/w0/w0) : 1;
- 	double res = -2.*r/w0/w0 * w*sin(arg)*sin(phi);
- 	double amp2=amp;
- 	if(p!=0){ double amp3=Eo*exp(-r*r/w0/w0)*pow(r*sqrt(2.)/w0 , abs(l))*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2+=2*amp3;}
- 	res*=amp2;
- 	if(l!=0)res += abs(l)*amp/r*w*sin(arg)*sin(phi)-l*amp/r*w*cos(arg)*cos(phi);
+ 	double res = 2.*r/w0/w0*amp;
+ 	if(l!=0) res-= abs(l)*amp/r;
+ 	if(p!=0){double amp2 = Eo*exp(-r*r/w0/w0)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/w0/w0); amp2 *= (l!=0) ? pow(r*sqrt(2.)/w0 , abs(l)) : 1; res+=amp2*4*r/w0/w0;}
+ 	res *= -w*sin(arg)*sin(phi);
+ 	if(l!=0) res-=w*l*amp/r*cos(arg)*cos(phi);
  	return res*Envelope(x,t);
  }
  else return 0.;
@@ -434,7 +434,7 @@ double teste(double*x,double*par){
 
 
 	//CHECK DIV,ROT
-	//return divEf(par[0],x[0],x[1]);
+	return divEf(par[0],x[0],x[1]);
 	//return divBf(par[0],x[0],x[1]);
 	//check curlE
 	//double a1,a2,a3;
@@ -452,14 +452,14 @@ double teste(double*x,double*par){
 	//CHECK TIME DERIVATIVES
 	//double b1 = DerEfx(par[0],x[0],x[1])-dt_Efx(par[0],x[0],x[1]);
 	//double b2 = DerEfy(par[0],x[0],x[1])-dt_Efy(par[0],x[0],x[1]);
-	//double b3 = DerEfz(par[0],x[0],x[1])-dt_Efz(par[0],x[0],x[1]);
+	//ouble b3 = DerEfz(par[0],x[0],x[1])-dt_Efz(par[0],x[0],x[1]);
 	//double b4 = DerBfx(par[0],x[0],x[1])-dt_Bfx(par[0],x[0],x[1]);
 	//double b5 = DerBfy(par[0],x[0],x[1])-dt_Bfy(par[0],x[0],x[1]);
 	//double b6 = DerBfz(par[0],x[0],x[1])-dt_Bfz(par[0],x[0],x[1]);
 	//return sqrt(b1*b1+b2*b2+b3*b3+b4*b4+b5*b5+b6*b6);
 
 
-	return Bfz(par[0],x[0],x[1]);
+	//return Bfz(par[0],x[0],x[1]);
 }
 
 
@@ -497,7 +497,7 @@ int main(int argc, char** argv){
 
 	int n_l=6; n_l=1;
 	int n_p=4; n_p=1;
-	int side=500;
+	int side=600;
 
 	auto f1 = new TF2**[n_p];
 	auto t1 = new TLatex**[n_p];
@@ -527,7 +527,7 @@ int main(int argc, char** argv){
 		t1[pi] = new TLatex*[n_l];
 		for(int li=0; li<n_l; li++){
 			f1[pi][li] = new TF2("",teste,-20,20,-20,20,1);
-			p=pi; l=li;
+			//p=pi; l=li;
 			p=pr; l=lr;
 			t=ti;
 			f1[pi][li]->SetParameter(0,0); //x
@@ -560,7 +560,7 @@ int main(int argc, char** argv){
 			double maxi = f1[0][0]->GetMaximum(), mini=f1[0][0]->GetMinimum();
 			cout<<"\33[2K\r";
 			cout<<"TIME: "<<t<<"\t\t"<<"pl="<<p<<l<<"\t\t( "<<MINI<<" , "<<MAXI<<" )";
-			//if(max(abs(mini), abs(maxi))>1e-7) cout<<"\t\t***NOT ZERO***";
+			if(max(abs(mini), abs(maxi))>1e-7) cout<<"\t\t***NOT ZERO***";
 			if(maxi>MAXI) MAXI = maxi;
 			if(mini<MINI) MINI = mini;
 			cout<<flush;

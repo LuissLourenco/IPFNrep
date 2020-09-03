@@ -62,7 +62,7 @@ int mood(string file, int p, int l, string bottom){
 	DataSet PYMAX(n_points, values[8]);
 	DataSet PZMAX(n_points, values[9]);
 
-	DataSet E(n_points, values[10]);
+	DataSet E = (DataSet(n_points, values[10]) - DataSet(n_points, 2000)) / DataSet(n_points, 2000/100);
 
 	DataSet LXMAX(n_points, values[11]);
 	DataSet LXF(n_points, values[12]);
@@ -121,11 +121,14 @@ int mood(string file, int p, int l, string bottom){
 
 	//=====================================
 
-	TGraph2D* graph2 = GetTGraph2D(Y, Z, PYMAX);
-	graph2->SetTitle("Maximum y Momentum;y_{0};z_{0}");
-	graph2->SetNpx(500);
-	graph2->SetNpy(500);
-	
+	TVectorField* graph2 = new TVectorField(Y, Z, DY, DZ);
+	//graph2->SetTitle("Maximum x Angular Momentum;y_{0};z_{0}");
+	//graph2->SetNpx(500);
+	//graph2->SetNpy(500);
+	graph2->SetLimits(-19.9, -19.9, 19.9, 19.9);
+	graph2->SetArrowColor(1);
+	graph2->SetArrowSize(0.5, 0.002, 2);
+
 	pad2->cd();
 
 	pad2->SetRightMargin( 0.14);
@@ -133,8 +136,12 @@ int mood(string file, int p, int l, string bottom){
 	pad2->SetBottomMargin(0.08);
 	pad2->SetTopMargin(   0.08);
 
-	TH1 *frame_graph2 = c1->cd(2)->DrawFrame(-19.9,-19.9,19.9,19.9);
-	frame_graph2->SetTitle("Maximum y Momentum;y_{0};z_{0}");
+	graph2->Draw("F");
+
+	TH1 *frame_graph2 = graph2->GetTH1();
+	frame_graph2->SetTitle("Displacement;y_{0};z_{0}");
+	frame_graph2->SetTitleSize(100);
+	//frame_graph2->SetTitleOffset(0.01);
 	frame_graph2->GetXaxis()->SetLabelSize(0.03);
 	frame_graph2->GetXaxis()->SetTitleSize(0.06);
 	frame_graph2->GetXaxis()->SetTitleOffset(0.5);
@@ -142,10 +149,11 @@ int mood(string file, int p, int l, string bottom){
 	frame_graph2->GetYaxis()->SetTitleSize(0.06);
 	frame_graph2->GetYaxis()->SetTitleOffset(0.3);
 	frame_graph2->GetZaxis()->SetMaxDigits(2);
-	graph2->Draw("same COLZ");
+	graph2->ReDraw("F");
 
 	pad2->SetGrid(1, 1);
 	pad2->RedrawAxis("g");
+
 
 	//=====================================
 
@@ -178,14 +186,11 @@ int mood(string file, int p, int l, string bottom){
 
 	//=====================================
 
-	TVectorField* graph4 = new TVectorField(Y, Z, DY, DZ);
-	//graph4->SetTitle("Maximum x Angular Momentum;y_{0};z_{0}");
-	//graph4->SetNpx(500);
-	//graph4->SetNpy(500);
-	graph4->SetLimits(-19.9, -19.9, 19.9, 19.9);
-	graph4->SetArrowColor(1);
-	graph4->SetArrowSize(0.5, 0.002, 2);
-
+	TGraph2D* graph4 = GetTGraph2D(Y, Z, E);
+	graph4->SetTitle("Percentual Energy Change;y_{0};z_{0}");
+	graph4->SetNpx(500);
+	graph4->SetNpy(500);
+	
 	pad4->cd();
 
 	pad4->SetRightMargin( 0.14);
@@ -193,12 +198,8 @@ int mood(string file, int p, int l, string bottom){
 	pad4->SetBottomMargin(0.08);
 	pad4->SetTopMargin(   0.08);
 
-	graph4->Draw("F");
-
-	TH1 *frame_graph4 = graph4->GetTH1();
-	frame_graph4->SetTitle("Displacement;y_{0};z_{0}");
-	frame_graph4->SetTitleSize(100);
-	//frame_graph4->SetTitleOffset(0.01);
+	TH1 *frame_graph4 = c1->cd(2)->DrawFrame(-19.9,-19.9,19.9,19.9);
+	frame_graph4->SetTitle("Percentual Energy Change;y_{0};z_{0}");
 	frame_graph4->GetXaxis()->SetLabelSize(0.03);
 	frame_graph4->GetXaxis()->SetTitleSize(0.06);
 	frame_graph4->GetXaxis()->SetTitleOffset(0.5);
@@ -206,19 +207,22 @@ int mood(string file, int p, int l, string bottom){
 	frame_graph4->GetYaxis()->SetTitleSize(0.06);
 	frame_graph4->GetYaxis()->SetTitleOffset(0.3);
 	frame_graph4->GetZaxis()->SetMaxDigits(2);
-	graph4->ReDraw("F");
+	graph4->GetZaxis()->SetRangeUser(1900, 2000);
+	graph4->Draw("same COLZ");
 
 	pad4->SetGrid(1, 1);
 	pad4->RedrawAxis("g");
 
-
 	//=====================================
 
-	TGraph2D* graph5 = GetTGraph2D(Y, Z, PZMAX);
-	graph5->SetTitle("Maximum z Momentum;y_{0};z_{0}");
-	graph5->SetNpx(500);
-	graph5->SetNpy(500);
-	
+	TVectorField* graph5 = new TVectorField(Y, Z, PYMAX, PZMAX);
+	//graph5->SetTitle("Maximum x Angular Momentum;y_{0};z_{0}");
+	//graph5->SetNpx(500);
+	//graph5->SetNpy(500);
+	graph5->SetLimits(-19.9, -19.9, 19.9, 19.9);
+	graph5->SetArrowColor(1);
+	graph5->SetArrowSize(0.5, 0.002, 2);
+
 	pad5->cd();
 
 	pad5->SetRightMargin( 0.14);
@@ -226,8 +230,12 @@ int mood(string file, int p, int l, string bottom){
 	pad5->SetBottomMargin(0.08);
 	pad5->SetTopMargin(   0.08);
 
-	TH1 *frame_graph5 = c1->cd(3)->DrawFrame(-19.9,-19.9,19.9,19.9);
-	frame_graph5->SetTitle("Maximum z Momentum;y_{0};z_{0}");
+	graph5->Draw("F");
+
+	TH1 *frame_graph5 = graph5->GetTH1();
+	frame_graph5->SetTitle("Maximum Perpendicular Momentum;y_{0};z_{0}");
+	frame_graph5->SetTitleSize(100);
+	//frame_graph5->SetTitleOffset(0.01);
 	frame_graph5->GetXaxis()->SetLabelSize(0.03);
 	frame_graph5->GetXaxis()->SetTitleSize(0.06);
 	frame_graph5->GetXaxis()->SetTitleOffset(0.5);
@@ -235,7 +243,7 @@ int mood(string file, int p, int l, string bottom){
 	frame_graph5->GetYaxis()->SetTitleSize(0.06);
 	frame_graph5->GetYaxis()->SetTitleOffset(0.3);
 	frame_graph5->GetZaxis()->SetMaxDigits(2);
-	graph5->Draw("same COLZ");
+	graph5->ReDraw("F");
 
 	pad5->SetGrid(1, 1);
 	pad5->RedrawAxis("g");
@@ -305,10 +313,25 @@ int mood(string file, int p, int l, string bottom){
 
 int main(){
 
-	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l1_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l2_px-2000.000000" , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p2l1_px-2000.000000" , 2, 1, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p2l2_px-2000.000000" , 2, 2, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l0_px-2000.000000" , 0, 0, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l1_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l2_px-2000.000000" , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p0l3_px-2000.000000" , 0, 3, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p1l0_px-2000.000000" , 1, 0, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p1l1_px-2000.000000" , 1, 1, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p1l2_px-2000.000000" , 1, 2, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p1l3_px-2000.000000" , 1, 3, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p2l0_px-2000.000000" , 2, 0, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p2l1_px-2000.000000" , 2, 1, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p2l2_px-2000.000000" , 2, 2, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p2l3_px-2000.000000" , 2, 3, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p3l0_px-2000.000000" , 3, 0, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p3l1_px-2000.000000" , 3, 1, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p3l2_px-2000.000000" , 3, 2, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
+	mood("Output_Laguerre_wv3_kdamp_data/Output_wv3_p3l3_px-2000.000000" , 3, 3, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; kdamp = 1.18E-8; Linear Polarization on y");
 	
 }
 

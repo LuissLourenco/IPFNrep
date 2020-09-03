@@ -7,13 +7,29 @@ g++ -o2 macro_laguerre.cpp -lm -o macro_laguerre `root-config --cflags --glibs`
 PX=-2000
 KDAMP=1.18E-8
 
-PROCESS=0
 #for l in {1..3}			# RUN FOR RAFAEL
-for l in {0..0} 		# RUN FOR LUIS
-do
-	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 0 $PX $KDAMP;	./macro_laguerre $PROCESS $l 1 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
-	let "PROCESS= $PROCESS + 1"
-	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 2 $PX $KDAMP;	./macro_laguerre $PROCESS $l 3 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
-	let "PROCESS= $PROCESS + 1"
-done
+#for l in {0..0} 		# RUN FOR LUIS
+#do
+#	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 0 $PX $KDAMP;	./macro_laguerre $PROCESS $l 1 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+#	let "PROCESS= $PROCESS + 1"
+#	gnome-terminal -- bash -ic "./macro_laguerre $PROCESS $l 2 $PX $KDAMP;	./macro_laguerre $PROCESS $l 3 $PX $KDAMP; pushover 'Estágio' 'Process $PROCESS has finished'; rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+#	let "PROCESS= $PROCESS + 1"
+#done
+
+#PROCESS=0
+#gnome-terminal -- bash -ic "\
+#./macro_laguerre $PROCESS 3 3 $PX $KDAMP;\
+#./macro_laguerre $PROCESS 1 1 $PX $KDAMP;\
+#pushover 'Estágio' 'Process $PROCESS has finished';\
+#rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+
+
+#PROCESS=0
+#gnome-terminal -- bash -ic "\
+#./macro_laguerre $PROCESS 0 1 $PX $KDAMP;\
+#pushover 'Estágio' 'Process $PROCESS has finished';\
+#rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+
+
+./macro_laguerre 69 1 1 0 0
 

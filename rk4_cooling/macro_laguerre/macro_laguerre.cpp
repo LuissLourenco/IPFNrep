@@ -47,8 +47,6 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	cout << kdamp << endl;
-
 	time_t start_time = chrono::system_clock::to_time_t(chrono::system_clock::now());
 	cout << "Simulating l = " << l << " and p = " << p << " with px0 = " << px0;
 	cout << " starting " << ctime(&start_time);
@@ -56,9 +54,9 @@ int main(int argc, char **argv){
     int n_cols, n_points;
 	double** values;
 
-	double y_min = -3;//-20;
-	double y_max = 3;//20;
-	double dy = 1;//0.5;
+	double y_min = -20;
+	double y_max = 20;
+	double dy = 0.5;
 	double y = y_min;
 
 	double z_min = y_min;

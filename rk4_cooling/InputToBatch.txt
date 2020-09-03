@@ -19,5 +19,5 @@ trash|x01|x02|x03|p01|p02|p03|kdamp|T|N|pri|dx|wave_type|tfwhm|stable|E0|delta|w
 1.
 1.
 1.
-0
-0
+1
+1

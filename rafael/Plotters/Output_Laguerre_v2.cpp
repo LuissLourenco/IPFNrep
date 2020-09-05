@@ -303,41 +303,41 @@ int mood(string file, int p, int l, string bottom){
 
 int main(){
 /*
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l0_px-0.000000"    , 0, 0, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l1_px-0.000000"    , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l2_px-0.000000"    , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l3_px-0.000000"    , 0, 3, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l0_px-0.000000"    , 1, 0, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l1_px-0.000000"    , 1, 1, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l2_px-0.000000"    , 1, 2, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l3_px-0.000000"    , 1, 3, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l0_px-0.000000"    , 2, 0, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l1_px-0.000000"    , 2, 1, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l2_px-0.000000"    , 2, 2, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l3_px-0.000000"    , 2, 3, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l0_px-0.000000"    , 3, 0, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l1_px-0.000000"    , 3, 1, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l2_px-0.000000"    , 3, 2, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l3_px-0.000000"    , 3, 3, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l0_px-0.000000"    , 0, 0, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l1_px-0.000000"    , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l2_px-0.000000"    , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l3_px-0.000000"    , 0, 3, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l0_px-0.000000"    , 1, 0, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l1_px-0.000000"    , 1, 1, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l2_px-0.000000"    , 1, 2, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l3_px-0.000000"    , 1, 3, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l0_px-0.000000"    , 2, 0, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l1_px-0.000000"    , 2, 1, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l2_px-0.000000"    , 2, 2, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l3_px-0.000000"    , 2, 3, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l0_px-0.000000"    , 3, 0, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 0 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l1_px-0.000000"    , 3, 1, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 1 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l2_px-0.000000"    , 3, 2, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 2 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l3_px-0.000000"    , 3, 3, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 3 ); Initial Longitudinal Momentum = 0; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 */
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l0_px-2000.000000" , 0, 0, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	/*mood("Output_Laguerre_wv3_data/Output_wv3_p0l1_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l2_px-2000.000000" , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p0l3_px-2000.000000" , 0, 3, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l0_px-2000.000000" , 1, 0, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l1_px-2000.000000" , 1, 1, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l2_px-2000.000000" , 1, 2, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p1l3_px-2000.000000" , 1, 3, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l0_px-2000.000000" , 2, 0, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l1_px-2000.000000" , 2, 1, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l2_px-2000.000000" , 2, 2, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p2l3_px-2000.000000" , 2, 3, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l0_px-2000.000000" , 3, 0, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l1_px-2000.000000" , 3, 1, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l2_px-2000.000000" , 3, 2, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
-	mood("Output_Laguerre_wv3_data/Output_wv3_p3l3_px-2000.000000" , 3, 3, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l0_px-2000.000000" , 0, 0, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	/*mood("Output_Laguerre_v2_data/Output_wv3_p0l1_px-2000.000000" , 0, 1, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l2_px-2000.000000" , 0, 2, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p0l3_px-2000.000000" , 0, 3, "Simplified Laguerre Gaussian Mode ( p = 0 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l0_px-2000.000000" , 1, 0, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l1_px-2000.000000" , 1, 1, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l2_px-2000.000000" , 1, 2, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p1l3_px-2000.000000" , 1, 3, "Simplified Laguerre Gaussian Mode ( p = 1 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l0_px-2000.000000" , 2, 0, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l1_px-2000.000000" , 2, 1, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l2_px-2000.000000" , 2, 2, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p2l3_px-2000.000000" , 2, 3, "Simplified Laguerre Gaussian Mode ( p = 2 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l0_px-2000.000000" , 3, 0, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 0 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l1_px-2000.000000" , 3, 1, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 1 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l2_px-2000.000000" , 3, 2, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 2 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p3l3_px-2000.000000" , 3, 3, "Simplified Laguerre Gaussian Mode ( p = 3 | l = 3 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 */
-	mood("Output_Laguerre_wv3_data/Output_wv3_p5l5_px-2000.000000" , 5, 5, "Simplified Laguerre Gaussian Mode ( p = 5 | l = 5 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
+	mood("Output_Laguerre_v2_data/Output_wv3_p5l5_px-2000.000000" , 5, 5, "Simplified Laguerre Gaussian Mode ( p = 5 | l = 5 ); Initial Longitudinal Momentum = -2000; w0 = 5; E0 = 1; lambda = 1; Linear Polarization on y");
 
 }
 

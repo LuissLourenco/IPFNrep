@@ -98,15 +98,8 @@ double Efy(double x, double y, double z){  //Ey interpolation to (x,y,z)
 	double R_1 = x / (x*x + zr*zr);
 	double N = abs(l) + 2*p;
 	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
- 	double res=1;
-
- 	res *= w;
- 	res *= Eo*w0/wz;
- 	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
- 	res *= exp(-r*r/wz/wz); 	
- 	res *= sin(arg);
- 	return res*Envelope(x,t);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	return w*amp*sin(arg)*Envelope(x,t);
  }
  if(wave_type==3){ //return 0;
  	double r = sqrt(y*y+z*z);
@@ -139,15 +132,8 @@ double DerEfy(double x, double y, double z){ //Ey time derivative at (x,y,z)
 	double R_1 = x / (x*x + zr*zr);
 	double N = abs(l) + 2*p;
 	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
- 	double res=1;
-
- 	res *= w*w;
- 	res *= Eo*w0/wz;
- 	if(l!=0) res *= pow(r*sqrt(2.)/wz, abs(l));
- 	if(l!=0 && p!=0) res *= assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz);
- 	res *= exp(-r*r/wz/wz); 	
- 	res *= cos(arg);
- 	return res*Envelope(x,t);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	return w*w*amp*cos(arg)*Envelope(x,t);
  }
  if(wave_type==3){ 
  	double r = sqrt(y*y+z*z);
@@ -183,7 +169,20 @@ double DerEfz(double x, double y, double z){ //Ez time derivative at (x,y,z)
 double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
- if(wave_type == 2) return 0;
+ if(wave_type == 2){
+ 	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	double wz = w0*sqrt(1+x*x/zr/zr);
+	double R_1 = x / (x*x + zr*zr);
+	double N = abs(l) + 2*p;
+	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	double f1 = (2*r/wz/wz-abs(l)/r)*amp;
+ 	if(p!=0){double amp2 = Eo*w0/wz*exp(-r*r/wz/wz)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/wz/wz); amp2 *= (l!=0) ? pow(r*sqrt(2.)/wz , abs(l)) : 1; f1+=amp2*4*r/wz/wz;}
+ 	f1*=sin(phi);
+ 	double f2 = -(l/r*cos(phi)+k*r*R_1*sin(phi))*amp;
+ 	return (f1*cos(arg)+f2*sin(arg))*Envelope(x,t);
+ }
  if(wave_type == 3){ //return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
@@ -203,7 +202,20 @@ double Bfx( double x, double y, double z){  //Bx interpolation to (x,y,z)
 double DerBfx(double x, double y, double z){ //Bx time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
- if(wave_type == 2) return 0;
+ if(wave_type == 2){
+ 	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	double wz = w0*sqrt(1+x*x/zr/zr);
+	double R_1 = x / (x*x + zr*zr);
+	double N = abs(l) + 2*p;
+	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	double f1 = (2*r/wz/wz-abs(l)/r)*amp;
+ 	if(p!=0){double amp2 = Eo*w0/wz*exp(-r*r/wz/wz)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/wz/wz); amp2 *= (l!=0) ? pow(r*sqrt(2.)/wz , abs(l)) : 1; f1+=amp2*4*r/wz/wz;}
+ 	f1*=sin(phi);
+ 	double f2 = -(l/r*cos(phi)+k*r*R_1*sin(phi))*amp;
+ 	return w*(-f1*sin(arg)+f2*cos(arg))*Envelope(x,t);
+ }
  if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
@@ -248,31 +260,15 @@ double Bfz(double x, double y, double z){  //Bz interpolation to (x,y,z)
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double wz = w0*sqrt(1+x*x/zr/zr);
-
-	double res;
-	double A1_re=0; double A1_im=0; double A2_re=0; double A2_im=0; double A3_re=0; double A3_im=0;
- 	
- 	double aux1 = Eo*w0/wz *  pow(r*sqrt(2.)/wz, abs(l)) * assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) * exp(-r*r/wz/wz);
- 	double arg = -k*r*r*x/2./(x*x+zr*zr)-l*phi+(2.*(double)p+(double)abs(l)+1.)*atan(x/zr);
- 	
- 	double A1 = -w0*w0*x/zr/zr/wz/wz*aux1;
- 	if(l!=0) A1 *= (1.+(double)abs(l));
- 	A1_re = A1 * cos(arg);
- 	A1_im = A1 * sin(arg);
-
- 	if(p!=0){
- 		double aux2 = Eo*w0/wz *  pow(r*sqrt(2.)/wz, abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/wz/wz) * exp(-r*r/wz/wz);
- 		double A2 = 4*r*r*w0*w0*x/zr/zr/wz/wz/wz/wz * aux2;
- 		A2_re = A2 * cos(arg);
- 		A2_im = A2 * sin(arg);
- 	}
-
- 	double A3 = aux1*(-k*r*r/2.*(zr*zr-x*x)/(x*x+zr*zr)/(x*x+zr*zr)+(2.*(double)p+(double)abs(l)+1.)*zr/(x*x+zr*zr)-k);
- 	A3_re = -A3*sin(arg);
- 	A3_im = A3*cos(arg);
-
-	res = cos(w*t-k*x)*(A1_re+A2_re+A3_re) - sin(w*t-k*x)*(A1_im+A2_im+A3_im);
- 	return res*Envelope(x,t);
+	double R_1 = x / (x*x + zr*zr);
+	double N = abs(l) + 2*p;
+	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	double f1 = (2*r*r/wz/wz-1-abs(l))*amp;
+ 	if(p!=0){double amp2 = Eo*w0/wz*exp(-r*r/wz/wz)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/wz/wz); amp2 *= (l!=0) ? pow(r*sqrt(2.)/wz , abs(l)) : 1; f1+=amp2*2*r*r/wz/wz;}
+ 	f1*=w0*w0*x/zr/zr/wz/wz;
+ 	double f2 = (k-k*r*r/2*(x*x-zr*zr)/(x*x+zr*zr)/(x*x+zr*zr)-(N+1)*zr/(x*x+zr*zr))*amp;
+ 	return (f1*cos(arg)+f2*sin(arg))*Envelope(x,t);
  }
  if(wave_type==3){ //eturn 0;
  	double r = sqrt(y*y+z*z);
@@ -303,31 +299,15 @@ double DerBfz(double x, double y, double z){ //Bz time derivative at (x,y,z)
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
 	double wz = w0*sqrt(1+x*x/zr/zr);
-
-	double res;
-	double A1_re=0; double A1_im=0; double A2_re=0; double A2_im=0; double A3_re=0; double A3_im=0;
- 	
- 	double aux1 = Eo*w0/wz *  pow(r*sqrt(2.)/wz, abs(l)) * assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) * exp(-r*r/wz/wz);
- 	double arg = -k*r*r*x/2./(x*x+zr*zr)-l*phi+(2.*(double)p+(double)abs(l)+1.)*atan(x/zr);
- 	
- 	double A1 = -w0*w0*x/zr/zr/wz/wz*aux1;
- 	if(l!=0) A1 *= (1.+(double)abs(l));
- 	A1_re = A1 * cos(arg);
- 	A1_im = A1 * sin(arg);
-
- 	if(p!=0){
- 		double aux2 = Eo*w0/wz *  pow(r*sqrt(2.)/wz, abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/wz/wz) * exp(-r*r/wz/wz);
- 		double A2 = 4*r*r*w0*w0*x/zr/zr/wz/wz/wz/wz * aux2;
- 		A2_re = A2 * cos(arg);
- 		A2_im = A2 * sin(arg);
- 	}
-
- 	double A3 = aux1*(-k*r*r/2.*(zr*zr-x*x)/(x*x+zr*zr)/(x*x+zr*zr)+(2.*(double)p+(double)abs(l)+1.)*zr/(x*x+zr*zr)-k);
- 	A3_re = -A3*sin(arg);
- 	A3_im = A3*cos(arg);
-
-	res = -w*sin(w*t-k*x)*(A1_re+A2_re+A3_re) - w*cos(w*t-k*x)*(A1_im+A2_im+A3_im);
- 	return res*Envelope(x,t);
+	double R_1 = x / (x*x + zr*zr);
+	double N = abs(l) + 2*p;
+	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	double f1 = (2*r*r/wz/wz-1-abs(l))*amp;
+ 	if(p!=0){double amp2 = Eo*w0/wz*exp(-r*r/wz/wz)*assoc_laguerre(p-1, abs(l)+1, 2.*r*r/wz/wz); amp2 *= (l!=0) ? pow(r*sqrt(2.)/wz , abs(l)) : 1; f1+=amp2*2*r*r/wz/wz;}
+ 	f1*=w0*w0*x/zr/zr/wz/wz;
+ 	double f2 = (k-k*r*r/2*(x*x-zr*zr)/(x*x+zr*zr)/(x*x+zr*zr)-(N+1)*zr/(x*x+zr*zr))*amp;
+ 	return w*(-f1*sin(arg)+f2*cos(arg))*Envelope(x,t);
  }
  if(wave_type==3){
  	double r = sqrt(y*y+z*z);
@@ -430,11 +410,10 @@ double* curlBf(double x, double y, double z){
 
 
 double teste(double*x,double*par){
-	wave_type=3;
 
 
 	//CHECK DIV,ROT
-	return divEf(par[0],x[0],x[1]);
+	//return divEf(par[0],x[0],x[1]);
 	//return divBf(par[0],x[0],x[1]);
 	//check curlE
 	//double a1,a2,a3;
@@ -458,9 +437,17 @@ double teste(double*x,double*par){
 	//double b6 = DerBfz(par[0],x[0],x[1])-dt_Bfz(par[0],x[0],x[1]);
 	//return sqrt(b1*b1+b2*b2+b3*b3+b4*b4+b5*b5+b6*b6);
 
-
-	//return Bfz(par[0],x[0],x[1]);
+	//CHECK SOME COMPONENT
+	return Efy(par[0],x[0],x[1]);
 }
+
+
+
+
+
+
+
+
 
 
 

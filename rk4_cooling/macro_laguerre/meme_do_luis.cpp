@@ -58,10 +58,12 @@ int main(int argc, char **argv){
 	DataSet Y(0,bog);
 	DataSet Z(0,bog);
 
-	double ns = 5;
-	for(int i=0; i<ns; i++){
-
-		input(0,4*cos(i*2*M_PI/(ns-1)),4*sin(i*2*M_PI/(ns-1)), 0,0,0, 0, 300, 100000, 5, 5e-3, 3, 50, 1000, 3, -1, 5, 1, 1, 1, 1, 0);
+	double ns = 10;
+	for(int i=1; i<=ns; i++){
+		cout<<i<<"/"<<ns<<"\t"<<flush;
+		if(i%5==0) cout<<endl;
+		double a0=M_PI/2;
+		input(0,i*cos(a0),i*sin(a0), 0,0,0,   0, 300, 100000, 10, 5e-3, 3, 50, 1000, 3, -1, 5, 1, 1, 1, 2, 2);
 		run_theory3(0);
 
 		values = ReadFile("Out4.txt", &n_cols, &n_points, false, false);
@@ -69,6 +71,7 @@ int main(int argc, char **argv){
 		Y = Y.concat(DataSet(n_points,values[2]));
 		Z = Z.concat(DataSet(n_points,values[3]));
 	}
+	cout<<endl;
 
 	//TGraph* graph_y = GetTGraph(DataSet(n_points, values[1]), DataSet(n_points, values[2]));
 	//TGraph* graph_p = GetTGraph(DataSet(n_points, values[4]), DataSet(n_points, values[5]));

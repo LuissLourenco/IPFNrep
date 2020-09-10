@@ -28,40 +28,29 @@ gnome-terminal -- bash -ic "\
 ./macro_laguerre $PROCESS 0 0 -2000 0;\
 ./macro_laguerre $PROCESS 0 1 -2000 0;\
 ./macro_laguerre $PROCESS 0 2 -2000 0;\
-./macro_laguerre $PROCESS 0 3 -2000 0;\
-./macro_laguerre $PROCESS 1 0 -2000 0;\
-pushover 'Estágio' 'Process $PROCESS has finished';\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
 PROCESS=1
 gnome-terminal -- bash -ic "\
+./macro_laguerre $PROCESS 1 0 -2000 0;\
 ./macro_laguerre $PROCESS 1 1 -2000 0;\
 ./macro_laguerre $PROCESS 1 2 -2000 0;\
-./macro_laguerre $PROCESS 1 3 -2000 0;\
-./macro_laguerre $PROCESS 2 0 -2000 0;\
-./macro_laguerre $PROCESS 2 1 -2000 0;\
-pushover 'Estágio' 'Process $PROCESS has finished';\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
 <<COMMENT1
+
 PROCESS=2
 gnome-terminal -- bash -ic "\
+./macro_laguerre $PROCESS 2 0 -2000 0;\
+./macro_laguerre $PROCESS 2 1 -2000 0;\
 ./macro_laguerre $PROCESS 2 2 -2000 0;\
-./macro_laguerre $PROCESS 2 3 -2000 0;\
-./macro_laguerre $PROCESS 3 0 -2000 0;\
-./macro_laguerre $PROCESS 3 1 -2000 0;\
-./macro_laguerre $PROCESS 3 2 -2000 0;\
-pushover 'Estágio' 'Process $PROCESS has finished';\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
 PROCESS=3
 gnome-terminal -- bash -ic "\
-./macro_laguerre $PROCESS 3 3 -2000 0;\
 ./macro_laguerre $PROCESS 0 0 -2000 1.18E-8;\
 ./macro_laguerre $PROCESS 0 1 -2000 1.18E-8;\
 ./macro_laguerre $PROCESS 0 2 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 0 3 -2000 1.18E-8;\
-pushover 'Estágio' 'Process $PROCESS has finished';\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
 PROCESS=4
@@ -69,20 +58,13 @@ gnome-terminal -- bash -ic "\
 ./macro_laguerre $PROCESS 1 0 -2000 1.18E-8;\
 ./macro_laguerre $PROCESS 1 1 -2000 1.18E-8;\
 ./macro_laguerre $PROCESS 1 2 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 1 3 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 2 0 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 2 1 -2000 1.18E-8;\
-pushover 'Estágio' 'Process $PROCESS has finished';\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
 PROCESS=5
 gnome-terminal -- bash -ic "\
+./macro_laguerre $PROCESS 2 0 -2000 1.18E-8;\
+./macro_laguerre $PROCESS 2 1 -2000 1.18E-8;\
 ./macro_laguerre $PROCESS 2 2 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 2 3 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 3 0 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 3 1 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 3 2 -2000 1.18E-8;\
-./macro_laguerre $PROCESS 3 3 -2000 1.18E-8;\
-pushover 'Estágio' 'Process $PROCESS has finished';\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
+
 COMMENT1

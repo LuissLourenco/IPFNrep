@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 	int wave_type = 3;
 	double tfwhm = 50;
 	double stable = 0;
-	double Eo = 1;
+	double Eo = 30;
 	double delta = 0;
 	double w0 = 5;
 	double lambda = 1;

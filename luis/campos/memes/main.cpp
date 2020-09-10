@@ -408,6 +408,68 @@ double* curlBf(double x, double y, double z){
 
 //--------------------------------------------------------------------------
 
+double A2(double x, double y, double z){
+	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	double wz = w0*sqrt(1+x*x/zr/zr);
+	double R_1 = x / (x*x + zr*zr);
+	double N = abs(l) + 2*p;
+	double arg = w*t-k*x-k*r*r*R_1/2.-l*phi+(N+1)*atan(x/zr);
+ 	double amp = Eo*w0*wz*exp(-r*r/wz/wz); amp *= (l!=0)? pow(r*sqrt(2.)/wz, abs(l))*assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : (p!=0)? assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) : 1;
+ 	return amp*cos(arg);	
+}
+double dt_A2(double x, double y, double z){
+	double h=1e-5;
+	t+=h/2; double a1=A2(x,y,z);
+	t-=h; double a2=A2(x,y,z);
+	t+=h/2; double res= (a1-a2)/h;
+	return res;
+}
+double* curlA2(double x, double y, double z){
+	double h=1e-5;
+	double* res = new double[3];
+	res[0] = -(A2(x,y,z+h/2)-A2(z,y,z-h/2))/h;
+	res[1] = 0;
+	res[2] = (A2(x+h/2,y,z)-A2(x-h/2,y,z))/h;
+	return res;
+}
+
+//-------------------------------------------------------------------------------
+
+
+
+double Bfz_anterior(double x, double y, double z){
+	double r = sqrt(y*y+z*z);
+	double phi = atan2(z,y);
+	double wz = w0*sqrt(1+x*x/zr/zr);
+
+	double res;
+	double A1_re=0; double A1_im=0; double A2_re=0; double A2_im=0; double A3_re=0; double A3_im=0;
+ 	
+ 	double aux1 = Eo*w0/wz *  pow(r*sqrt(2.)/wz, abs(l)) * assoc_laguerre(abs(p), abs(l), 2.*r*r/wz/wz) * exp(-r*r/wz/wz);
+ 	double arg = -k*r*r*x/2./(x*x+zr*zr)-l*phi+(2.*(double)p+(double)abs(l)+1.)*atan(x/zr);
+ 	
+ 	double A1 = -w0*w0*x/zr/zr/wz/wz*aux1;
+ 	if(l!=0) A1 *= (1.+(double)abs(l));
+ 	A1_re = A1 * cos(arg);
+ 	A1_im = A1 * sin(arg);
+
+ 	if(p!=0){
+ 		double aux2 = Eo*w0/wz *  pow(r*sqrt(2.)/wz, abs(l)) * assoc_laguerre(abs(p)-1, abs(l)+1, 2.*r*r/wz/wz) * exp(-r*r/wz/wz);
+ 		double A2 = 4*r*r*w0*w0*x/zr/zr/wz/wz/wz/wz * aux2;
+ 		A2_re = A2 * cos(arg);
+ 		A2_im = A2 * sin(arg);
+ 	}
+
+ 	double A3 = aux1*(-k*r*r/2.*(zr*zr-x*x)/(x*x+zr*zr)/(x*x+zr*zr)+(2.*(double)p+(double)abs(l)+1.)*zr/(x*x+zr*zr)-k);
+ 	A3_re = -A3*sin(arg);
+ 	A3_im = A3*cos(arg);
+
+	res = cos(w*t-k*x)*(A1_re+A2_re+A3_re) - sin(w*t-k*x)*(A1_im+A2_im+A3_im);
+ 	return res*Envelope(x,t);
+}
+
+
 
 double teste(double*x,double*par){
 
@@ -431,14 +493,26 @@ double teste(double*x,double*par){
 	//CHECK TIME DERIVATIVES
 	//double b1 = DerEfx(par[0],x[0],x[1])-dt_Efx(par[0],x[0],x[1]);
 	//double b2 = DerEfy(par[0],x[0],x[1])-dt_Efy(par[0],x[0],x[1]);
-	//ouble b3 = DerEfz(par[0],x[0],x[1])-dt_Efz(par[0],x[0],x[1]);
+	//double b3 = DerEfz(par[0],x[0],x[1])-dt_Efz(par[0],x[0],x[1]);
 	//double b4 = DerBfx(par[0],x[0],x[1])-dt_Bfx(par[0],x[0],x[1]);
 	//double b5 = DerBfy(par[0],x[0],x[1])-dt_Bfy(par[0],x[0],x[1]);
 	//double b6 = DerBfz(par[0],x[0],x[1])-dt_Bfz(par[0],x[0],x[1]);
 	//return sqrt(b1*b1+b2*b2+b3*b3+b4*b4+b5*b5+b6*b6);
 
+	//CHECK WAVE_TYPE_2, derivadas de A
+	//E
+	//return Efy(par[0],x[0],x[1])+dt_A2(par[0],x[0],x[1]);
+	//B
+	//double a1, a2, a3;
+	//a1 = pow( curlA2(par[0],x[0],x[1])[0]-Bfx(par[0],x[0],x[1]) ,2);
+	//a2 = pow( curlA2(par[0],x[0],x[1])[1]-Bfy(par[0],x[0],x[1]) ,2);
+	//a3 = pow( curlA2(par[0],x[0],x[1])[2]-Bfz(par[0],x[0],x[1]) ,2);
+	//return sqrt(a1+a2+a3);
+
+	return Bfz(par[0],x[0],x[1])-Bfz_anterior(par[0],x[0],x[1]);
+
 	//CHECK SOME COMPONENT
-	return Efy(par[0],x[0],x[1]);
+	//return Efy(par[0],x[0],x[1]);
 }
 
 

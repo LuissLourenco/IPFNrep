@@ -23,6 +23,8 @@ KDAMP=1.18E-8
 #pushover 'Estágio' 'Process $PROCESS has finished';\
 #rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
+<<COMMENT1
+
 PROCESS=0
 gnome-terminal -- bash -ic "\
 ./macro_laguerre $PROCESS 0 0 -2000 0;\
@@ -37,7 +39,8 @@ gnome-terminal -- bash -ic "\
 ./macro_laguerre $PROCESS 1 2 -2000 0;\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
-<<COMMENT1
+COMMENT1
+
 
 PROCESS=2
 gnome-terminal -- bash -ic "\
@@ -67,4 +70,3 @@ gnome-terminal -- bash -ic "\
 ./macro_laguerre $PROCESS 2 2 -2000 1.18E-8;\
 rm InputToBatch$PROCESS.txt; rm Out$PROCESS.txt; "
 
-COMMENT1

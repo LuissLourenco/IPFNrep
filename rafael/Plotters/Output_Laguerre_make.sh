@@ -8,4 +8,4 @@ xdg-open Output_Laguerre_v$1_data/$2
 # v2 - Simplified Laguerre Gaussian
 # v3 - Simplified Laguerre Gaussian, kdamped
 # v4 - Simplified Laguerre Gaussian with Ex
-
+# v5 - Simplified Laguerre Gaussian with Ex and A0 = 30

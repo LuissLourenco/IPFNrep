@@ -2,6 +2,7 @@
 #include<iostream>
 #include<cmath>
 #include<stdlib.h>
+#include<string.h>
 using namespace std;
 double t, xgrid, ygrid,gam,Fx,Fy,Fz,pE,k,dx,dy,dz,w,Eo,Bo,delta,kdamp, tfwhm, stable;  
 int pri, Ni, Nj;
@@ -609,8 +610,12 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 	long long int i; 
 	FILE *fo;
 
-
-	fo=fopen("Out4.txt","w");
+	char str1[24] = "Outputs/Out";
+	char str2[12]; sprintf(str2,"%d",process);
+	char str3[12] = ".txt";
+	strcat(str1,str2);
+	strcat(str1,str3);
+	fo=fopen(str1,"w");
 	//fprintf(fo,"t	 x		 y      z	   px		 py		  pz	 gamma\n");
 	h=T/N; 
 
@@ -730,7 +735,7 @@ int run_theory3(int process_in){
 
 	char trash[128];
  
-	foo=fopen("../InputToBatch.txt","r");
+	foo=fopen("../../rk4_cooling/InputToBatch.txt","r");
 	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %i %lf %lf %lf %lf %lf %lf %lf %lf %i %i", 
 				trash, &x01, &x02, &x03, &p01, &p02, &p03, &kdamp, &T, &N, &pri, &dx, 
 				&wave_type, &tfwhm, &stable, &Eo, &delta, &w0, &lambda, &n, &eta, &l, &p);

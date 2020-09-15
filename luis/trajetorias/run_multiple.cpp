@@ -68,6 +68,9 @@ int main(int argc, char **argv){
 	double phi0=0;
 
 
+	double T=1000;
+	int N=1000000;
+
 	if(argc==7){//argv-> a0 r0 p0 p l ns
 		sscanf(argv[1],"%lf",&a0);
 		sscanf(argv[2],"%lf",&r0);
@@ -83,7 +86,7 @@ int main(int argc, char **argv){
 
 		
 		//input(0,0.5*i*cos(phi0),0.5*i*sin(phi0), p0,0,0,   0, 300, 100000, 10, 5e-3, 3, 50, 1000, a0, -1, 5, 1, 1, 1, l, p);
-		input(0,r0*cos(i*2*M_PI/ns),r0*sin(i*2*M_PI/ns),  p0,0,0,   0, 300, 100000, 10, 5e-3, 3, 50, 1000, a0, -1, 5, 1, 1, 1, l, p);
+		input(0,r0*cos(i*2*M_PI/ns),r0*sin(i*2*M_PI/ns),  p0,0,0,   0, T, N, 10, 5e-3, 3, 50, 1000, a0, -1, 5, 1, 1, 1, l, p);
 		run_theory3(i);
 		/*
 		values = ReadFile((string("Outputs/Out")+to_string(i)+string(".txt")).c_str(), &n_cols, &n_points, false, false);

@@ -5,7 +5,7 @@ r0=1;
 %phi0=0;
 p0=-10;
 p=1;
-l=3;
+l=2;
 pasta = strcat('Out_a0_',num2str(a0),'_r0_',num2str(r0),'_p0_',num2str(p0),'_pl_',num2str(p),num2str(l),'/');
 %pasta = strcat('Out_a0_',num2str(a0),'_phi0_',num2str(phi0),'_p0_',num2str(p0),'_pl_',num2str(p),num2str(l),'/');
 %pasta = 'Outputs/';
@@ -32,19 +32,6 @@ ax1 = nexttile;
 grid on, xlabel x, ylabel y, zlabel z;
 view(ax1,3);
 hold on;
-for k=5
-    matrix = cell2mat(res{k});
-    x = matrix(:,2);
-    y = matrix(:,3);    
-    z = matrix(:,4);
-    plot3(x,y,z)
-end
-
-ax2 = nexttile;
-title(['a_0=',num2str(a0),'    r_0=',num2str(r0),'    p_0_x=',num2str(p0),'    pl=',num2str(p),num2str(l)]);
-grid on, xlabel x, ylabel y, zlabel z;
-view(ax2,3);
-hold on;
 for k=1:n
     matrix = cell2mat(res{k});
     x = matrix(:,2);
@@ -52,23 +39,10 @@ for k=1:n
     z = matrix(:,4);
     plot3(x,y,z)
 end
-axis([-300 10 -5 5 -5 5])
+%axis([-300 10 -5 5 -5 5])
 hold off
 
-%{
-f3=figure;
-grid on, xlabel t;    
-hold on;
-for k=1:1
-    matrix = cell2mat(res{k});
-    t = matrix(:,1);
-    x = matrix(:,2);    
-    px = matrix(:,5);
-    plot(t,x,'b',t,px,'r');
-    legend('x','px');
-end
-hold off;
-%}
+
 
 nexttile;
 grid on, xlabel t, ylabel 'L_x';    
@@ -91,6 +65,26 @@ for k=1:n
     
 end
 hold off;
+
+
+nexttile;
+grid on, xlabel t, ylabel 'p_{\theta}';    
+hold on;
+for k=1:n
+    matrix = cell2mat(res{k});
+    t = matrix(:,1);
+    y = matrix(:,3);
+    z = matrix(:,4);
+    phi = atan2(z,y);
+    py = matrix(:,6);
+    pz = matrix(:,7);
+    ptht = -sin(phi).*py+cos(phi).*pz;
+    plot(t,ptht);
+   
+end
+hold off;
+
+
 
 
 saveas(f,'plot.jpg');

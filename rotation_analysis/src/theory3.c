@@ -2,7 +2,6 @@
 #include<iostream>
 #include<cmath>
 #include<stdlib.h>
-#include<string.h>
 using namespace std;
 double t, xgrid, ygrid,gam,Fx,Fy,Fz,pE,k,dx,dy,dz,w,Eo,Bo,delta,kdamp, tfwhm, stable;  
 int pri, Ni, Nj;
@@ -80,7 +79,7 @@ double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ return 0;
+ if(wave_type == 3){ //return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -99,7 +98,7 @@ double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ return 0;
+ if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -610,28 +609,23 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 	long long int i; 
 	FILE *fo;
 
-	char str1[24] = "Outputs/Out";
-	char str2[12]; sprintf(str2,"%d",process);
-	char str3[12] = ".txt";
-	strcat(str1,str2);
-	strcat(str1,str3);
-	fo=fopen(str1,"w");
+	double angle = 0;
+	double p_r = 0;
+	double p_theta = 0;
 
-	cout<<str1<<"\t "<<flush;
+	char file_to_open[64];
+	sprintf(file_to_open, "Out%05d.txt", process);
+
+	fo=fopen(file_to_open,"w");
 	//fprintf(fo,"t	 x		 y      z	   px		 py		  pz	 gamma\n");
 	h=T/N; 
 
 	w1=p01; w2=p02; w3=p03; w4=x01; w5=x02; w6=x03;  gam=sqrt(1+p01*p01+p02*p02+p03*p03); t=0;
 
 
-	fprintf(fo, "%.14e    	%.14e 	 %.14e  	%.14e    %.14e	 %.14e	%.14e		%.14e\n",t, w4, w5, w6, w1, w2, w3, gam); 
+	fprintf(fo, "%.14e    	%.14e 	 %.14e  	%.14e    %.14e	 %.14e	%.14e		%.14e 0 0\n",t, w4, w5, w6, w1, w2, w3, gam); 
 	for(i=1; i<N; i++){
-
-		if(i%100 == 0){
-			double perc = (double)i/(double)N * 100;
-			printf("\b\b\b\b\b\b\b%6.3lf%%", perc);
-		}
-
+		
 		t=(i-1)*h;
 
 		px=w1; py=w2; pz=w3; x=w4; y=w5; z=w6;
@@ -721,8 +715,30 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 
 		if ((i % pri) == 0){
 			gam=sqrt(1+w1*w1+w2*w2+w3*w3); 
-			fprintf(fo, "%.14e    	%.14e 	 %.14e   %.14e 	%.14e	 %.14e	%.14e		%.14e\n",t, w4, w5, w6, w1, w2, w3, gam); 
-			// prints t, x, y, z, px, py, pz, gamma
+			fprintf(fo, "%.14e\t", t); 
+			fprintf(fo, "%.14e\t", w4); 
+			fprintf(fo, "%.14e\t", w5); 
+			fprintf(fo, "%.14e\t", w6); 
+			fprintf(fo, "%.14e\t", w1); 
+			fprintf(fo, "%.14e\t", w2); 
+			fprintf(fo, "%.14e\t", w3); 
+			fprintf(fo, "%.14e\t", gam); 
+			/*
+			if(sqrt(w6*w6+w5*w5)>=0.45) angle = atan2(w6, w5);
+			if(angle <= 0) angle += M_PI;
+			fprintf(fo, "%.14e\t", angle); 
+			*/
+			if(cos(atan2(w6, w5))*w2 + sin(atan2(w6, w5))*w3 <= 0 && p_r > 0){
+				angle = atan2(w6, w5);
+				p_theta = -sin(atan2(w6, w5))*w2 + cos(atan2(w6, w5))*w3;
+			}
+			if(angle <= 0) angle += M_PI;
+			fprintf(fo, "%.14e\t", angle); 
+			p_r = cos(atan2(w6, w5))*w2 + sin(atan2(w6, w5))*w3;
+
+			fprintf(fo, "%.14e\n", p_theta); 
+
+			// prints t, x, y, z, px, py, pz, gamma, theta, p_theta
 		}
 	
 	}
@@ -742,7 +758,7 @@ int run_theory3(int process_in){
 
 	char trash[128];
  
-	foo=fopen("../../rk4_cooling/InputToBatch.txt","r");
+	foo=fopen(("InputToBatch"+to_string(process)+".txt").c_str(),"r");
 	fscanf(foo,"%s %lf %lf %lf %lf %lf %lf %lf %lf %lli %i %lf %i %lf %lf %lf %lf %lf %lf %lf %lf %i %i", 
 				trash, &x01, &x02, &x03, &p01, &p02, &p03, &kdamp, &T, &N, &pri, &dx, 
 				&wave_type, &tfwhm, &stable, &Eo, &delta, &w0, &lambda, &n, &eta, &l, &p);

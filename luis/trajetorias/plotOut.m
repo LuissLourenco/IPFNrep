@@ -1,14 +1,7 @@
 close all 
 
-a0=30;
-r0=1;
-%phi0=0;
-p0=-10;
-p=1;
-l=2;
-pasta = strcat('Out_a0_',num2str(a0),'_r0_',num2str(r0),'_p0_',num2str(p0),'_pl_',num2str(p),num2str(l),'/');
-%pasta = strcat('Out_a0_',num2str(a0),'_phi0_',num2str(phi0),'_p0_',num2str(p0),'_pl_',num2str(p),num2str(l),'/');
-%pasta = 'Outputs/';
+
+pasta = 'Outputs/';
 Files=dir(pasta);
 Names = {Files.name};
 Names=Names(3:end);
@@ -18,76 +11,74 @@ res = cell(n,1);
 
 for k=1:n
     [matrix] = ReadTxt(strcat(pasta,Names(k)),false);
+    n_points = size(matrix,1);
+    %matrix = matrix(1:n_points/2,:);
     res{k} = mat2cell(matrix, size(matrix,1), size(matrix,2));
 end
 
 
 
-
-%TRAJECTORIES
 f=figure;
-tiledlayout(1,3)
-set(gcf,'Position',[50 50 1200 500])
-ax1 = nexttile;
+view(axes(),3);
 grid on, xlabel x, ylabel y, zlabel z;
-view(ax1,3);
+hold on;
+for k=[10 2]
+    matrix = cell2mat(res{k});
+    x = matrix(:,2);
+    y = matrix(:,3);    
+    z = matrix(:,4);
+    plot3(x,y,z);
+end
+%axis([-300 10 -1 1 -1 1])
+
+
+%{
+f2 = figure;
+grid on, xlabel y, ylabel z;
 hold on;
 for k=1:n
     matrix = cell2mat(res{k});
     x = matrix(:,2);
     y = matrix(:,3);    
     z = matrix(:,4);
-    plot3(x,y,z)
-end
-%axis([-300 10 -5 5 -5 5])
-hold off
-
-
-
-nexttile;
-grid on, xlabel t, ylabel 'L_x';    
-hold on;
-for k=1:n
-    matrix = cell2mat(res{k});
-    t = matrix(:,1);
-    x = matrix(:,2);
-    y = matrix(:,3);
-    z = matrix(:,4);
-    px = matrix(:,5);
-    py = matrix(:,6);
-    pz = matrix(:,7);
-    lx = y.*pz-z.*py;
-    ly = z.*px-x.*pz;
-    lz = x.*py-y.*px;
-    %plot(t,lx,t,ly,t,lz);
-    %legend('Lx','Ly','Lz');
-    plot(t,lx);
-    
+    plot(y,z);
 end
 hold off;
+legend([{'with E_x'},{'without E_x'}]);
 
-
-nexttile;
-grid on, xlabel t, ylabel 'p_{\theta}';    
+f3 = figure;
+grid on, xlabel t, ylabel p_r;
 hold on;
 for k=1:n
     matrix = cell2mat(res{k});
     t = matrix(:,1);
-    y = matrix(:,3);
+    y = matrix(:,3);    
     z = matrix(:,4);
     phi = atan2(z,y);
     py = matrix(:,6);
     pz = matrix(:,7);
-    ptht = -sin(phi).*py+cos(phi).*pz;
-    plot(t,ptht);
-   
+    pphi = -sin(phi).*py+cos(phi).*pz;
+    pr = py.*cos(phi)+pz.*sin(phi);
+    plot(t,pr);
 end
 hold off;
+legend([{'with E_x'},{'without E_x'}]);
 
 
+f4 = figure;
+grid on, xlabel t, ylabel p_x;
+hold on;
+for k=1:n
+    matrix = cell2mat(res{k});
+    t = matrix(:,1);
+    px = matrix(:,5);
+    plot(t,px);
+end
+hold off;
+legend([{'with E_x'},{'without E_x'}]);
 
+%}
 
-saveas(f,'plot.jpg');
 
 
 

@@ -1,4 +1,4 @@
-#include "../../src/DataAnalysis.cpp"
+#include "../src/DataAnalysis.cpp"
 #include <dirent.h>
 #include <string>
 #include <vector>
@@ -20,10 +20,10 @@ typedef struct simulation_data{
 	double delta = 0;
 	double w0 = 5;
 	double lambda = 1;
-	int l = 0;
+	int l = 1;
 	int p = 0;
 
-	double rmin = 0;
+	double rmin = 0.1;
 	double rmax = 4.1;
 	double dr = 0.1;
 
@@ -100,7 +100,8 @@ void run_simulations(simulation_data data, int n_terminals){
 				system(cmd);
 				cout << "PROCESS = " << process << "\tr = " << r << "\tphi = " << phi << endl;
 			}else{
-				sprintf(cmd, "gnome-terminal -- bash -ic 'xdotool getactivewindow windowminimize; ./single_run %i %.14e %.14e %.14e %.14e %i %i %i %i %.14e %.14e %.14e %.14e %.14e %.14e %i %i ; rm InputToBatch%i.txt'", 
+				sprintf(cmd, "gnome-terminal --tab -- bash -ic './single_run %i %.14e %.14e %.14e %.14e %i %i %i %i %.14e %.14e %.14e %.14e %.14e %.14e %i %i ; rm InputToBatch%i.txt'", 
+				//sprintf(cmd, "gnome-terminal -- bash -ic 'xdotool getactivewindow windowminimize; ./single_run %i %.14e %.14e %.14e %.14e %i %i %i %i %.14e %.14e %.14e %.14e %.14e %.14e %i %i ; rm InputToBatch%i.txt'", 
 					process, r, phi, px0, kdamp, T, N, pri, wave_type, tfwhm, stable , Eo, delta, w0, lambda, l, p, process);
 				system(cmd);
 			}
@@ -123,31 +124,23 @@ void run_simulations(simulation_data data, int n_terminals){
 
 
 int main(){
-/*
-	// A0 = 70
+
+	/*
+	CHANGE THE PARAMETERS OF THE SIMULATION HERE
+	struct simulation_data HAS THE PARAMETERS
+	run_simulations(data, n_terminals)
+	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
+	*/
+
 	simulation_data sim1;
-	sim1.Eo = 70;
-	sim1.phimax = 91;
-	sim1.directory = "../outputs/Data_a70/";
+	// sim1.(...) = (...);
+
+	sim1.dr = 2;
+	sim1.dphi = 45;
+
+	sim1.directory = "../outputs/Data/";
 	sim1.print();
-	run_simulations(sim1, 3);
-
-	// px = -20
-	simulation_data sim2;
-	sim2.px = -20;
-	sim2.phimax = 91;
-	sim2.directory = "../outputs/Data_px-20/";
-	sim2.print();
-	run_simulations(sim2, 3);
-*/
-	// p = 0, l = 2
-	simulation_data sim3;
-	sim3.p = 0;
-	sim3.l = 2;
-	sim3.directory = "../outputs/Data_p0l2/";
-	sim3.print();
-	run_simulations(sim3, 3);
-
+	run_simulations(sim1, 4);
 
 
 }

@@ -6,7 +6,7 @@
 #include <chrono>
 #include <ctime> 
 
-#include "../../src/theory3.c"
+#include "../src/theory3.c"
 
 using namespace std;
 

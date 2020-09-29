@@ -58,18 +58,22 @@ int main(int argc, char **argv){
 	DataSet Z(0,bog);
 	*/
 
-	int ns = 20;
+	int ns = 1;
 	//double a0=M_PI/2;
-	double r0=3;
-	double a0=100;
-	double p0=0;
-	int p=2;
-	int l=0;
+
+	
+	double a0=50;
+
+	int p=0;
+	int l=1;
+
+	double r0=0.5;
 	double phi0=0;
 
+	double p0=-50;
 
-	double T=1000;
-	int N=1000000;
+	double T=10e3;
+	int N=T*1000;
 
 	if(argc==7){//argv-> a0 r0 p0 p l ns
 		sscanf(argv[1],"%lf",&a0);
@@ -82,11 +86,16 @@ int main(int argc, char **argv){
 		sscanf(argv[6],"%i",&ns);
 	}
 
-	for(int i=1; i<=ns; i++){
+	
+
+
+	for(int i=10; i<=10; i++){
 
 		
 		//input(0,0.5*i*cos(phi0),0.5*i*sin(phi0), p0,0,0,   0, 300, 100000, 10, 5e-3, 3, 50, 1000, a0, -1, 5, 1, 1, 1, l, p);
-		input(0,r0*cos(i*2*M_PI/ns),r0*sin(i*2*M_PI/ns),  p0,0,0,   0, T, N, 10, 5e-3, 3, 50, 1000, a0, -1, 5, 1, 1, 1, l, p);
+		//input(0,r0*cos(i*2*M_PI/ns),r0*sin(i*2*M_PI/ns),  p0,0,0,   0, T, N, 10, 5e-3, 3, 50, 1000, a0, -1, 5, 1, 1, 1, l, p);
+		input(0,r0*cos(phi0),r0*sin(phi0),  p0,0,0,   0, T, N, 10, 5e-3, 3, 50, T*10, a0, -1, 5, 1, 1, 1, l, p);
+		
 		run_theory3(i);
 		/*
 		values = ReadFile((string("Outputs/Out")+to_string(i)+string(".txt")).c_str(), &n_cols, &n_points, false, false);
@@ -94,8 +103,9 @@ int main(int argc, char **argv){
 		Y = Y.concat(DataSet(n_points,values[2]));
 		Z = Z.concat(DataSet(n_points,values[3]));
 		*/
-		cout<<i<<"/"<<ns<<"\t"<<flush;
-		if(i%5==0) cout<<endl;
+		
+		//cout<<i<<"/"<<ns<<"\t"<<flush;
+		//if(i%5==0) cout<<endl;
 	}
 	cout<<endl<<"gotovo"<<endl;
 

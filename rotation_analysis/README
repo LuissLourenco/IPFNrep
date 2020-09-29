@@ -1,0 +1,10 @@
+1) Usar o simulate/simulate.cpp para criar as simulações;
+2) Usar o analysis/analise.cpp para analisar os Outputxxxxx.txt todos;
+3) Verificar cada plot de fit das elipses e apagar os piores;
+4) Usar o analysis/final_txt.cpp para criar o txt final;
+5) Mover o txt final obtido anteriormente para a pasta final_outputs/ ;
+6) Usar o plot/plot.cpp para plotar a cena final.
+
+NOTAS: 
+a) Os ficheiros simulate/single_run.cpp e analysis/single_analise.cpp são apenas auxiliares e não é preciso mexer neles;
+b) Ler os detalhes em cada ficheiro .cpp !!!!!

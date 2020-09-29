@@ -48,7 +48,7 @@ double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ //return 0;
+ if(wave_type == 3){ 
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -484,11 +484,11 @@ double teste(double*x,double*par){
 	//a3 = pow(curlEf(par[0],x[0],x[1])[2]+DerBfz(par[0],x[0],x[1]),2);
 	//return sqrt(a1+a2+a3);
 	//check curlB
-	//double a1,a2,a3;
-	//a1 = pow( curlBf(par[0],x[0],x[1])[0]-DerEfx(par[0],x[0],x[1]) ,2);
-	//a2 = pow( curlBf(par[0],x[0],x[1])[1]-DerEfy(par[0],x[0],x[1]) ,2);
-	//a3 = pow( curlBf(par[0],x[0],x[1])[2]-DerEfz(par[0],x[0],x[1]) ,2);
-	//return sqrt(a1+a2+a3);
+	double a1,a2,a3;
+	a1 = pow( curlBf(par[0],x[0],x[1])[0]-DerEfx(par[0],x[0],x[1]) ,2);
+	a2 = pow( curlBf(par[0],x[0],x[1])[1]-DerEfy(par[0],x[0],x[1]) ,2);
+	a3 = pow( curlBf(par[0],x[0],x[1])[2]-DerEfz(par[0],x[0],x[1]) ,2);
+	return sqrt(a1+a2+a3);
 
 	//CHECK TIME DERIVATIVES
 	//double b1 = DerEfx(par[0],x[0],x[1])-dt_Efx(par[0],x[0],x[1]);
@@ -509,7 +509,7 @@ double teste(double*x,double*par){
 	//a3 = pow( curlA2(par[0],x[0],x[1])[2]-Bfz(par[0],x[0],x[1]) ,2);
 	//return sqrt(a1+a2+a3);
 
-	return Bfz(par[0],x[0],x[1])-Bfz_anterior(par[0],x[0],x[1]);
+	//return Bfz(par[0],x[0],x[1])-Bfz_anterior(par[0],x[0],x[1]);
 
 	//CHECK SOME COMPONENT
 	//return Efy(par[0],x[0],x[1]);

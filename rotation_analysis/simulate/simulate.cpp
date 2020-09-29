@@ -15,7 +15,7 @@ typedef struct simulation_data{
 	int pri = 10;
 	int wave_type = 3;
 	double tfwhm = 50;
-	double stable = 1000000000;
+	double stable = T*100;
 	double Eo = 50;
 	double delta = 0;
 	double w0 = 5;
@@ -135,8 +135,8 @@ int main(){
 	simulation_data sim1;
 	// sim1.(...) = (...);
 
-	sim1.dr = 2;
-	sim1.dphi = 45;
+	//sim1.dr = 2;
+	//sim1.dphi = 45;
 
 	sim1.directory = "../outputs/Data/";
 	sim1.print();

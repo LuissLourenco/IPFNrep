@@ -14,7 +14,7 @@ int main(int argc, char** argv){
 	*/
 
 	string directory = "../outputs/Data/"; // INCLUDE LAST SLASH
-	int n_terminals = 4;
+	int n_terminals = 6;
 
 	system("g++ -o2 single_analise.cpp -lm -o single_analise `root-config --cflags --glibs`");
 
@@ -22,14 +22,14 @@ int main(int argc, char** argv){
 	string *files;
 	char plot[64], log[64], cmd[516];
 
-	files = list_dir(directory.c_str(), &n_files);
-
 	sprintf(cmd, "rm -rvf %splots", directory.c_str());
 	system(cmd);
-	sprintf(cmd, "mkdir %splots", directory.c_str());
+	sprintf(cmd, "rm -rvf %slogs", directory.c_str());
 	system(cmd);
 
-	sprintf(cmd, "rm -rvf %slogs", directory.c_str());
+	files = list_dir(directory.c_str(), &n_files);
+
+	sprintf(cmd, "mkdir %splots", directory.c_str());
 	system(cmd);
 	sprintf(cmd, "mkdir %slogs", directory.c_str());
 	system(cmd);

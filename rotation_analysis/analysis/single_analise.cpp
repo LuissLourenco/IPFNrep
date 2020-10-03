@@ -44,6 +44,10 @@ void mood(string file_in, string plot_out, string file_out){
 
 	N = osc_per/(T[1]-T[0]).val()*0.95;
 
+	double eixo_maior = 0;
+	double eixo_menor = 0;
+	int n_eixos = 0;
+
 	DataSet TSIGMA(1, 0.), SIGMA(1, 0.);
 	DataSet PHI, R;
 	while(start+N < n_points){
@@ -69,6 +73,10 @@ void mood(string file_in, string plot_out, string file_out){
 		while(fit_elipse->GetParameter(2) < 0) 
 			fit_elipse->SetParameter(2, fit_elipse->GetParameter(2)+M_PI);
 
+		eixo_maior += abs(fit_elipse->GetParameter(0));
+		eixo_menor += abs(fit_elipse->GetParameter(1));
+		n_eixos += 1;
+
 		TSIGMA.append(Var(T[start]));
 		SIGMA.append(Var(fit_elipse->GetParameter(2)));
 		
@@ -76,6 +84,9 @@ void mood(string file_in, string plot_out, string file_out){
 	}	
 	TSIGMA = TSIGMA.subDataSet(1, TSIGMA.size());
 	SIGMA = SIGMA.subDataSet(1, SIGMA.size());
+
+	eixo_maior /= n_eixos;
+	eixo_menor /= n_eixos;
 
 	// CHECK THE ELLIPSE FITTING ======================================
 	canvas->cd(1);
@@ -203,6 +214,8 @@ void mood(string file_in, string plot_out, string file_out){
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", amp_min);
 	fprintf(fout, "\t%.14e", amp_max);
+	fprintf(fout, "\t%.14e", eixo_maior);
+	fprintf(fout, "\t%.14e", eixo_menor);
 	fclose(fout);
 
 

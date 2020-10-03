@@ -13,14 +13,14 @@ int main(int argc, char **argv){
 	string directory = "../outputs/Data/"; // INCLUDE LAST SLASH
 	string file_out = "Data_Out.txt";
 
-	char aux[256];
+	char aux[512];
 	int n_files;
 	sprintf(aux, "%splots/", directory.c_str());
 	string* files = list_dir(aux, &n_files);
 
 	sprintf(aux, "%s%s", directory.c_str(), file_out.c_str());
 	FILE* fout = fopen(aux, "w");
-	fprintf(fout, "y\tz\tphi\tr\tperiod\tthetamin\tthetamax");
+	fprintf(fout, "y\tz\tphi\tr\tperiod\tthetamin\tthetamax\teixo_menor\teixo_maior");
 
 	FILE* fin;
 	int file_to_read;
@@ -29,7 +29,7 @@ int main(int argc, char **argv){
 		sscanf(files[i].c_str(), aux, &file_to_read);
 		sprintf(aux, "%slogs/logOut%05d.txt", directory.c_str(), file_to_read);
 		fin = fopen(aux, "r");
-		fgets(aux, 256, fin);
+		fgets(aux, 512, fin);
 		fprintf(fout, "\n%s", aux);
 		printf("%s\n", aux);
 		fclose(fin);

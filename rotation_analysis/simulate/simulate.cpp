@@ -6,17 +6,19 @@
 
 using namespace std;
 
+double dt = 2e-3;
+
 typedef struct simulation_data{
 
 	double px0 = -10;
 	double kdamp = 0;
-	int T = 5000;
-	int N = 1500000;
+	int T = 10e3;
+	int N = (double)T/dt;
 	int pri = 10;
 	int wave_type = 3;
 	double tfwhm = 50;
 	double stable = T*100;
-	double Eo = 50;
+	double Eo = 5;
 	double delta = 0;
 	double w0 = 5;
 	double lambda = 1;
@@ -24,7 +26,7 @@ typedef struct simulation_data{
 	int p = 0;
 
 	double rmin = 0.1;
-	double rmax = 4.1;
+	double rmax = 3.5;
 	double dr = 0.1;
 
 	double phimin = 0;
@@ -133,14 +135,12 @@ int main(){
 	*/
 
 	simulation_data sim1;
-	// sim1.(...) = (...);
-
-	//sim1.dr = 2;
-	//sim1.dphi = 45;
+	sim1.phimin = 30;
+	sim1.phimax = 31;
 
 	sim1.directory = "../outputs/Data/";
 	sim1.print();
-	run_simulations(sim1, 4);
+	run_simulations(sim1, 6);
 
 
 }

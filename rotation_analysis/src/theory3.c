@@ -79,7 +79,7 @@ double Efx(double x, double y, double z){  //Ex interpolation to (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ //return 0;
+ if(wave_type == 3){ return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;
@@ -98,7 +98,7 @@ double DerEfx(double x, double y, double z){ //Ex time derivative at (x,y,z)
  if(wave_type == 0) return 0; 
  if(wave_type == 1) return 0;
  if(wave_type == 2) return 0;
- if(wave_type == 3){ 
+ if(wave_type == 3){ return 0;
  	double r = sqrt(y*y+z*z);
 	double phi = atan2(z,y);
  	double arg = w*t-k*x-l*phi;

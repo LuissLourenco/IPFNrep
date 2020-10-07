@@ -10,7 +10,7 @@ int main(int argc, char **argv){
 	CHANGE THE MAIN DIRECTORY OF THE PLOTS AND THE FILE NAME
 	*/
 
-	string directory = "../outputs/Data/"; // INCLUDE LAST SLASH
+	string directory = "../outputs/Data_px-10_a10/"; // INCLUDE LAST SLASH
 	string file_out = "Data_Out.txt";
 
 	char aux[512];
@@ -20,7 +20,7 @@ int main(int argc, char **argv){
 
 	sprintf(aux, "%s%s", directory.c_str(), file_out.c_str());
 	FILE* fout = fopen(aux, "w");
-	fprintf(fout, "y\tz\tphi\tr\tperiod\tthetamin\tthetamax\teixo_menor\teixo_maior");
+	fprintf(fout, "y\tz\tphi\tr\tperiod\tthetamin\tthetamax\raio_max");
 
 	FILE* fin;
 	int file_to_read;

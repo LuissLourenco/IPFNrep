@@ -20,8 +20,6 @@ void mood(string file_in, string plot_out, string file_out){
 	DataSet PY(n_points, values[5]);
 	DataSet PZ(n_points, values[6]);
 	DataSet GAMMA(n_points, values[7]);
-	DataSet THETA(n_points, values[8]);
-	DataSet PTHETA(n_points, values[9]);
 
 	if(sqrt(Y*Y+Z*Z).getMax().val() > 10){
 		cout << "Radius diverges! Exiting..." << endl;
@@ -42,11 +40,10 @@ void mood(string file_in, string plot_out, string file_out){
 	int index = DataSet(1000, dft_out[2]).getMaxI();
 	double osc_per = DataSet(1000, dft_out[0])[index].val();
 
-	N = osc_per/(T[1]-T[0]).val()*0.95;
+	double raio_max;
+	//raio_max = sqrt(Y*Y+Z*Z).subDataSet((int)(n_points/2), n_points-1).getMax().val();
 
-	double eixo_maior = 0;
-	double eixo_menor = 0;
-	int n_eixos = 0;
+	N = osc_per/(T[1]-T[0]).val()*0.95;
 
 	DataSet TSIGMA(1, 0.), SIGMA(1, 0.);
 	DataSet PHI, R;
@@ -73,9 +70,6 @@ void mood(string file_in, string plot_out, string file_out){
 		while(fit_elipse->GetParameter(2) < 0) 
 			fit_elipse->SetParameter(2, fit_elipse->GetParameter(2)+M_PI);
 
-		eixo_maior += abs(fit_elipse->GetParameter(0));
-		eixo_menor += abs(fit_elipse->GetParameter(1));
-		n_eixos += 1;
 
 		TSIGMA.append(Var(T[start]));
 		SIGMA.append(Var(fit_elipse->GetParameter(2)));
@@ -84,9 +78,6 @@ void mood(string file_in, string plot_out, string file_out){
 	}	
 	TSIGMA = TSIGMA.subDataSet(1, TSIGMA.size());
 	SIGMA = SIGMA.subDataSet(1, SIGMA.size());
-
-	eixo_maior /= n_eixos;
-	eixo_menor /= n_eixos;
 
 	// CHECK THE ELLIPSE FITTING ======================================
 	canvas->cd(1);
@@ -214,8 +205,7 @@ void mood(string file_in, string plot_out, string file_out){
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", amp_min);
 	fprintf(fout, "\t%.14e", amp_max);
-	fprintf(fout, "\t%.14e", eixo_maior);
-	fprintf(fout, "\t%.14e", eixo_menor);
+	fprintf(fout, "\t%.14e", raio_max);
 	fclose(fout);
 
 

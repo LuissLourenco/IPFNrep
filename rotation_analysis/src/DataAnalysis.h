@@ -209,6 +209,35 @@ class DataSet{
 			for(int i = a; i < b; i++) aux[i-a] = var[i];
 			return DataSet(b-a, aux);
 		}
+		DataSet order_by(const DataSet &O){
+			if(O.size() != n)
+				cout << "TAMANHO INCOMPATIVEL PARA ORDENAR!" << endl;
+			DataSet order(O.size());
+			Var* res = new Var[O.size()];
+			for(int i = 0; i < order.size(); i++){
+				order[i] = O[i];
+				res[i] = var[i];
+			}
+			bool flag = true;
+			Var aux;
+			while(flag){
+				flag = false;
+				for(int i = 0; i < n-1; i++){
+					if(order[i] > order[i+1]){
+						aux = order[i];
+						order[i] = order[i+1];
+						order[i+1] = aux;
+						flag = true;
+						aux = res[i];
+						res[i] = res[i+1];
+						res[i+1] = aux;
+					}
+				}
+			}
+			for(int i = 0; i < n; i++)
+				var[i] = res[i];
+			return *this;
+		}
 
 
 

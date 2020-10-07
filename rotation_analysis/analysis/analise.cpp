@@ -13,7 +13,7 @@ int main(int argc, char** argv){
 		THE ONES THAT ARE TRASH
 	*/
 
-	string directory = "../outputs/Data/"; // INCLUDE LAST SLASH
+	string directory = "../outputs/Data_px-10_a10/"; // INCLUDE LAST SLASH
 	int n_terminals = 6;
 
 	system("g++ -o2 single_analise.cpp -lm -o single_analise `root-config --cflags --glibs`");
@@ -22,9 +22,9 @@ int main(int argc, char** argv){
 	string *files;
 	char plot[64], log[64], cmd[516];
 
-	sprintf(cmd, "rm -rvf %splots", directory.c_str());
+	sprintf(cmd, "rm %splots/*", directory.c_str());
 	system(cmd);
-	sprintf(cmd, "rm -rvf %slogs", directory.c_str());
+	sprintf(cmd, "rm %slogs/*", directory.c_str());
 	system(cmd);
 
 	files = list_dir(directory.c_str(), &n_files);

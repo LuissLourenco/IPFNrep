@@ -722,23 +722,8 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 			fprintf(fo, "%.14e\t", w1); 
 			fprintf(fo, "%.14e\t", w2); 
 			fprintf(fo, "%.14e\t", w3); 
-			fprintf(fo, "%.14e\t", gam); 
-			/*
-			if(sqrt(w6*w6+w5*w5)>=0.45) angle = atan2(w6, w5);
-			if(angle <= 0) angle += M_PI;
-			fprintf(fo, "%.14e\t", angle); 
-			*/
-			if(cos(atan2(w6, w5))*w2 + sin(atan2(w6, w5))*w3 <= 0 && p_r > 0){
-				angle = atan2(w6, w5);
-				p_theta = -sin(atan2(w6, w5))*w2 + cos(atan2(w6, w5))*w3;
-			}
-			if(angle <= 0) angle += M_PI;
-			fprintf(fo, "%.14e\t", angle); 
-			p_r = cos(atan2(w6, w5))*w2 + sin(atan2(w6, w5))*w3;
-
-			fprintf(fo, "%.14e\n", p_theta); 
-
-			// prints t, x, y, z, px, py, pz, gamma, theta, p_theta
+			fprintf(fo, "%.14e\n", gam); 
+			
 		}
 	
 	}

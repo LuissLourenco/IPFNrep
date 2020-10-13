@@ -622,8 +622,24 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 
 	w1=p01; w2=p02; w3=p03; w4=x01; w5=x02; w6=x03;  gam=sqrt(1+p01*p01+p02*p02+p03*p03); t=0;
 
+	fprintf(fo, "t\tx\ty\tz\tpx\tpy\tpz\tgam\tEx\tEy\tEz\tBx\tBy\tBz\n");
+	gam=sqrt(1+w1*w1+w2*w2+w3*w3); 
+	fprintf(fo, "%.8e\t", t); 
+	fprintf(fo, "%.8e\t", w4); 
+	fprintf(fo, "%.8e\t", w5); 
+	fprintf(fo, "%.8e\t", w6); 
+	fprintf(fo, "%.8e\t", w1); 
+	fprintf(fo, "%.8e\t", w2); 
+	fprintf(fo, "%.8e\t", w3); 
+	fprintf(fo, "%.8e\t", gam);
+	fprintf(fo, "%.8e\t", Efx(x, y, z));
+	fprintf(fo, "%.8e\t", Efy(x, y, z));
+	fprintf(fo, "%.8e\t", Efz(x, y, z));
+	fprintf(fo, "%.8e\t", Bfx(x, y, z));
+	fprintf(fo, "%.8e\t", Bfy(x, y, z));
+	fprintf(fo, "%.8e\n", Bfz(x, y, z));
 
-	fprintf(fo, "%.14e    	%.14e 	 %.14e  	%.14e    %.14e	 %.14e	%.14e		%.14e 0 0\n",t, w4, w5, w6, w1, w2, w3, gam); 
+	
 	for(i=1; i<N; i++){
 		
 		t=(i-1)*h;
@@ -715,15 +731,20 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 
 		if ((i % pri) == 0){
 			gam=sqrt(1+w1*w1+w2*w2+w3*w3); 
-			fprintf(fo, "%.14e\t", t); 
-			fprintf(fo, "%.14e\t", w4); 
-			fprintf(fo, "%.14e\t", w5); 
-			fprintf(fo, "%.14e\t", w6); 
-			fprintf(fo, "%.14e\t", w1); 
-			fprintf(fo, "%.14e\t", w2); 
-			fprintf(fo, "%.14e\t", w3); 
-			fprintf(fo, "%.14e\n", gam); 
-			
+			fprintf(fo, "%.8e\t", t); 
+			fprintf(fo, "%.8e\t", w4); 
+			fprintf(fo, "%.8e\t", w5); 
+			fprintf(fo, "%.8e\t", w6); 
+			fprintf(fo, "%.8e\t", w1); 
+			fprintf(fo, "%.8e\t", w2); 
+			fprintf(fo, "%.8e\t", w3); 
+			fprintf(fo, "%.8e\t", gam);
+			fprintf(fo, "%.8e\t", Efx(x, y, z));
+			fprintf(fo, "%.8e\t", Efy(x, y, z));
+			fprintf(fo, "%.8e\t", Efz(x, y, z));
+			fprintf(fo, "%.8e\t", Bfx(x, y, z));
+			fprintf(fo, "%.8e\t", Bfy(x, y, z));
+			fprintf(fo, "%.8e\n", Bfz(x, y, z));
 		}
 	
 	}

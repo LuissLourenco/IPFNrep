@@ -113,6 +113,7 @@ void run_simulations(simulation_data data, int n_terminals){
 
 	cout << "Sleeping!" << endl;
 	system("sleep 30");
+	//system("read line");
 	
 	sprintf(cmd, "rm %s/*", data.directory.c_str());
 	system(cmd);
@@ -135,19 +136,31 @@ int main(){
 
 	double dt = 5e-3;
 
+	double gamma_luis = 4.82488035;
+
 	simulation_data sim1;
 	sim1.phimin = 0;
 	sim1.phimax = 1;
-	sim1.rmin = 3.5;
+	sim1.rmin = 0.1;
 	sim1.rmax = 4;
 	sim1.dr = 0.1;
-	sim1.Eo = 10;
-	sim1.T = 10000;
+	sim1.lambda = 1;
+	sim1.px0 = 0;
+	sim1.T = 800;
 	sim1.N = sim1.T / dt;
+	sim1.pri = 10;
 
-	sim1.directory = "../outputs/Data/";
-	sim1.print();
-	run_simulations(sim1, 6);
+	char aux[128];
+	for(int a0 = 0; a0 <= 0; a0++){
+		sim1.Eo = a0+0.5;
+		sim1.T = 10000;
+		sim1.N = sim1.T / dt;
+		sprintf(aux, "../outputs/Data_Stopped_%02d.5/", a0);
+		sim1.directory = aux;
+		sim1.print();
+		run_simulations(sim1, 6);
+	}
+
 
 
 }

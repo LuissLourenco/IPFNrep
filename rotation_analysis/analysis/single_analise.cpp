@@ -26,7 +26,7 @@ void mood(string file_in, string plot_out, string file_out){
 		return;
 	}
 
-	TCanvas* canvas = new TCanvas("", "", 1500, 1000);
+	TCanvas* canvas = new TCanvas("", "", 2000, 1000);
 	canvas->Divide(3, 2);
 	TGraph* trajectory; double r_max = sqrt(Y[0]*Y[0]+Z[0]*Z[0]).val()/2;
 	TGraph* sigma;
@@ -36,12 +36,12 @@ void mood(string file_in, string plot_out, string file_out){
 	int start = 0;
 	char name[64];
 
-	double** dft_out = computeDft((T[1]-T[0]).val(), 10000, Y.array(), 1000);
+	double** dft_out = computeDft((T[1]-T[0]).val(), T.size(), Y.array(), 1000);
 	int index = DataSet(1000, dft_out[2]).getMaxI();
 	double osc_per = DataSet(1000, dft_out[0])[index].val();
 
 	double raio_max;
-	//raio_max = sqrt(Y*Y+Z*Z).subDataSet((int)(n_points/2), n_points-1).getMax().val();
+	raio_max = sqrt(Y*Y+Z*Z).subDataSet((int)(n_points/2), n_points-1).getMax().val();
 
 	N = osc_per/(T[1]-T[0]).val()*0.95;
 
@@ -86,7 +86,7 @@ void mood(string file_in, string plot_out, string file_out){
 	elipse->SetTitle("1) Fitando a Elipse;#theta;r");
 	elipse->Draw("AP");
 	fit_elipse->Draw("SAME");
-	
+
 	// CHECK THE ELLIPSE FITTING ======================================
 	canvas->cd(2);
 	trajectory->GetXaxis()->SetLimits(-r_max, r_max);
@@ -100,7 +100,7 @@ void mood(string file_in, string plot_out, string file_out){
 
 	// FOURIER THE PERIOD ======================================
 	canvas->cd(3);
-	int dft_to_compute = SIGMA.size()/10;
+	int dft_to_compute = SIGMA.size()/5;
 	dft_out = computeDft((TSIGMA[1]-TSIGMA[0]).val(), SIGMA.size(), SIGMA.array(), dft_to_compute);
 	index = DataSet(dft_to_compute, dft_out[2]).getMaxI();
 
@@ -206,8 +206,11 @@ void mood(string file_in, string plot_out, string file_out){
 	fprintf(fout, "\t%.14e", amp_min);
 	fprintf(fout, "\t%.14e", amp_max);
 	fprintf(fout, "\t%.14e", raio_max);
-	fclose(fout);
 
+	double px_mean = PX.subDataSet(n_points/4, n_points-1).getMean().val();
+	fprintf(fout, "\t%.14e", px_mean);
+
+	fclose(fout);
 
 	// DELETE STUUUUUUFF ======================================
 	for(int i = 0; i < n_cols; i++) 

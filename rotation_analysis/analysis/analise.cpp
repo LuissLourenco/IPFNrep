@@ -4,17 +4,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv){
-
-	/*
-	CHANGE THE DIRECTORY OF THE SIMULATIONS HERE
-	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
-	AFTER FINISHED RUNNING, CHECK EVERY FILE AT directory/plots/ AND DELETE
-		THE ONES THAT ARE TRASH
-	*/
-
-	string directory = "../outputs/Data_px-10_a10/"; // INCLUDE LAST SLASH
-	int n_terminals = 6;
+void analise_folder(string directory, int n_terminals){
 
 	system("g++ -o2 single_analise.cpp -lm -o single_analise `root-config --cflags --glibs`");
 
@@ -45,6 +35,38 @@ int main(int argc, char** argv){
 			system(cmd);
 		}
 	}
+
+}
+
+int main(int argc, char** argv){
+
+	/*
+	CHANGE THE DIRECTORY OF THE SIMULATIONS HERE
+	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
+	AFTER FINISHED RUNNING, CHECK EVERY FILE AT directory/plots/ AND DELETE
+		THE ONES THAT ARE TRASH
+	*/
+
+	string directory = "../outputs/Data_Teste_dividir_gamma0_v3/"; // INCLUDE LAST SLASH
+	int n_terminals = 6;
+
+
+	directory = "../outputs/Data_Stopped_00.5/";
+	analise_folder(directory, n_terminals);
+	/*directory = "../outputs/Data_Stopped_01.5/";
+	analise_folder(directory, n_terminals);
+	directory = "../outputs/Data_Stopped_02.5/";
+	analise_folder(directory, n_terminals);
+	directory = "../outputs/Data_Stopped_03.5/";
+	analise_folder(directory, n_terminals);
+	directory = "../outputs/Data_Stopped_04.5/";
+	analise_folder(directory, n_terminals);
+
+*/
+	//directory = "../outputs/Data_Luis/";
+	//analise_folder(directory, n_terminals);
+
+
 
 	return 0;
 

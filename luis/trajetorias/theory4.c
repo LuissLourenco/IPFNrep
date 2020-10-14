@@ -627,9 +627,9 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 	fprintf(fo, "%.14e    	%.14e 	 %.14e  	%.14e    %.14e	 %.14e	%.14e		%.14e\n",t, w4, w5, w6, w1, w2, w3, gam); 
 	for(i=1; i<N; i++){
 
-		if(i%100 == 0){
+		if(i%500 == 0){
 			double perc = (double)i/(double)N * 100;
-			printf("\b\b\b\b\b\b\b%6.3lf%%", perc);
+			printf("\b\b\b\b\b\b\b%6.1lf%%", perc);
 		}
 
 		t=(i-1)*h;
@@ -763,6 +763,7 @@ int run_theory3(int process_in){
  	if(kdamp == 0) run_kdamp = false;
 
  	RK(T, N, p01, p02, p03, x01, x02, x03);
+ 	cout<<endl;
 
  	//printf("gotovo\n");
 

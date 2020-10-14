@@ -1,1 +1,0 @@
-g++ -o2 run_multiple.cpp -lm -o run_multiple `root-config --cflags --glibs`

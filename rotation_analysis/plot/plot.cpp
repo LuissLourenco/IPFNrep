@@ -225,7 +225,7 @@ int main(){
 	mood("../final_outputs/p0l1_px-10_a70_dt0.003" , 0, 1, "Laguerre Gaussian Mode ( p = 0 | l = 1 ) with Longitudinal B and E fields; Initial Longitudinal Momentum = -10; w0 = 5; a0 = 70; lambda = 1; kdamp = 0; Linear Polarization on y", "quadrant");
 	mood("../final_outputs/p0l1_px-10_a100_dt0.001", 0, 1, "Laguerre Gaussian Mode ( p = 0 | l = 1 ) with Longitudinal B and E fields; Initial Longitudinal Momentum = -10; w0 = 5; a0 = 100; lambda = 1; kdamp = 0; Linear Polarization on y", "quadrant");
 	*/	
-	mood("../final_outputs/Data_Out", 0, 1, "pila");
+	mood("../final_outputs/Data_Out", 0, 1, "");
 
 	return 0;
 }

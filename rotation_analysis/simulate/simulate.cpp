@@ -6,16 +6,18 @@
 
 using namespace std;
 
+double dt=2e-3;
+
 typedef struct simulation_data{
 
 	double px0 = -10;
 	double kdamp = 0;
-	int T = 10e3;
-	int N = 10e6;
+	int T = 5e3;
+	int N = T/dt;
 	int pri = 10;
 	int wave_type = 3;
 	double tfwhm = 50;
-	double stable = 1000000;
+	double stable = T*10;
 	double Eo = 10;
 	double delta = 0;
 	double w0 = 5;
@@ -23,12 +25,12 @@ typedef struct simulation_data{
 	int l = 1;
 	int p = 0;
 
-	double rmin = 0.1;
-	double rmax = 3.5;
-	double dr = 0.1;
+	double rmin = 1;
+	double rmax = 2.1;
+	double dr = 1;
 
 	double phimin = 0;
-	double phimax = 181;
+	double phimax = 180;
 	double dphi = 5;
 
 	string directory = "../outputs/Data";
@@ -134,33 +136,58 @@ int main(){
 	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
 	*/
 
-	double dt = 5e-3;
+	
 
-	double gamma_luis = 4.82488035;
-
+	/*
+	
 	simulation_data sim1;
-	sim1.phimin = 0;
-	sim1.phimax = 1;
-	sim1.rmin = 0.1;
-	sim1.rmax = 4;
-	sim1.dr = 0.1;
-	sim1.lambda = 1;
-	sim1.px0 = 0;
-	sim1.T = 800;
-	sim1.N = sim1.T / dt;
-	sim1.pri = 10;
 
-	char aux[128];
-	for(int a0 = 0; a0 <= 0; a0++){
-		sim1.Eo = a0+0.5;
-		sim1.T = 10000;
-		sim1.N = sim1.T / dt;
-		sprintf(aux, "../outputs/Data_Stopped_%02d.5/", a0);
-		sim1.directory = aux;
-		sim1.print();
-		run_simulations(sim1, 6);
+	//a0=5,10,15,20,25,30    
+	//px0=20,25,30
+	//pl=01
+	for(int i=1; i<=6; i++){
+		for(int j=1; j<=3; j++){
+
+			sim1.Eo = 5.*i;
+			sim1.px0 = -15. - j*5.;
+			char aux[128];
+			sprintf(aux, "../outputs/PicardLindelof_a0_%02.0lf_px0_%02.0lf/", sim1.Eo, sim1.px0);
+			sim1.directory = aux;
+			sim1.print();
+			run_simulations(sim1,6);
+		}
 	}
 
+	//a0=10   px0=-10   pl=02
+	sim1.Eo = 10;
+	sim1.px0 = -10;
+	sim1.l = 2;
+	sim1.phimax = 181;
+	char aux[128];
+	sprintf(aux, "../outputs/PicardLindelof02_a0_%02.0lf_px0_%02.0lf/", sim1.Eo, sim1.px0);
+	sim1.directory = aux;
+	sim1.print();
+	run_simulations(sim1,6);
 
 
+
+	//a0=5(baixo)   px0=-5   pl=01
+	sim1.Eo = 5;
+	sim1.px0 = -5;
+	sim1.l = 1;
+	sim1.phimax = 181;
+	char aux1[128];
+	sprintf(aux1, "../outputs/PicardLindelof01_a0_%02.0lf_px0_%02.0lf/", sim1.Eo, sim1.px0);
+	sim1.directory = aux1;
+	sim1.print();
+	run_simulations(sim1,6);
+
+	*/
+	
+
+	simulation_data sim1;
+	sim1.Eo = 5;
+	sim1.Eo = -10;
+	sim1.directory = "../outputs/Testephi0_a0_5_p0_10/";
+	run_simulations(sim1,6);
 }

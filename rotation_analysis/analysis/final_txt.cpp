@@ -44,6 +44,7 @@ int main(int argc, char **argv){
 	string file_out = "Data_Out.txt";
 
 
+	/*
 	directory = "../outputs/Data_Stopped_00.5/";
 	get_final_txt(directory, file_out);	
 	directory = "../outputs/Data_Stopped_01.5/";
@@ -60,11 +61,11 @@ int main(int argc, char **argv){
 	get_final_txt(directory, file_out);	
 	directory = "../outputs/Data_Stopped_05.0/";
 	get_final_txt(directory, file_out);	
-	
+	*/
 
 
-	//directory = "../outputs/Data_Luis/";
-	//get_final_txt(directory, file_out);	
+	directory = "../outputs/Testephi0_a0_5_p0_10/";
+	get_final_txt(directory, file_out);	
 
 	return 0;
 

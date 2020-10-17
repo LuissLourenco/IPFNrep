@@ -35,6 +35,7 @@
 #include "TPolyLine3D.h"
 #include "TEllipse.h"
 #include "TBox.h"
+#include "TMath.h"
 
 using namespace std;
 
@@ -350,6 +351,7 @@ class DataSet{
 			delete[] aux;
 			return res;
 		};
+
 
 	private:
 		int n;

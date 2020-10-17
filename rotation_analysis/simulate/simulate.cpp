@@ -6,7 +6,7 @@
 
 using namespace std;
 
-double dt=2e-3;
+double dt=1e-3;
 
 typedef struct simulation_data{
 
@@ -138,56 +138,7 @@ int main(){
 
 	
 
-	/*
 	
-	simulation_data sim1;
-
-	//a0=5,10,15,20,25,30    
-	//px0=20,25,30
-	//pl=01
-	for(int i=1; i<=6; i++){
-		for(int j=1; j<=3; j++){
-
-			sim1.Eo = 5.*i;
-			sim1.px0 = -15. - j*5.;
-			char aux[128];
-			sprintf(aux, "../outputs/PicardLindelof_a0_%02.0lf_px0_%02.0lf/", sim1.Eo, sim1.px0);
-			sim1.directory = aux;
-			sim1.print();
-			run_simulations(sim1,6);
-		}
-	}
-
-	//a0=10   px0=-10   pl=02
-	sim1.Eo = 10;
-	sim1.px0 = -10;
-	sim1.l = 2;
-	sim1.phimax = 181;
-	char aux[128];
-	sprintf(aux, "../outputs/PicardLindelof02_a0_%02.0lf_px0_%02.0lf/", sim1.Eo, sim1.px0);
-	sim1.directory = aux;
-	sim1.print();
-	run_simulations(sim1,6);
-
-
-
-	//a0=5(baixo)   px0=-5   pl=01
-	sim1.Eo = 5;
-	sim1.px0 = -5;
-	sim1.l = 1;
-	sim1.phimax = 181;
-	char aux1[128];
-	sprintf(aux1, "../outputs/PicardLindelof01_a0_%02.0lf_px0_%02.0lf/", sim1.Eo, sim1.px0);
-	sim1.directory = aux1;
-	sim1.print();
-	run_simulations(sim1,6);
-
-	*/
 	
-
-	simulation_data sim1;
-	sim1.Eo = 5;
-	sim1.Eo = -10;
-	sim1.directory = "../outputs/Testephi0_a0_5_p0_10/";
-	run_simulations(sim1,6);
+	return 0;
 }

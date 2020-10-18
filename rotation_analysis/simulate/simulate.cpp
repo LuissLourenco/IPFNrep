@@ -6,14 +6,12 @@
 
 using namespace std;
 
-double dt=1e-3;
-
 typedef struct simulation_data{
 
 	double px0 = -10;
 	double kdamp = 0;
 	int T = 5e3;
-	int N = T/dt;
+	int N = 100000;
 	int pri = 10;
 	int wave_type = 3;
 	double tfwhm = 50;
@@ -114,8 +112,8 @@ void run_simulations(simulation_data data, int n_terminals){
 	}
 
 	cout << "Sleeping!" << endl;
-	system("sleep 30");
-	//system("read line");
+	//system("sleep 30");
+	system("read line");
 	
 	sprintf(cmd, "rm %s/*", data.directory.c_str());
 	system(cmd);
@@ -136,9 +134,38 @@ int main(){
 	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
 	*/
 
+	simulation_data sim1;
 	
+	sim1.px0 = -2000;
+	sim1.kdamp = 1.18E-8;
+	sim1.T = 50;
+	sim1.N = 1000000;
+	sim1.pri = 10;
+	sim1.wave_type = 0;
+	sim1.tfwhm = 50;
+	sim1.stable = 0;
+	sim1.Eo = 50;
+	sim1.delta = 0;
+	sim1.w0 = 15;
+	sim1.lambda = 1;
+	sim1.l = 0;
+	sim1.p = 0;
+	sim1.rmin = 0;
+	sim1.rmax = 0.1;
+	sim1.dr = 0.5;
+	sim1.phimin = 0;
+	sim1.phimax = 1;
+	sim1.dphi = 30;
 
-	
+	sim1.directory = "../outputs/Data_Radiation_v1";
+	sim1.kdamp = 0;
+	sim1.print();
+	run_simulations(sim1, 1);
+
+	sim1.directory = "../outputs/Data_Radiation_v2";
+	sim1.kdamp = 1.18E-8;
+	sim1.print();
+	run_simulations(sim1, 1);
 	
 	return 0;
 }

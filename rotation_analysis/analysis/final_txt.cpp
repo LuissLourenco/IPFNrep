@@ -13,7 +13,7 @@ void get_final_txt(string directory, string file_out){
 
 	sprintf(aux, "%s%s", directory.c_str(), file_out.c_str());
 	FILE* fout = fopen(aux, "w");
-	fprintf(fout, "y\tz\tphi\tr\tperiod\tthetamin\tthetamax\traio_max\tpx_mean");
+	fprintf(fout, "phi\tr\tperiod\traio_max\tpx_mean");
 
 	printf("WRITING TO FILE %s\n", aux);
 
@@ -40,32 +40,25 @@ int main(int argc, char **argv){
 	CHANGE THE MAIN DIRECTORY OF THE PLOTS AND THE FILE NAME
 	*/
 
-	string directory = "../outputs/Data_Teste_dividir_gamma0_v2/"; // INCLUDE LAST SLASH
-	string file_out = "Data_Out.txt";
+	string directory; // INCLUDE LAST SLASH
+	string file_out;
 
 
-	/*
-	directory = "../outputs/Data_Stopped_00.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_01.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_02.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_03.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_04.5/";
-	get_final_txt(directory, file_out);	
 
-
-	directory = "../outputs/Data_Stopped_04.0/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_05.0/";
-	get_final_txt(directory, file_out);	
-	*/
-
-
-	directory = "../outputs/Testephi0_a0_5_p0_10/";
-	get_final_txt(directory, file_out);	
+	for(int i=1; i<=6; i++){
+		for(int j=1; j<=3; j++){
+			double Eo = (double)(5*i);
+			double px0 = -(double)(15+j*5);
+			char aux1[128];
+			char aux2[128];
+			sprintf(aux1, "../outputs/Data01_a0_%02.lf_p0_%02.lf/", Eo, -px0);
+			sprintf(aux2, "Data_px%02.lf_a%02.lf.txt", -px0, Eo);
+			directory = string(aux1);
+			file_out = string(aux2);
+			cout << directory << endl;
+			get_final_txt(directory, file_out);
+		}
+	}
 
 	return 0;
 

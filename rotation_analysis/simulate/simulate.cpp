@@ -6,13 +6,13 @@
 
 using namespace std;
 
-double dt=1e-3;
+double dt=2e-3;
 
 typedef struct simulation_data{
 
 	double px0 = -10;
 	double kdamp = 0;
-	int T = 5e3;
+	int T = 3e3;
 	int N = T/dt;
 	int pri = 10;
 	int wave_type = 3;
@@ -26,11 +26,11 @@ typedef struct simulation_data{
 	int p = 0;
 
 	double rmin = 1;
-	double rmax = 2.1;
-	double dr = 1;
+	double rmax = 4;
+	double dr = 0.1;
 
 	double phimin = 0;
-	double phimax = 180;
+	double phimax = 1;
 	double dphi = 5;
 
 	string directory = "../outputs/Data";
@@ -136,6 +136,17 @@ int main(){
 	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
 	*/
 
+	simulation_data sim;
+	for(int i=1; i<=2; i++){
+		for(int j=3; j<=3; j++){
+			sim.Eo = (double)(5*i);
+			sim.px0 = -(double)(15+j*5);
+			char aux[128];
+			sprintf(aux, "../outputs/Data01_a0_%02.lf_p0_%02.lf/",sim.Eo, -sim.px0);
+			sim.directory = aux;
+			run_simulations(sim,5);
+		}
+	}
 	
 
 	

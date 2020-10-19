@@ -48,8 +48,20 @@ int main(int argc, char** argv){
 	*/
 
 	string directory = "../outputs/Folder/"; // INCLUDE LAST SLASH
-	int n_terminals = 6;
-	analise_folder(directory, n_terminals);
+	int n_terminals = 4;
+	//analise_folder(directory, n_terminals);
+
+
+	for(int i=1; i<=2; i++){
+		for(int j=3; j<=3; j++){
+			double Eo = (double)(5*i);
+			double px0 = (double)(15+j*5);
+			char aux[128];
+			sprintf(aux, "../outputs/Data01_a0_%02.lf_p0_%02.lf/", Eo, px0);
+			directory = aux;
+			analise_folder(directory,n_terminals);
+		}
+	}
 	
 	return 0;
 

@@ -155,7 +155,7 @@ void mood(string file_in, string plot_out, string file_out){
 	*/
 
 	for(int i=0; i<SIGMA.size()-1; i++){
-		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.7*M_PI){
+		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.5*M_PI){
 			//cout << i << endl;
 			int aux = round(abs(SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
 			for(int j=i+1; j<SIGMA.size(); j++){
@@ -176,7 +176,8 @@ void mood(string file_in, string plot_out, string file_out){
 	sigma2->Draw("APL");
 	sigma2->Fit("reta","QR");
 
-	osc_per = 2*M_PI / reta->GetParameter(0);
+	osc_per = 2*M_PI / abs(reta->GetParameter(0));
+	cout<<"T: "<<osc_per<<endl;
 
 
 	// DATA FOR MAINTENANCE ======================================
@@ -192,7 +193,7 @@ void mood(string file_in, string plot_out, string file_out){
 
 	// SAVE LOG ======================================
 	FILE* fout = fopen(file_out.c_str(), "w");
-	fprintf(fout, "\t%.14e", atan2(Z[0].val(), Y[0].val()));
+	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val()));
 	fprintf(fout, "\t%.14e", r_max*2);
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", raio_max);

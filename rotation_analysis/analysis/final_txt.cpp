@@ -13,7 +13,7 @@ void get_final_txt(string directory, string file_out){
 
 	sprintf(aux, "%s%s", directory.c_str(), file_out.c_str());
 	FILE* fout = fopen(aux, "w");
-	fprintf(fout, "y\tz\tphi\tr\tperiod\tthetamin\tthetamax\traio_max\tpx_mean");
+	fprintf(fout, "phi\tr\tperiod\traio_max\tpx_mean");
 
 	printf("WRITING TO FILE %s\n", aux);
 
@@ -25,6 +25,7 @@ void get_final_txt(string directory, string file_out){
 		sprintf(aux, "%slogs/logOut%05d.txt", directory.c_str(), file_to_read);
 		fin = fopen(aux, "r");
 		fgets(aux, 512, fin);
+		aux[0] = 48;
 		fprintf(fout, "\n%s", aux);
 		fclose(fin);
 	}
@@ -44,28 +45,25 @@ int main(int argc, char **argv){
 	string file_out = "Data_Out.txt";
 
 
-	/*
-	directory = "../outputs/Data_Stopped_00.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_01.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_02.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_03.5/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_04.5/";
-	get_final_txt(directory, file_out);	
-
-
-	directory = "../outputs/Data_Stopped_04.0/";
-	get_final_txt(directory, file_out);	
-	directory = "../outputs/Data_Stopped_05.0/";
-	get_final_txt(directory, file_out);	
-	*/
-
 
 	directory = "../outputs/Testephi0_a0_5_p0_10/";
-	get_final_txt(directory, file_out);	
+
+	int px_arr[18] = {5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15, 15};
+	int Eo_arr[18] = {5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30};
+
+	char aux1[128];
+	char aux2[128];
+	for(int i = 0; i < 18; i++){
+		sprintf(aux1, "../outputs/Data_px%02d_a%02d_v2/", px_arr[i], Eo_arr[i]);
+		sprintf(aux2, "Data_px%02d_a%02d.txt", px_arr[i], Eo_arr[i]);
+	
+		directory = aux1;
+		file_out = aux2;
+
+		get_final_txt(directory, file_out);	
+
+	}
+
 
 	return 0;
 

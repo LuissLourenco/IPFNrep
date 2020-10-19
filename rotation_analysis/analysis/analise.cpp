@@ -47,43 +47,10 @@ int main(int argc, char** argv){
 		THE ONES THAT ARE TRASH
 	*/
 
-	string directory = "../outputs/Data_Teste_dividir_gamma0_v3/"; // INCLUDE LAST SLASH
+	string directory = "../outputs/Data_px10_a05/"; // INCLUDE LAST SLASH
 	int n_terminals = 6;
-
-	directory = "../outputs/PicardLindelof02/";
-	analise_folder(directory, n_terminals);
-	/*directory = "../outputs/Data_Stopped_01.5/";
-	analise_folder(directory, n_terminals);
-	directory = "../outputs/Data_Stopped_02.5/";
-	analise_folder(directory, n_terminals);
-	directory = "../outputs/Data_Stopped_03.5/";
-	analise_folder(directory, n_terminals);
-	directory = "../outputs/Data_Stopped_04.5/";
 	analise_folder(directory, n_terminals);
 
-*/
-	//directory = "../outputs/Data_Luis/";
-	//analise_folder(directory, n_terminals);
-
-
-
-	/*
-
-	for(int i=1; i<=6; i++){
-		for(int j=1; j<=3; j++){
-
-			double Eo = 5.*i;
-			double px0 = -15. - j*5.;
-			char aux[128];
-			sprintf(aux, "../outputs/PicardLindelof_a0_%02.0lf_px0_%02.0lf/", Eo, px0);
-			string directory = aux;
-			analise_folder(directory, 6);
-		}
-	}
-	
-
-
-	*/
 	return 0;
 
 }

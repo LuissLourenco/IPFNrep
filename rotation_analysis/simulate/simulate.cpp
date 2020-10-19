@@ -112,8 +112,8 @@ void run_simulations(simulation_data data, int n_terminals){
 	}
 
 	cout << "Sleeping!" << endl;
-	//system("sleep 30");
-	system("read line");
+	system("sleep 30");
+	//system("read line");
 	
 	sprintf(cmd, "rm %s/*", data.directory.c_str());
 	system(cmd);
@@ -134,38 +134,58 @@ int main(){
 	n_terminals IS THE NUMBER OS TABS THAT WILL BE RAN AT THE SAME TIME
 	*/
 
+	double dt = 5E-3;
+
 	simulation_data sim1;
 	
-	sim1.px0 = -2000;
-	sim1.kdamp = 1.18E-8;
-	sim1.T = 50;
-	sim1.N = 1000000;
+	sim1.kdamp = 0;
 	sim1.pri = 10;
-	sim1.wave_type = 0;
+	sim1.wave_type = 3;
 	sim1.tfwhm = 50;
-	sim1.stable = 0;
-	sim1.Eo = 50;
+	sim1.stable = 1e300;
 	sim1.delta = 0;
-	sim1.w0 = 15;
+	sim1.w0 = 5;
 	sim1.lambda = 1;
-	sim1.l = 0;
+	sim1.l = 1;
 	sim1.p = 0;
-	sim1.rmin = 0;
-	sim1.rmax = 0.1;
-	sim1.dr = 0.5;
+	sim1.rmin = 0.1;
+	sim1.rmax = 3.5;
+	sim1.dr = 0.1;
 	sim1.phimin = 0;
 	sim1.phimax = 1;
 	sim1.dphi = 30;
 
-	sim1.directory = "../outputs/Data_Radiation_v1";
-	sim1.kdamp = 0;
-	sim1.print();
-	run_simulations(sim1, 1);
+	sim1.pri = 5;
+
+
+	int px_arr[18] = {5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15, 15};
+	int Eo_arr[18] = {5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30};
+	int T_arr[18] = {1100, 500, 200, 150, 80, 60, 8000, 2000, 900, 500, 300, 200, 11000, 4000, 2000, 1000, 700, 500};
+
+	char aux[128];
+	for(int i = 0; i < 18; i++){
+		sprintf(aux, "../outputs/Data_px%02d_a%02d_v2", px_arr[i], Eo_arr[i]);
+
+		sim1.Eo = Eo_arr[i];
+		sim1.T = T_arr[i];
+		sim1.N = sim1.T / dt;
+		sim1.px0 = -px_arr[i];
+		sim1.directory = aux;
+		
+		sim1.print();
+
+		run_simulations(sim1, 6);
+	}
+
+	/*
+	sim1.Eo = 0;
+
+	sim1.T = 50;
+	sim1.N = 1000000;
+	sim1.px0 = -2000;
 
 	sim1.directory = "../outputs/Data_Radiation_v2";
-	sim1.kdamp = 1.18E-8;
 	sim1.print();
-	run_simulations(sim1, 1);
-	
+	*/
 	return 0;
 }

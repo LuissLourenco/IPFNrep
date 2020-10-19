@@ -47,9 +47,21 @@ int main(int argc, char** argv){
 		THE ONES THAT ARE TRASH
 	*/
 
-	string directory = "../outputs/Folder/"; // INCLUDE LAST SLASH
+	string directory = "../outputs/Data_px10_a05/"; // INCLUDE LAST SLASH
 	int n_terminals = 6;
-	analise_folder(directory, n_terminals);
+	//analise_folder(directory, n_terminals);
+
+	int px_arr[18] = {5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15, 15};
+	int Eo_arr[18] = {5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30};
+
+	char aux[128];
+	for(int i = 0; i < 18; i++){
+		sprintf(aux, "../outputs/Data_px%02d_a%02d_v2/", px_arr[i], Eo_arr[i]);
+
+		string directory = aux;
+		analise_folder(directory, n_terminals);
+
+	}
 	
 	return 0;
 

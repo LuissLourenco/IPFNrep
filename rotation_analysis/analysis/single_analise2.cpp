@@ -176,7 +176,7 @@ void mood(string file_in, string plot_out, string file_out){
 	sigma2->Draw("APL");
 	sigma2->Fit("reta","QR");
 
-	osc_per = 2*M_PI / reta->GetParameter(0);
+	osc_per = -2*M_PI / reta->GetParameter(0);
 
 
 	// DATA FOR MAINTENANCE ======================================
@@ -192,7 +192,7 @@ void mood(string file_in, string plot_out, string file_out){
 
 	// SAVE LOG ======================================
 	FILE* fout = fopen(file_out.c_str(), "w");
-	fprintf(fout, "\t%.14e", atan2(Z[0].val(), Y[0].val()));
+	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val()));
 	fprintf(fout, "\t%.14e", r_max*2);
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", raio_max);

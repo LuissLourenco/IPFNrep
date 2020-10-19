@@ -61,7 +61,7 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header=false
 		double aux;
 		int n_col = 0;
 		size_t aux_i = 0, aux_p = 0;
-		while(aux_p < line_vec[0].size()){
+		while(aux_p < line_vec[0].size()-1){
 				aux = stod(line_vec[0].substr(aux_p), &aux_i);
 				n_col++;
 				aux_p += aux_i;
@@ -75,10 +75,10 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header=false
 				j = 0;
 				aux_i = 0;
 				aux_p = 0;
-				while(aux_p < line_vec[i].size()){
+				while(aux_p < line_vec[i].size()-1){
 						res[j][i] = stod(line_vec[i].substr(aux_p), &aux_i);
 						aux_p += aux_i;
-						j++;
+						j++; 
 				}
 		}
 

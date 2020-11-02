@@ -41,11 +41,12 @@ int main(int argc, char **argv){
 	CHANGE THE MAIN DIRECTORY OF THE PLOTS AND THE FILE NAME
 	*/
 
-	string directory = "../outputs/Data_Teste_dividir_gamma0_v2/"; // INCLUDE LAST SLASH
-	string file_out = "Data_Out.txt";
+	string directory; // INCLUDE LAST SLASH
+	string file_out;
 
 
 
+<<<<<<< HEAD
 	directory = "../outputs/Testephi0_a0_5_p0_10/";
 
 	int px_arr[18] = {5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15, 15};
@@ -64,6 +65,22 @@ int main(int argc, char **argv){
 
 	}
 
+=======
+	for(int i=1; i<=6; i++){
+		for(int j=1; j<=3; j++){
+			double Eo = (double)(5*i);
+			double px0 = -(double)(15+j*5);
+			char aux1[128];
+			char aux2[128];
+			sprintf(aux1, "../outputs/Data01_a0_%02.lf_p0_%02.lf/", Eo, -px0);
+			sprintf(aux2, "Data_px%02.lf_a%02.lf.txt", -px0, Eo);
+			directory = string(aux1);
+			file_out = string(aux2);
+			cout << directory << endl;
+			get_final_txt(directory, file_out);
+		}
+	}
+>>>>>>> 65234b89d1fc37b5c5a1cc4614ddf179dc22de21
 
 	return 0;
 

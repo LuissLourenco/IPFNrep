@@ -155,7 +155,7 @@ void mood(string file_in, string plot_out, string file_out){
 	*/
 
 	for(int i=0; i<SIGMA.size()-1; i++){
-		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.7*M_PI){
+		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.5*M_PI){
 			//cout << i << endl;
 			int aux = round(abs(SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
 			for(int j=i+1; j<SIGMA.size(); j++){
@@ -176,7 +176,7 @@ void mood(string file_in, string plot_out, string file_out){
 	sigma2->Draw("APL");
 	sigma2->Fit("reta","QR");
 
-	osc_per = -2*M_PI / reta->GetParameter(0);
+	osc_per = 2*M_PI / abs(reta->GetParameter(0));
 
 
 	// DATA FOR MAINTENANCE ======================================

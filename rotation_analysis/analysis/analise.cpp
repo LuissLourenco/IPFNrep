@@ -49,8 +49,18 @@ int main(int argc, char** argv){
 
 	string directory = "../outputs/Data_px10_a05/"; // INCLUDE LAST SLASH
 	int n_terminals = 6;
-	analise_folder(directory, n_terminals);
 
+	analise_folder("../outputs/Data_Stopped_00.5/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_01.0/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_01.5/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_02.0/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_02.5/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_03.0/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_03.5/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_04.0/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_04.5/", n_terminals);
+	analise_folder("../outputs/Data_Stopped_05.0/", n_terminals);
+	
 	return 0;
 
 }

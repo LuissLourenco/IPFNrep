@@ -12,14 +12,16 @@ void mood(string file_in, string plot_out, string file_out){
 	cout << "Saving to " << plot_out << "\n          " << file_out << endl;
 
 	// prints t, x, y, z, px, py, pz, gamma, theta, p_theta
-	DataSet T(n_points, values[0]);
-	DataSet X(n_points, values[1]);
-	DataSet Y(n_points, values[2]);
-	DataSet Z(n_points, values[3]);
-	DataSet PX(n_points, values[4]);
-	DataSet PY(n_points, values[5]);
-	DataSet PZ(n_points, values[6]);
-	DataSet GAMMA(n_points, values[7]);
+	DataSet T = DataSet(n_points, values[0]).compress(10);
+	DataSet X = DataSet(n_points, values[1]).compress(10);
+	DataSet Y = DataSet(n_points, values[2]).compress(10);
+	DataSet Z = DataSet(n_points, values[3]).compress(10);
+	DataSet PX = DataSet(n_points, values[4]).compress(10);
+	DataSet PY = DataSet(n_points, values[5]).compress(10);
+	DataSet PZ = DataSet(n_points, values[6]).compress(10);
+	DataSet GAMMA = DataSet(n_points, values[7]).compress(10);
+
+	n_points = T.size();
 
 	if(sqrt(Y*Y+Z*Z).getMax().val() > 10){
 		cout << "Radius diverges! Exiting..." << endl;
@@ -197,6 +199,7 @@ void mood(string file_in, string plot_out, string file_out){
 	canvas->SaveAs(plot_out.c_str());
 
 	// SAVE LOG ======================================
+	/*
 	FILE* fout = fopen(file_out.c_str(), "w");
 	fprintf(fout, "%.14e", Y[0].val());
 	fprintf(fout, "\t%.14e", Z[0].val());
@@ -205,6 +208,18 @@ void mood(string file_in, string plot_out, string file_out){
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", amp_min);
 	fprintf(fout, "\t%.14e", amp_max);
+	fprintf(fout, "\t%.14e", raio_max);
+
+	double px_mean = PX.subDataSet(n_points/4, n_points-1).getMean().val();
+	fprintf(fout, "\t%.14e", px_mean);
+
+	fclose(fout);
+	*/
+	
+	FILE* fout = fopen(file_out.c_str(), "w");
+	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val()));
+	fprintf(fout, "\t%.14e", r_max*2);
+	fprintf(fout, "\t%.14e", 2*osc_per);
 	fprintf(fout, "\t%.14e", raio_max);
 
 	double px_mean = PX.subDataSet(n_points/4, n_points-1).getMean().val();

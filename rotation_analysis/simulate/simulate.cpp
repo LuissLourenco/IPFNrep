@@ -7,17 +7,18 @@
 using namespace std;
 
 double dt=2e-3;
+bool NHECOS = true;
 
 typedef struct simulation_data{
 
-	double px0 = -10;
+	double px0 = -20;
 	double kdamp = 0;
-	int T = 3e3;
+	int T = 20e3;
 	int N = T/dt;
 	int pri = 10;
 	int wave_type = 3;
 	double tfwhm = 50;
-	double stable = T*10;
+	double stable = T;
 	double Eo = 10;
 	double delta = 0;
 	double w0 = 5;
@@ -30,7 +31,7 @@ typedef struct simulation_data{
 	double dr = 0.1;
 
 	double phimin = 0;
-	double phimax = 1;
+	double phimax = 180;
 	double dphi = 5;
 
 	string directory = "../outputs/Data";
@@ -114,7 +115,7 @@ void run_simulations(simulation_data data, int n_terminals){
 	}
 
 	cout << "Sleeping!" << endl;
-	system("sleep 30");
+	if(NHECOS) system("sleep 30");
 	//system("read line");
 	
 	sprintf(cmd, "rm %s/*", data.directory.c_str());
@@ -137,7 +138,8 @@ int main(){
 	*/
 
 	simulation_data sim;
-	for(int i=1; i<=2; i++){
+	
+	/*for(int i=1; i<=2; i++){
 		for(int j=3; j<=3; j++){
 			sim.Eo = (double)(5*i);
 			sim.px0 = -(double)(15+j*5);
@@ -146,8 +148,24 @@ int main(){
 			sim.directory = aux;
 			run_simulations(sim,5);
 		}
-	}
+	}*/
+
+	NHECOS = false;
 	
+	sim.rmin = 3;
+	sim.rmax = 3.01;
+	sim.phimin = 0;
+	sim.phimax = 1;
+
+	sim.Eo = 30;
+	sim.px0 = -20;
+
+	sim.directory = "../outputs/meme/";
+	run_simulations(sim,1);
+
+
+
+
 
 	
 	

@@ -39,6 +39,7 @@ void mood(string file_in, string plot_out, string file_out){
 	double** dft_out = computeDft((T[1]-T[0]).val(), T.size(), Y.array(), 1000);
 	int index = DataSet(1000, dft_out[2]).getMaxI();
 	double osc_per = DataSet(1000, dft_out[0])[index].val();
+	double T_elipse = osc_per;
 
 	double raio_max;
 	raio_max = sqrt(Y*Y+Z*Z).subDataSet((int)(n_points/2), n_points-1).getMax().val();
@@ -157,7 +158,7 @@ void mood(string file_in, string plot_out, string file_out){
 	for(int i=0; i<SIGMA.size()-1; i++){
 		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.5*M_PI){
 			//cout << i << endl;
-			int aux = round(abs(SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
+			int aux = round((SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
 			for(int j=i+1; j<SIGMA.size(); j++){
 				SIGMA[j] = SIGMA[j] - Var((double)aux*M_PI);
 			}
@@ -167,7 +168,6 @@ void mood(string file_in, string plot_out, string file_out){
 	TF1* reta = new TF1("reta", "[0]*x+[1]",0,TSIGMA[-1].val());
 	sigma2 = GetTGraph(TSIGMA, SIGMA);
 	sigma2->SetTitle("4) Fit;t;#sigma");
-	//sigma2->GetYaxis()->SetRangeUser(-0.2,M_PI+0.2);
 	sigma2->SetMarkerStyle(8);
 	sigma2->SetMarkerSize(0.5);
 
@@ -193,13 +193,15 @@ void mood(string file_in, string plot_out, string file_out){
 
 	// SAVE LOG ======================================
 	FILE* fout = fopen(file_out.c_str(), "w");
-	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val()));
-	fprintf(fout, "\t%.14e", r_max*2);
+	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val())); //phi0
+	fprintf(fout, "\t%.14e", r_max*2); //r0  <- e mesmo, acredita bro
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", raio_max);
 
 	double px_mean = PX.subDataSet(n_points/4, n_points-1).getMean().val();
-	fprintf(fout, "\t%.14e", px_mean);
+	fprintf(fout, "\t%.14e", px_mean); //px_mean
+	fprintf(fout, "\t%.14e", X[-1].val()); //X_final
+	fprintf(fout, "\t%.14e", osc_per/T_elipse); //eta
 
 	fclose(fout);
 

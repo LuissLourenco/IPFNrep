@@ -51,7 +51,7 @@ int main(int argc, char** argv){
 	int n_terminals = 4;
 	//analise_folder(directory, n_terminals);
 
-
+	/*
 	for(int i=1; i<=2; i++){
 		for(int j=3; j<=3; j++){
 			double Eo = (double)(5*i);
@@ -61,7 +61,25 @@ int main(int argc, char** argv){
 			directory = aux;
 			analise_folder(directory,n_terminals);
 		}
-	}
+	}*/
+
+	directory = "../outputs/Teste_cool/";
+	//analise_folder(directory,4);
+	directory = "../outputs/Teste_pl02/";
+	//analise_folder(directory,4);
+	directory = "../outputs/Teste_pl0-1/";
+
+	directory = "../outputs/teste1/";
+	//analise_folder(directory,1);
+	directory = "../outputs/teste2/";
+	//analise_folder(directory,1);
+	directory = "../outputs/teste3/";
+	//analise_folder(directory,1);
+
+	directory = "../outputs/Data01_a0_20_p0_20/";
+	analise_folder(directory,1);
+	directory = "../outputs/Data0-1_a0_20_p0_20/";
+	analise_folder(directory,1);
 	
 	return 0;
 

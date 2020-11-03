@@ -175,8 +175,7 @@ int main(int argc, char** argv){
 	sim1.kdamp = 0;
 	sim1.pri = 10;
 	sim1.wave_type = 3;
-	sim1.tfwhm = 25;
-	sim1.stable = 10000;//2E300;
+	sim1.stable = 1000000;//2E300;
 	sim1.delta = 0;
 	sim1.w0 = 5;
 	sim1.lambda = 1;
@@ -190,25 +189,31 @@ int main(int argc, char** argv){
 	sim1.phimax = 1;
 	sim1.dphi = 30;
 
-	sim1.pri = 1;
+	sim1.pri = 10;
 
 	sim1.Eo = 5;
-	sim1.px0 = -3;
+	sim1.px0 = -1;
+	sim1.tfwhm = 500;
 
-	sim1.T = 200;
+	sim1.T = 800;
 	sim1.N = sim1.T / 0.005;
 	sim1.directory = "";
+
+	simulation_data sim2 = sim1;
+	sim2.tfwhm = 5;
 	
 	//sim1.print();
 
-	run_simulations(sim1, 6);
+	//run_simulations(sim1, 6); // 500
+	run_simulations(sim2, 6); // 5
 
 	//analise("Out00000.txt", "Plot00000.png", "Log00000.txt");
 	
 	TApplication* theApp = new TApplication("App", &argc, argv);
 
 	int n_points, n_cols;
-	double** values = ReadFile("Out00000.txt", &n_cols, &n_points, true);
+	//double** values = ReadFile("Out00000.txt", &n_cols, &n_points, true);
+	double** values = ReadFile("Out_a0.1_p0.txt", &n_cols, &n_points, true);
 
 	cout << "N_POINTS = " << n_points << endl;
 	int start = 0;

@@ -57,6 +57,88 @@ double magnetic_field_rafa(double* coord, double* par){
 
 }
 
+void mood(double t, string file){
+	int n_l = 3;
+	int n_p = 2;
+	int l_min = -1;
+	int side = 300;
+
+	TCanvas* c1 = new TCanvas("c", "", n_l*side, n_p*side);
+	c1->Divide(n_l, n_p);
+	c1->SetRightMargin(0.0);
+	c1->SetLeftMargin(0.0);
+	c1->SetBottomMargin(0.0);
+	c1->SetTopMargin(0.0);
+
+	Int_t NCont = 200; //azul meme, light blue, gold, laranja meme, vermelho meme
+	Double_t RED[] = {000./256, 256./256, 200./256};
+	Double_t GRE[] = {157./256, 256./256, 037./256};
+	Double_t BLU[] = {224./256, 256./256, 006./256};
+	//Double_t s[] = {0.00, 0.05, 0.20, 0.40, 1.00};
+	Double_t s[] = {0.00, 0.50, 1.00};
+	TColor::CreateGradientColorTable(3, s, RED, GRE, BLU, NCont);
+	gStyle->SetNumberContours(NCont);
+
+	TF2*** fun = new TF2**[n_p];
+	TLatex*** text = new TLatex**[n_p];
+	TEllipse*** ellipse = new TEllipse**[n_p];
+	for(int p = 0; p < n_p; p++){
+		fun[p] = new TF2*[n_l];
+		text[p] = new TLatex*[n_l];
+		ellipse[p] = new TEllipse*[n_l];
+		for(int l = 0; l < n_l; l++){
+			fun[p][l] = new TF2(("f_"+to_string(p)+"_"+to_string(l_min+l)).c_str(), magnetic_field_rafa, -20, 20, -20, 20, 4); 
+			fun[p][l]->SetTitle(";;;");
+			fun[p][l]->SetNpx(300);
+			fun[p][l]->SetNpy(300);
+
+			fun[p][l]->SetParameter(0, 0); // SET X COORDINATE - PROPAGATION 
+			fun[p][l]->SetParameter(1, t); // SET TIME
+			fun[p][l]->SetParameter(2, p); // SET "p" VARIABLE
+			fun[p][l]->SetParameter(3, l_min+l); // SET "l" VARIABLE
+
+			double range = fun[p][l]->GetMaximum();
+
+			if(l_min+l==0){
+				fun[p][l]->SetMaximum(7);
+				fun[p][l]->SetMinimum(-7);	
+			}
+			
+			c1->cd(1+l+p*n_l);
+			c1->cd(1+l+p*n_l)->SetGrid();
+
+			c1->cd(1+l+p*n_l)->SetRightMargin(0.0);
+			c1->cd(1+l+p*n_l)->SetLeftMargin(0.0);
+			c1->cd(1+l+p*n_l)->SetBottomMargin(0.0);
+			c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
+
+			fun[p][l]->Draw("COL");	
+
+			text[p][l] = new TLatex(-13, 15.3, ("#font[132]{p = "+to_string(p)+" | l = "+to_string(l_min+l)+"}").c_str());
+			text[p][l]->SetTextSize(0.15);
+			text[p][l]->Draw("SAME");
+
+			if(p == n_p-1 && l == n_l-1){
+				char aux[64];
+				sprintf(aux, "t = %2.2lf", t);
+				TLatex* time = new TLatex(8, -18, aux);
+				time->SetTextSize(0.08);
+				time->Draw("SAME");
+			}
+
+			ellipse[p][l] = new TEllipse(0, 0, w0);
+			ellipse[p][l]->SetFillStyle(0);
+			ellipse[p][l]->SetLineColor(2);
+			ellipse[p][l]->SetLineWidth(2);
+			ellipse[p][l]->Draw();
+		}
+	}
+
+	c1->SaveAs(file.c_str());
+
+
+}
+
 
 int main(){
 	/*
@@ -79,67 +161,16 @@ int main(){
 	c1->SaveAs("LaguerreGaussianWaveModes.png");
 	*/
 
-
-	int n_l = 6;
-	int n_p = 4;
-	int side = 400;
-
-	TCanvas* c1 = new TCanvas("c", "", n_l*side, n_p*side);
-	c1->Divide(n_l, n_p);
-	c1->SetRightMargin(0.0);
-	c1->SetLeftMargin(0.0);
-	c1->SetBottomMargin(0.0);
-	c1->SetTopMargin(0.0);
-
-	gStyle->SetPalette(kBird);
-
-	TF2*** fun = new TF2**[n_p];
-	TLatex*** text = new TLatex**[n_p];
-	TEllipse*** ellipse = new TEllipse**[n_p];
-	for(int p = 0; p < n_p; p++){
-		fun[p] = new TF2*[n_l];
-		text[p] = new TLatex*[n_l];
-		ellipse[p] = new TEllipse*[n_l];
-		for(int l = 0; l < n_l; l++){
-			fun[p][l] = new TF2(("f_"+to_string(p)+"_"+to_string(l)).c_str(), magnetic_field_rafa, -20, 20, -20, 20, 4); 
-			fun[p][l]->SetTitle(";;;");
-			fun[p][l]->SetNpx(500);
-			fun[p][l]->SetNpy(500);
-
-			fun[p][l]->SetParameter(0, 0); // SET X COORDINATE - PROPAGATION 
-			fun[p][l]->SetParameter(1, 0); // SET TIME
-			fun[p][l]->SetParameter(2, p); // SET "p" VARIABLE
-			fun[p][l]->SetParameter(3, l); // SET "l" VARIABLE
-
-			double range = fun[p][l]->GetMaximum();
-
-			//fun[p][l]->SetMaximum(range);
-			//fun[p][l]->SetMinimum(-range);	
-
-			c1->cd(1+l+p*n_l);
-
-			c1->cd(1+l+p*n_l)->SetRightMargin(0.0);
-			c1->cd(1+l+p*n_l)->SetLeftMargin(0.0);
-			c1->cd(1+l+p*n_l)->SetBottomMargin(0.0);
-			c1->cd(1+l+p*n_l)->SetTopMargin(0.0);
-
-			fun[p][l]->Draw("COL");	
-
-			text[p][l] = new TLatex(-13, 15.5, ("#font[132]{p = "+to_string(p)+" | l = "+to_string(l)+"}").c_str());
-			text[p][l]->SetTextSize(0.15);
-			text[p][l]->Draw("SAME");
-
-			ellipse[p][l] = new TEllipse(0, 0, w0);
-			ellipse[p][l]->SetFillStyle(0);
-			ellipse[p][l]->SetLineColor(2);
-			ellipse[p][l]->SetLineWidth(2);
-			ellipse[p][l]->Draw();
-		}
+	double t = 0;
+	double dt = 0.05;
+	char aux[128];
+	int frame = 0;
+	while(t < 2*M_PI){
+		sprintf(aux, "gif/Frame%03d.png", frame);
+		mood(t, aux);
+		t+=dt;
+		frame++;
 	}
-
-	c1->SaveAs("LaguerreGaussianWaveModes.png");
-
-
 
 	return 0;
 

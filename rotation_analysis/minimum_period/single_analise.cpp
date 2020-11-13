@@ -3,8 +3,9 @@
 
 using namespace std;
 
-void analise(string file_in, string plot_out, string file_out){
+void analise(string file_in, string plot_out, string file_out, double cut_in=0.25){
 
+	
 	int n_points, n_cols;
 	double** values = ReadFile(file_in.c_str(), &n_cols, &n_points, true);
 
@@ -19,6 +20,20 @@ void analise(string file_in, string plot_out, string file_out){
 	DataSet PY(n_points, values[5]);
 	DataSet PZ(n_points, values[6]);
 	DataSet GAMMA(n_points, values[7]);
+
+	double r_inicial = sqrt(Y[0]*Y[0]+Z[0]*Z[0]).val()/2;
+	double phi_inicial = atan2(Z[0].val(), Y[0].val());
+
+	double per_cut=cut_in;
+	T = T.subDataSet(n_points*per_cut, n_points);
+	X = X.subDataSet(n_points*per_cut, n_points);
+	Y = Y.subDataSet(n_points*per_cut, n_points);
+	Z = Z.subDataSet(n_points*per_cut, n_points);
+	PX = PX.subDataSet(n_points*per_cut, n_points);
+	PY = PY.subDataSet(n_points*per_cut, n_points);
+	PZ = PZ.subDataSet(n_points*per_cut, n_points);
+	GAMMA = GAMMA.subDataSet(n_points*per_cut, n_points);
+	n_points = T.size();
 
 	if(sqrt(Y*Y+Z*Z).getMax().val() > 10){
 		cout << "Radius diverges! Exiting..." << endl;
@@ -35,9 +50,18 @@ void analise(string file_in, string plot_out, string file_out){
 	int start = 0;
 	char name[64];
 
-	double** dft_out = computeDft((T[1]-T[0]).val(), T.size(), Y.array(), 1000);
+	int first_dft_size = 1000;
+	double** dft_out = computeDft((T[1]-T[0]).val(), T.size(), Y.array(), first_dft_size);
 	int index = DataSet(1000, dft_out[2]).getMaxI();
 	double osc_per = DataSet(1000, dft_out[0])[index].val();
+
+	FLAG(index);
+
+	int dft_to_compute;
+	dft_out = computeDft2((T[1]-T[0]).val(), T.size(), Y.array(), DataSet(first_dft_size, dft_out[0])[index+1].val(), DataSet(first_dft_size, dft_out[0])[index-1].val(), 0.01, &dft_to_compute);
+	index = DataSet(dft_to_compute, dft_out[2]).getMaxI();
+	osc_per = DataSet(dft_to_compute, dft_out[0])[index].val();
+	double T_elipse = osc_per;
 
 	double raio_max;
 	raio_max = sqrt(Y*Y+Z*Z).subDataSet((int)(n_points/2), n_points-1).getMax().val();
@@ -156,7 +180,7 @@ void analise(string file_in, string plot_out, string file_out){
 	for(int i=0; i<SIGMA.size()-1; i++){
 		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.5*M_PI){
 			//cout << i << endl;
-			int aux = round(abs(SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
+			int aux = round((SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
 			for(int j=i+1; j<SIGMA.size(); j++){
 				SIGMA[j] = SIGMA[j] - Var((double)aux*M_PI);
 			}
@@ -166,7 +190,6 @@ void analise(string file_in, string plot_out, string file_out){
 	TF1* reta = new TF1("reta", "[0]*x+[1]",0,TSIGMA[-1].val());
 	sigma2 = GetTGraph(TSIGMA, SIGMA);
 	sigma2->SetTitle("4) Fit;t;#sigma");
-	//sigma2->GetYaxis()->SetRangeUser(-0.2,M_PI+0.2);
 	sigma2->SetMarkerStyle(8);
 	sigma2->SetMarkerSize(0.5);
 
@@ -191,13 +214,15 @@ void analise(string file_in, string plot_out, string file_out){
 
 	// SAVE LOG ======================================
 	FILE* fout = fopen(file_out.c_str(), "w");
-	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val()));
-	fprintf(fout, "\t%.14e", r_max*2);
+	fprintf(fout, "%.14e", phi_inicial); //phi0
+	fprintf(fout, "\t%.14e", r_inicial); //r0  <- e mesmo, acredita bro
 	fprintf(fout, "\t%.14e", osc_per);
 	fprintf(fout, "\t%.14e", raio_max);
 
 	double px_mean = PX.subDataSet(n_points/4, n_points-1).getMean().val();
-	fprintf(fout, "\t%.14e", px_mean);
+	fprintf(fout, "\t%.14e", px_mean); //px_mean
+	fprintf(fout, "\t%.14e", X[-1].val()); //X_final
+	fprintf(fout, "\t%.14e", osc_per/T_elipse); //eta
 
 	fclose(fout);
 

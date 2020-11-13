@@ -90,8 +90,6 @@ int main(int argc, char **argv){
 
 	run_theory3(process);
 
-	cout << "gotovo, phi = " << phi << ", r = " << r << endl;	
-
 	return 0;
 
 }

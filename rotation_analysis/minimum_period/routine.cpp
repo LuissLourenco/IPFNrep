@@ -195,7 +195,7 @@ int main(int argc, char** argv){
 	sim1.px0 = -1;
 	sim1.tfwhm = 500;
 
-	sim1.T = 800;
+	sim1.T = 2000;
 	sim1.N = sim1.T / 0.005;
 	sim1.directory = "";
 
@@ -205,15 +205,226 @@ int main(int argc, char** argv){
 	//sim1.print();
 
 	//run_simulations(sim1, 6); // 500
-	run_simulations(sim2, 6); // 5
+	//run_simulations(sim2, 6); // 5
 
+	sim1.print();
+
+	int rise_min = 10;
+	int rise_max = 1500;
+	int drise = 10;
+	char file[256];
+	for(int rise = rise_min; rise <= rise_max; rise+=drise){
+
+		/*
+		cout << "SIMULATING TFWHM = " << rise << endl;
+
+		sim1.tfwhm = rise;
+		run_simulations(sim1, 6);
+		analise("Out00000.txt", "Plot00000.png", "Log00000.txt", (double)rise/sim1.T);
+		cout << "---------------" << (double)rise/sim1.T <<endl;
+
+
+		system("sleep 0.001;");
+		sprintf(file, "mv Out00000.txt tfwhm/Out_tfwhm%03d.txt", rise);
+		system(file);
+		sprintf(file, "mv Plot00000.png tfwhm/Plot_tfwhm%03d.png", rise);
+		system(file);
+		sprintf(file, "mv Log00000.txt tfwhm/Log_tfwhm%03d.txt", rise);
+		system(file);
+		system("sleep 0.001;");
+		*/
+		
+
+		
+		char f1[256], f2[256], f3[256];
+		sprintf(f1, "tfwhm/Out_tfwhm%03d.txt", rise);
+		sprintf(f2, "tfwhm/Plot_tfwhm%03d.png", rise);
+		sprintf(f3, "tfwhm/Log_tfwhm%03d.txt", rise);
+		analise(f1, f2, f3);
+
+	}
+
+	char aux[512];
+	vector<string> files = { 
+
+"tfwhm/Log_tfwhm010.txt",
+"tfwhm/Log_tfwhm020.txt",
+"tfwhm/Log_tfwhm030.txt",
+"tfwhm/Log_tfwhm040.txt",
+"tfwhm/Log_tfwhm050.txt",
+"tfwhm/Log_tfwhm060.txt",
+"tfwhm/Log_tfwhm070.txt",
+"tfwhm/Log_tfwhm080.txt",
+"tfwhm/Log_tfwhm090.txt",
+"tfwhm/Log_tfwhm100.txt",
+"tfwhm/Log_tfwhm110.txt",
+"tfwhm/Log_tfwhm120.txt",
+"tfwhm/Log_tfwhm130.txt",
+"tfwhm/Log_tfwhm140.txt",
+"tfwhm/Log_tfwhm150.txt",
+"tfwhm/Log_tfwhm160.txt",
+"tfwhm/Log_tfwhm170.txt",
+"tfwhm/Log_tfwhm180.txt",
+"tfwhm/Log_tfwhm190.txt",
+"tfwhm/Log_tfwhm200.txt",
+"tfwhm/Log_tfwhm210.txt",
+"tfwhm/Log_tfwhm220.txt",
+"tfwhm/Log_tfwhm230.txt",
+"tfwhm/Log_tfwhm240.txt",
+"tfwhm/Log_tfwhm250.txt",
+"tfwhm/Log_tfwhm260.txt",
+"tfwhm/Log_tfwhm270.txt",
+"tfwhm/Log_tfwhm280.txt",
+"tfwhm/Log_tfwhm290.txt",
+"tfwhm/Log_tfwhm300.txt",
+"tfwhm/Log_tfwhm310.txt",
+"tfwhm/Log_tfwhm320.txt",
+"tfwhm/Log_tfwhm330.txt",
+"tfwhm/Log_tfwhm340.txt",
+"tfwhm/Log_tfwhm350.txt",
+"tfwhm/Log_tfwhm360.txt",
+"tfwhm/Log_tfwhm370.txt",
+"tfwhm/Log_tfwhm380.txt",
+"tfwhm/Log_tfwhm390.txt",
+"tfwhm/Log_tfwhm400.txt",
+"tfwhm/Log_tfwhm410.txt",
+"tfwhm/Log_tfwhm420.txt",
+"tfwhm/Log_tfwhm430.txt",
+"tfwhm/Log_tfwhm440.txt",
+"tfwhm/Log_tfwhm450.txt",
+"tfwhm/Log_tfwhm460.txt",
+"tfwhm/Log_tfwhm470.txt",
+"tfwhm/Log_tfwhm480.txt",
+"tfwhm/Log_tfwhm490.txt",
+"tfwhm/Log_tfwhm500.txt",
+"tfwhm/Log_tfwhm510.txt",
+"tfwhm/Log_tfwhm520.txt",
+"tfwhm/Log_tfwhm530.txt",
+"tfwhm/Log_tfwhm540.txt",
+"tfwhm/Log_tfwhm550.txt",
+"tfwhm/Log_tfwhm560.txt",
+"tfwhm/Log_tfwhm570.txt",
+"tfwhm/Log_tfwhm580.txt",
+"tfwhm/Log_tfwhm590.txt",
+"tfwhm/Log_tfwhm600.txt",
+"tfwhm/Log_tfwhm610.txt",
+"tfwhm/Log_tfwhm620.txt",
+"tfwhm/Log_tfwhm630.txt",
+"tfwhm/Log_tfwhm640.txt",
+"tfwhm/Log_tfwhm650.txt",
+"tfwhm/Log_tfwhm660.txt",
+"tfwhm/Log_tfwhm670.txt",
+"tfwhm/Log_tfwhm680.txt",
+"tfwhm/Log_tfwhm690.txt",
+"tfwhm/Log_tfwhm700.txt",
+"tfwhm/Log_tfwhm710.txt",
+"tfwhm/Log_tfwhm720.txt",
+"tfwhm/Log_tfwhm730.txt",
+"tfwhm/Log_tfwhm740.txt",
+"tfwhm/Log_tfwhm750.txt",
+"tfwhm/Log_tfwhm760.txt",
+"tfwhm/Log_tfwhm770.txt",
+"tfwhm/Log_tfwhm780.txt",
+"tfwhm/Log_tfwhm790.txt",
+"tfwhm/Log_tfwhm800.txt",
+"tfwhm/Log_tfwhm810.txt",
+"tfwhm/Log_tfwhm820.txt",
+"tfwhm/Log_tfwhm830.txt",
+"tfwhm/Log_tfwhm840.txt",
+"tfwhm/Log_tfwhm850.txt",
+"tfwhm/Log_tfwhm860.txt",
+"tfwhm/Log_tfwhm870.txt",
+"tfwhm/Log_tfwhm880.txt",
+"tfwhm/Log_tfwhm890.txt",
+"tfwhm/Log_tfwhm900.txt",
+"tfwhm/Log_tfwhm910.txt",
+"tfwhm/Log_tfwhm920.txt",
+"tfwhm/Log_tfwhm930.txt",
+"tfwhm/Log_tfwhm940.txt",
+"tfwhm/Log_tfwhm950.txt",
+"tfwhm/Log_tfwhm960.txt",
+"tfwhm/Log_tfwhm970.txt",
+"tfwhm/Log_tfwhm980.txt",
+"tfwhm/Log_tfwhm990.txt",
+"tfwhm/Log_tfwhm1000.txt",
+"tfwhm/Log_tfwhm1010.txt",
+"tfwhm/Log_tfwhm1020.txt",
+"tfwhm/Log_tfwhm1030.txt",
+"tfwhm/Log_tfwhm1040.txt",
+"tfwhm/Log_tfwhm1050.txt",
+"tfwhm/Log_tfwhm1060.txt",
+"tfwhm/Log_tfwhm1070.txt",
+"tfwhm/Log_tfwhm1080.txt",
+"tfwhm/Log_tfwhm1090.txt",
+"tfwhm/Log_tfwhm1100.txt",
+"tfwhm/Log_tfwhm1110.txt",
+"tfwhm/Log_tfwhm1120.txt",
+"tfwhm/Log_tfwhm1130.txt",
+"tfwhm/Log_tfwhm1140.txt",
+"tfwhm/Log_tfwhm1150.txt",
+"tfwhm/Log_tfwhm1160.txt",
+"tfwhm/Log_tfwhm1170.txt",
+"tfwhm/Log_tfwhm1180.txt",
+"tfwhm/Log_tfwhm1190.txt",
+"tfwhm/Log_tfwhm1200.txt",
+"tfwhm/Log_tfwhm1210.txt",
+"tfwhm/Log_tfwhm1220.txt",
+"tfwhm/Log_tfwhm1230.txt",
+"tfwhm/Log_tfwhm1240.txt",
+"tfwhm/Log_tfwhm1250.txt",
+"tfwhm/Log_tfwhm1260.txt",
+"tfwhm/Log_tfwhm1270.txt",
+"tfwhm/Log_tfwhm1280.txt",
+"tfwhm/Log_tfwhm1290.txt",
+"tfwhm/Log_tfwhm1300.txt",
+"tfwhm/Log_tfwhm1310.txt",
+"tfwhm/Log_tfwhm1320.txt",
+"tfwhm/Log_tfwhm1330.txt",
+"tfwhm/Log_tfwhm1340.txt",
+"tfwhm/Log_tfwhm1350.txt",
+"tfwhm/Log_tfwhm1360.txt",
+"tfwhm/Log_tfwhm1370.txt",
+"tfwhm/Log_tfwhm1380.txt",
+"tfwhm/Log_tfwhm1390.txt",
+"tfwhm/Log_tfwhm1400.txt",
+"tfwhm/Log_tfwhm1410.txt",
+"tfwhm/Log_tfwhm1420.txt",
+"tfwhm/Log_tfwhm1430.txt",
+"tfwhm/Log_tfwhm1440.txt",
+"tfwhm/Log_tfwhm1450.txt",
+"tfwhm/Log_tfwhm1460.txt",
+"tfwhm/Log_tfwhm1470.txt",
+"tfwhm/Log_tfwhm1480.txt",
+"tfwhm/Log_tfwhm1490.txt",
+"tfwhm/Log_tfwhm1500.txt"
+
+	};
+
+	FILE* fout = fopen("Data_tfwhm.txt", "w");
+	fprintf(fout, "tfwhm\tphi\tr\tperiod\traio_max\tpx_mean\tx_f\teta");
+
+	FILE* fin;
+	int rise_print;
+	for(int i = 0; i < files.size(); i++){
+		fin = fopen(files[i].c_str(), "r");
+		fgets(aux, 512, fin);
+		aux[0] = 48;
+		sscanf(files[i].c_str(), "tfwhm/Log_tfwhm%d", &rise_print); 
+		fprintf(fout, "\n%d\t%s", rise_print, aux);
+		fclose(fin);
+	}
+	fclose(fout);
+
+
+
+/*
 	//analise("Out00000.txt", "Plot00000.png", "Log00000.txt");
 	
 	TApplication* theApp = new TApplication("App", &argc, argv);
 
 	int n_points, n_cols;
 	//double** values = ReadFile("Out00000.txt", &n_cols, &n_points, true);
-	double** values = ReadFile("Out_a0.1_p0.txt", &n_cols, &n_points, true);
+	double** values = ReadFile("Sim_a0.1_p0.txt", &n_cols, &n_points, true);
 
 	cout << "N_POINTS = " << n_points << endl;
 	int start = 0;
@@ -256,7 +467,7 @@ int main(int argc, char** argv){
 
 
 	theApp->Run();
-
+*/
 
 	return 0;
 }

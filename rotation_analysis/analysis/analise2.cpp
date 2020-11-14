@@ -25,6 +25,9 @@ void analise_folder(string directory, int n_terminals){
 	system(cmd);
 
 	for(int i = 0; i < n_files; i++){
+		
+		if(files[i].substr(string(directory).size(), 8).compare("Logger")==0) continue;
+		
 		sprintf(plot, "%splots/plot%s.png", directory.c_str(), files[i].substr(string(directory).size(), 8).c_str());
 		sprintf(log , "%slogs/log%s.txt"  , directory.c_str(), files[i].substr(string(directory).size(), 8).c_str());
 		if(i % n_terminals == 0){
@@ -47,56 +50,11 @@ int main(int argc, char** argv){
 		THE ONES THAT ARE TRASH
 	*/
 
-<<<<<<< HEAD
-	string directory = "../outputs/Data_px10_a05/"; // INCLUDE LAST SLASH
-	int n_terminals = 6;
-	
 
-	analise_folder("../outputs/Data_Stopped_00.5/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_01.0/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_01.5/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_02.0/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_02.5/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_03.0/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_03.5/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_04.0/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_04.5/", n_terminals);
-	analise_folder("../outputs/Data_Stopped_05.0/", n_terminals);
-=======
-	string directory = "../outputs/Folder/"; // INCLUDE LAST SLASH
+	string directory = "../outputs/teste/"; // INCLUDE LAST SLASH
 	int n_terminals = 4;
-	//analise_folder(directory, n_terminals);
-
-	/*
-	for(int i=1; i<=2; i++){
-		for(int j=3; j<=3; j++){
-			double Eo = (double)(5*i);
-			double px0 = (double)(15+j*5);
-			char aux[128];
-			sprintf(aux, "../outputs/Data01_a0_%02.lf_p0_%02.lf/", Eo, px0);
-			directory = aux;
-			analise_folder(directory,n_terminals);
-		}
-	}*/
-
-	directory = "../outputs/Teste_cool/";
-	//analise_folder(directory,4);
-	directory = "../outputs/Teste_pl02/";
-	//analise_folder(directory,4);
-	directory = "../outputs/Teste_pl0-1/";
-
-	directory = "../outputs/teste1/";
-	//analise_folder(directory,1);
-	directory = "../outputs/teste2/";
-	//analise_folder(directory,1);
-	directory = "../outputs/teste3/";
-	//analise_folder(directory,1);
-
-	directory = "../outputs/Data01_a0_20_p0_20/";
-	analise_folder(directory,1);
-	directory = "../outputs/Data0-1_a0_20_p0_20/";
-	analise_folder(directory,1);
->>>>>>> 78dc1d2cf965c6ef764b661065e67c2687c13de0
+	
+	analise_folder(directory, n_terminals);
 	
 	return 0;
 

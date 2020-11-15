@@ -159,8 +159,12 @@ void mood(string file_in, string plot_out, string file_out){
 		if(abs(SIGMA[i+1].val() - SIGMA[i].val()) > 0.5*M_PI){
 			//cout << i << endl;
 			int aux = round((SIGMA[i+1].val() - SIGMA[i].val()) / M_PI);
-			for(int j=i+1; j<SIGMA.size(); j++){
-				SIGMA[j] = SIGMA[j] - Var((double)aux*M_PI);
+
+			//extra trigger -> tmb se desvia do penultimo
+			if(i==0 ? true : round((SIGMA[i+1].val() - SIGMA[i-1].val()) / M_PI) > 0.5)
+				for(int j=i+1; j<SIGMA.size(); j++){
+					SIGMA[j] = SIGMA[j] - Var((double)aux*M_PI);
+
 			}
 		}
 	}

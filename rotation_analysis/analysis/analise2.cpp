@@ -27,7 +27,7 @@ void analise_folder(string directory, int n_terminals){
 	for(int i = 0; i < n_files; i++){
 		
 		//TRIG p n se meter a ler merdas		
-		if(files[i].substr(string(directory).size(), 3).compare("Out")!=0){cout<<"==========AQUIIIII========="<<endl;continue;};
+		if(files[i].substr(string(directory).size(), 3).compare("Out")!=0){continue;};
 		
 		sprintf(plot, "%splots/plot%s.png", directory.c_str(), files[i].substr(string(directory).size(), 8).c_str());
 		sprintf(log , "%slogs/log%s.txt"  , directory.c_str(), files[i].substr(string(directory).size(), 8).c_str());

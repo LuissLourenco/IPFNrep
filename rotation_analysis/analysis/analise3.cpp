@@ -6,7 +6,7 @@ using namespace std;
 
 void analise_folder(string directory, int n_terminals){
 
-	system("g++ -o2 single_analise2.cpp -lm -o single_analise2 `root-config --cflags --glibs`");
+	system("g++ -o2 single_analise3.cpp -lm -o single_analise3 `root-config --cflags --glibs`");
 
 	int n_files;
 	string *files;
@@ -32,10 +32,10 @@ void analise_folder(string directory, int n_terminals){
 		sprintf(plot, "%splots/plot%s.png", directory.c_str(), files[i].substr(string(directory).size(), 8).c_str());
 		sprintf(log , "%slogs/log%s.txt"  , directory.c_str(), files[i].substr(string(directory).size(), 8).c_str());
 		if(i % n_terminals == 0){
-			sprintf(cmd, "./single_analise2 %s %s %s; sleep 1", files[i].c_str(), plot, log);
+			sprintf(cmd, "./single_analise3 %s %s %s; sleep 1", files[i].c_str(), plot, log);
 			system(cmd);
 		}else{
-			sprintf(cmd, "gnome-terminal --tab -- bash -ic './single_analise2 %s %s %s'", files[i].c_str(), plot, log);
+			sprintf(cmd, "gnome-terminal --tab -- bash -ic './single_analise3 %s %s %s'", files[i].c_str(), plot, log);
 			system(cmd);
 		}
 

@@ -13,11 +13,11 @@ typedef struct simulation_data{
 	double px0 = -20;
 	double kdamp = 0;
 	int T = 500;
-	int N = 10000;
+	int N = 100000;
 	int pri = 10;
 	int wave_type = 3;
 	double tfwhm = 50;
-	double stable = T;
+	double stable = 100000;
 	double Eo = 10;
 	double delta = 0;
 	double w0 = 5;
@@ -91,7 +91,7 @@ void run_simulations(vector<simulation_data> data, string directory, int n_termi
 		fprintf(data_logger, "%d\t", l);
 		fprintf(data_logger, "%d", p);
 
-		sprintf(cmd, "%4d of %4ld \u262d  ", process, data.size());
+		sprintf(cmd, "%4d of %4ld \u262d  ", process+1, data.size());
 		cout << cmd;
 		data[process].print_short();
 
@@ -129,14 +129,30 @@ int main(){
 	vector<simulation_data> data;
 	simulation_data single;
 
-	for(int i = 1; i < 10; i++){
+	double px0_min = -10;
+	double px0_max = -1;
+	double dpx0 = 1;
 
-		single.Eo = i;
-		data.push_back(single);
+	double a0_min = 2;
+	double a0_max = 20;
+	double da0 = 2;
 
+	double a0, px0;
+
+	a0 = a0_min;
+	while(a0 <= a0_max){
+		px0 = px0_min;
+		while(px0 <= px0_max){
+			single.Eo = a0;
+			single.px0 = px0;
+			data.push_back(single);
+
+			px0 += dpx0;
+		}
+		a0 += da0;
 	}
 
-	run_simulations(data, "../outputs/Data_New", 1);
+	run_simulations(data, "../outputs/Data_Test", 6);
 
 	return 0;
 }

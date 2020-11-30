@@ -19,13 +19,13 @@ using namespace std;
 int main(){
 	
 	int n_points, n_cols;
-	double** values = ReadFile("../outputs/Data_Finner/Data_Out.txt", &n_cols, &n_points, true);
+	double** values = ReadFile("../final_outputs/Data_Out_Finner.txt", &n_cols, &n_points, true);
 	// file phi	r	period	raio_max	px_mean	x_final	eta
 	DataSet PER(n_points, values[3]);
 	DataSet PXM(n_points, values[5]);
 	DataSet ETA(n_points, values[7]);
 
-	values = ReadFile("../outputs/Data_Finner/Logger", &n_cols, &n_points, true);
+	values = ReadFile("../final_outputs/Logger_Finner", &n_cols, &n_points, true);
 	// process	r	phi	px0	kdamp	T	N	pri	wave_type	tfwhm	stable	Eo	delta	w0	lambda	l	p
 	DataSet PX0(n_points, values[3]);
 	DataSet A0(n_points, values[11]);

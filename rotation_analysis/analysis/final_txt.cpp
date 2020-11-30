@@ -4,30 +4,26 @@
 
 using namespace std;
 
-void get_final_txt(string directory, string file_out){
+void get_final_txt(string directory, string file_out, int n_files){
 
 	char aux[512];
-	int n_files;
-	sprintf(aux, "%splots/", directory.c_str());
-	string* files = list_dir(aux, &n_files);
-
+	
 	sprintf(aux, "%s%s", directory.c_str(), file_out.c_str());
 	FILE* fout = fopen(aux, "w");
-	fprintf(fout, "phi\tr\tperiod\traio_max\tpx_mean");
+	fprintf(fout, "file\tphi\tr\tperiod\traio_max\tpx_mean\tx_final\teta");
 
 	printf("WRITING TO FILE %s\n", aux);
 
-	FILE* fin;
-	int file_to_read;
 	for(int i = 0; i < n_files; i++){
-		sprintf(aux, "%splots/plotOut%%05d.txt", directory.c_str());
-		sscanf(files[i].c_str(), aux, &file_to_read);
-		sprintf(aux, "%slogs/logOut%05d.txt", directory.c_str(), file_to_read);
-		fin = fopen(aux, "r");
-		fgets(aux, 512, fin);
-		aux[0] = 48;
-		fprintf(fout, "\n%s", aux);
-		fclose(fin);
+		sprintf(aux, "%slogs/logOut%05d.txt", directory.c_str(), i);
+		if(FILE *fin = fopen(aux, "r")){
+			fgets(aux, 512, fin);
+			aux[0] = 48;
+			fprintf(fout, "\n%i\t%s", i, aux);
+			fclose(fin);
+		}else{
+			fprintf(fout, "\n%i\t-1\t-1\t-1\t-1\t-1\t-1\t-1", i);
+		}		
 	}
 	fclose(fout);
 
@@ -41,46 +37,10 @@ int main(int argc, char **argv){
 	CHANGE THE MAIN DIRECTORY OF THE PLOTS AND THE FILE NAME
 	*/
 
-	string directory; // INCLUDE LAST SLASH
-	string file_out;
+	string directory = "../outputs/Data_Finner/"; // INCLUDE LAST SLASH
+	string file_out = "Data_Out.txt";
+	get_final_txt(directory, file_out, 3124);
 
-
-
-<<<<<<< HEAD
-	directory = "../outputs/Testephi0_a0_5_p0_10/";
-
-	int px_arr[18] = {5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15, 15};
-	int Eo_arr[18] = {5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30};
-
-	char aux1[128];
-	char aux2[128];
-	for(int i = 0; i < 18; i++){
-		sprintf(aux1, "../outputs/Data_px%02d_a%02d_v2/", px_arr[i], Eo_arr[i]);
-		sprintf(aux2, "Data_px%02d_a%02d.txt", px_arr[i], Eo_arr[i]);
-	
-		directory = aux1;
-		file_out = aux2;
-
-		get_final_txt(directory, file_out);	
-
-	}
-
-=======
-	for(int i=1; i<=6; i++){
-		for(int j=1; j<=3; j++){
-			double Eo = (double)(5*i);
-			double px0 = -(double)(15+j*5);
-			char aux1[128];
-			char aux2[128];
-			sprintf(aux1, "../outputs/Data01_a0_%02.lf_p0_%02.lf/", Eo, -px0);
-			sprintf(aux2, "Data_px%02.lf_a%02.lf.txt", -px0, Eo);
-			directory = string(aux1);
-			file_out = string(aux2);
-			cout << directory << endl;
-			get_final_txt(directory, file_out);
-		}
-	}
->>>>>>> 65234b89d1fc37b5c5a1cc4614ddf179dc22de21
 
 	return 0;
 

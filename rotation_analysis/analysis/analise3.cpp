@@ -53,7 +53,7 @@ int main(int argc, char** argv){
 	*/
 
 
-	string directory = "../outputs/Data_Test/"; // INCLUDE LAST SLASH
+	string directory = "../outputs/Data_Finner/"; // INCLUDE LAST SLASH
 	int n_terminals = 6;
 	
 	analise_folder(directory, n_terminals);

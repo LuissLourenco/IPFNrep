@@ -129,30 +129,46 @@ int main(){
 	vector<simulation_data> data;
 	simulation_data single;
 
-	double px0_min = -10;
-	double px0_max = -1;
-	double dpx0 = 1;
+	single.r = 2;
+	single.phi = 0;
+	single.px0 = -20;
+	single.kdamp = 0;
+	single.T = 1000;
+	single.N = 1000000;
+	single.pri = 20;
+	single.wave_type = 3;
+	single.tfwhm = 50;
+	single.stable = 100000;
+	single.Eo = 10;
+	single.delta = 0;
+	single.w0 = 5;
+	single.lambda = 1;
+	single.l = 1;
+	single.p = 0;
 
-	double a0_min = 2;
+	double px0_min = -10;
+	double px0_max = -0.2;
+	double dpx0 = 0.2;
+
+	double a0_min = 0.2;
 	double a0_max = 20;
-	double da0 = 2;
+	double da0 = 0.2;
 
 	double a0, px0;
 
-	a0 = a0_min;
-	while(a0 <= a0_max){
-		px0 = px0_min;
-		while(px0 <= px0_max){
+	px0 = px0_min;
+	while(px0 <= px0_max){
+		a0 = -1.5*px0;
+		while(a0 <= a0_max){
 			single.Eo = a0;
 			single.px0 = px0;
 			data.push_back(single);
-
-			px0 += dpx0;
+			a0 += da0;
 		}
-		a0 += da0;
+		px0 += dpx0;
 	}
 
-	run_simulations(data, "../outputs/Data_Test", 6);
+	run_simulations(data, "../outputs/Data_Finner", 6);
 
 	return 0;
 }

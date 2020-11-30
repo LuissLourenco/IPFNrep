@@ -43,7 +43,7 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header=false
 		ifstream file(src_file);
 
 		if(!file.is_open()){
-				cout << "Ficheiro para leitura inexistente!" << endl;
+				cout << "Unable to read file <" << src_file << ">!" << endl;
 				return 0;
 		}
 
@@ -78,7 +78,7 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header=false
 				while(aux_p < line_vec[i].size()-1){
 						res[j][i] = stod(line_vec[i].substr(aux_p), &aux_i);
 						aux_p += aux_i;
-						j++; 
+						j++;
 				}
 		}
 

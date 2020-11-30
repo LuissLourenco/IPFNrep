@@ -72,7 +72,7 @@ class Var{
 		friend Var sin(const Var& v){return Var(sin(v.value), abs(cos(v.value)*v.error));};
 		friend Var cos(const Var& v){return Var(cos(v.value), abs(sin(v.value)*v.error));};
 		friend Var sqrt(const Var& v){return Var(v.value, v.error)^Var(1./2, 0);};
-		
+		friend Var log(const Var& v){return Var(log(v.value), abs(v.error/v.value));};
 
 		friend ostream& operator<<(ostream& os, const Var& v);
 
@@ -335,6 +335,22 @@ class DataSet{
 		friend DataSet abs(const DataSet& v){
 			Var *aux = new Var[v.size()];
 			for(int i = 0; i < v.size(); i++) aux[i] = abs(v[i]);
+			DataSet res(v.size(), aux);
+			delete[] aux;
+			return res;
+		};
+
+		friend DataSet log(const DataSet& v){
+			Var *aux = new Var[v.size()];
+			for(int i = 0; i < v.size(); i++) aux[i] = log(v[i]);
+			DataSet res(v.size(), aux);
+			delete[] aux;
+			return res;
+		};
+
+		friend DataSet cos(const DataSet& v){
+			Var *aux = new Var[v.size()];
+			for(int i = 0; i < v.size(); i++) aux[i] = cos(v[i]);
 			DataSet res(v.size(), aux);
 			delete[] aux;
 			return res;

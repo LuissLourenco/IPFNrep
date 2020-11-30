@@ -632,12 +632,13 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 	fprintf(fo, "%.8e\t", w2); 
 	fprintf(fo, "%.8e\t", w3); 
 	fprintf(fo, "%.8e\t", gam);
-	fprintf(fo, "%.8e\t", Efx(x, y, z));
-	fprintf(fo, "%.8e\t", Efy(x, y, z));
-	fprintf(fo, "%.8e\t", Efz(x, y, z));
-	fprintf(fo, "%.8e\t", Bfx(x, y, z));
-	fprintf(fo, "%.8e\t", Bfy(x, y, z));
-	fprintf(fo, "%.8e\n", Bfz(x, y, z));
+	//fprintf(fo, "%.8e\t", Efx(x, y, z));
+	//fprintf(fo, "%.8e\t", Efy(x, y, z));
+	//fprintf(fo, "%.8e\t", Efz(x, y, z));
+	//fprintf(fo, "%.8e\t", Bfx(x, y, z));
+	//fprintf(fo, "%.8e\t", Bfy(x, y, z));
+	//fprintf(fo, "%.8e\n", Bfz(x, y, z));
+	fprintf(fo, "\n");
 
 	
 	for(i=1; i<N; i++){
@@ -731,20 +732,21 @@ double RK(double T, long long int N, double p01, double p02,double p03, double x
 
 		if ((i % pri) == 0){
 			gam=sqrt(1+w1*w1+w2*w2+w3*w3); 
-			fprintf(fo, "%.8e\t", t); 
-			fprintf(fo, "%.8e\t", w4); 
-			fprintf(fo, "%.8e\t", w5); 
-			fprintf(fo, "%.8e\t", w6); 
-			fprintf(fo, "%.8e\t", w1); 
-			fprintf(fo, "%.8e\t", w2); 
-			fprintf(fo, "%.8e\t", w3); 
-			fprintf(fo, "%.8e\t", gam);
-			fprintf(fo, "%.8e\t", Efx(x, y, z));
-			fprintf(fo, "%.8e\t", Efy(x, y, z));
-			fprintf(fo, "%.8e\t", Efz(x, y, z));
-			fprintf(fo, "%.8e\t", Bfx(x, y, z));
-			fprintf(fo, "%.8e\t", Bfy(x, y, z));
-			fprintf(fo, "%.8e\n", Bfz(x, y, z));
+			if(abs(t           ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", t           ); 
+			if(abs(w4          ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", w4          ); 
+			if(abs(w5          ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", w5          ); 
+			if(abs(w6          ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", w6          ); 
+			if(abs(w1          ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", w1          ); 
+			if(abs(w2          ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", w2          ); 
+			if(abs(w3          ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", w3          ); 
+			if(abs(gam         ) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", gam         );
+			//if(abs(Efx(x, y, z)) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", Efx(x, y, z));
+			//if(abs(Efy(x, y, z)) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", Efy(x, y, z));
+			//if(abs(Efz(x, y, z)) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", Efz(x, y, z));
+			//if(abs(Bfx(x, y, z)) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", Bfx(x, y, z));
+			//if(abs(Bfy(x, y, z)) < 1E-300) fprintf(fo, "0.00000000e+00\t"); else fprintf(fo, "%.8e\t", Bfy(x, y, z));
+			//if(abs(Bfz(x, y, z)) < 1E-300) fprintf(fo, "0.00000000e+00"); else fprintf(fo, "%.8e\n", Bfz(x, y, z));
+			fprintf(fo, "\n");
 		}
 	
 	}

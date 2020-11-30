@@ -19,7 +19,7 @@ void mood(string file_in, string plot_out, string file_out){
 	DataSet PZ(n_points, values[6]);
 	DataSet GAMMA(n_points, values[7]);
 
-	double starting_radius = sqrt(Z[0]^2+Y[0]^2).val();
+	double starting_radius = sqrt((Z[0]^2)+(Y[0]^2)).val();
 
 	// DISCARD FIRST POINTS
 	double per_cut = 0.1;
@@ -50,15 +50,15 @@ void mood(string file_in, string plot_out, string file_out){
 	// DRAW DFT[Y(T)]
 	canvas->cd(2);
 	int n_samples;
-	double** dft_data = computeDft2((T[1]-T[0]).val(), T.size(), Y.array(), 0.1, T[-1].val(), (T[1]-T[0]).val(), &n_samples);
+	double** dft_data = computeDft2((T[1]-T[0]).val(), T.size(), Y.array(), 0.1, T[n_points/10].val(), (T[1]-T[0]).val(), &n_samples);
 	TGraph* dft = GetTGraph(DataSet(n_samples, dft_data[0]), DataSet(n_samples, dft_data[2]));
 	dft->Draw("ALP");
-
-	// CHECK PERIOD OS ELLIPSIS
+ 
+ 	// CHECK PERIOD OS ELLIPSIS
 	canvas->cd(1);
 	int index = DataSet(n_samples, dft_data[2]).getMaxI();
 	double osc_per = DataSet(n_samples, dft_data[0])[index].val();
-	TF1* f = new TF1("", "0.2*cos(x*[0])", 0, 500);
+	TF1* f = new TF1("", "0.2*cos(x*[0])", T[0].val(), T[-1].val());
 	f->SetParameter(0, 2*M_PI/osc_per);
 	f->SetNpx(1000);
 	f->SetLineColor(kGreen);
@@ -105,30 +105,44 @@ void mood(string file_in, string plot_out, string file_out){
 	canvas->cd(3);
 	index = DataSet(n_samples, dft_data[2]).getMaxI();
 	osc_per = DataSet(n_samples, dft_data[0])[index].val();
-	TF1* f2 = new TF1("", "0.6+0.3*cos(x*[0])", 0, 500);
+	TF1* f2 = new TF1("", "0.6+0.3*cos(x*[0])", T[0].val(), T[-1].val());
 	f2->SetParameter(0, 2*M_PI/osc_per);
 	f2->SetNpx(1000);
 	f2->SetLineColor(kGreen);
 	f2->Draw("SAME");
 
+	// CHECK IF ALL WENT AS EXPECTED
+	bool worked = true;
+	if(index == 0 || index == n_samples-1 || DataSet(n_samples, dft_data[2]).getMax().val() < 1){
+		worked = false;
+		canvas->cd();
+		TLatex *latex = new TLatex(0.2, 0.5, "ANALISE FALHOU! SIMULACAO DESCARTADA!");
+		latex->Draw();
+	}
+
 	// SAVE PLOT
 	canvas->SaveAs(plot_out.c_str());
 
 	// SAVE LOG 
-	double t_rot = 2*M_PI/f2->GetParameter(1)*2;
-	double t_ell = 2*M_PI/f->GetParameter(1);
+	double t_rot = 2*M_PI/f2->GetParameter(0)*2;
+	double t_ell = 2*M_PI/f->GetParameter(0);
 
 	FILE* fout = fopen(file_out.c_str(), "w");
 	fprintf(fout, "%.14e", atan2(Z[0].val(), Y[0].val())); //phi0
 	fprintf(fout, "\t%.14e", starting_radius); //r0  <- e mesmo, acredita bro
-	fprintf(fout, "\t%.14e", t_rot);
-	fprintf(fout, "\t%.14e", qrt(Z.getMax()^2+Y.getMax()^2).val());
 
-	double px_mean = PX.getMean().val();
-	fprintf(fout, "\t%.14e", px_mean); //px_mean
-	fprintf(fout, "\t%.14e", X[-1].val()); //X_final
-	fprintf(fout, "\t%.14e", osc_per/T_elipse); //eta
+	if(worked){
+		fprintf(fout, "\t%.14e", t_rot); //periodo rotacao
+		fprintf(fout, "\t%.14e", sqrt((Z.getMax()^2)+(Y.getMax()^2)).val()); //raio max
 
+		double px_mean = PX.getMean().val();
+		fprintf(fout, "\t%.14e", px_mean); //px_mean
+		fprintf(fout, "\t%.14e", X[-1].val()); //X_final
+		fprintf(fout, "\t%.14e", t_rot/t_ell); //eta
+	}else{
+		fprintf(fout, "\t-1\t-1\t-1\t-1\t-1");
+	}
+	
 	fclose(fout);
 
 }

@@ -12,6 +12,12 @@ void printProgress(double percentage){
     if (val >= 100) cout << endl;
 }
 
+double round_N(double x, int N){
+
+	return round(x*pow(10, N))/pow(10, N);
+
+}
+
 //////////////////////////////////////////////////////////////
 
 ostream& operator<<(ostream& os, const Var& v){
@@ -43,7 +49,7 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header=false
 		ifstream file(src_file);
 
 		if(!file.is_open()){
-				cout << "Unable to read file <" << src_file << ">!" << endl;
+				cout << "Ficheiro para leitura inexistente!" << endl;
 				return 0;
 		}
 
@@ -78,7 +84,7 @@ double **ReadFile(string src_file, int *n_cols, int *n_points, bool header=false
 				while(aux_p < line_vec[i].size()-1){
 						res[j][i] = stod(line_vec[i].substr(aux_p), &aux_i);
 						aux_p += aux_i;
-						j++;
+						j++; 
 				}
 		}
 

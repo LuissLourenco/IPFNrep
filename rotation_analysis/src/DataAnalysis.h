@@ -40,6 +40,7 @@
 using namespace std;
 
 void printProgress(double percentage);
+double round_N(double x, int N);
 
 class Var{
 	public:
@@ -54,6 +55,7 @@ class Var{
 		double err(){return error;}
 		string print_latex(int p){cout << "$" << setprecision(p) << value; cout << "\\pm" << setprecision(p) << error << "$"; return "";}
 		void setError(double e){error = e;}
+		void round(int N){value = round_N(value, N); error = round_N(error, N);}
 
 		Var operator=(const Var& m1){value=m1.value; error=m1.error; return *this;}
 		Var operator+(const Var& m1){return Var(value+m1.value, sqrt(error*error+m1.error*m1.error));}
@@ -177,6 +179,11 @@ class DataSet{
 			for(int i = 0; i < n; i++) res[i] = var[i].val();
 			return res;
 		}
+		double* error_array(){
+			double* res = new double[n];
+			for(int i = 0; i < n; i++) res[i] = var[i].err();
+			return res;
+		}
 		DataSet setError(double e){
 			for(int i = 0; i < n; i++) var[i].setError(e);
 			return *this;
@@ -239,6 +246,26 @@ class DataSet{
 				var[i] = res[i];
 			return *this;
 		}
+		DataSet smooth(int a){
+			Var* aux = new Var[n];
+			int mean;
+			for(int i = 0; i < n; i++){
+				mean = 0;
+				aux[i] = Var(0);
+				for(int j = max(0, i-a); j < min(n, i+a+1); j++){
+					aux[i] = aux[i] + var[j];
+					mean++;
+				}
+				aux[i] = aux[i] / mean;
+			}
+			return DataSet(n, aux);
+		}
+		DataSet round(int N){
+			for(int i = 0; i < n; i++) 
+				var[i].round(N);
+			return *this;
+		}
+
 
 
 
@@ -319,6 +346,24 @@ class DataSet{
 		DataSet operator/(Var v){ 
 			Var *aux = new Var[n];
 			for(int i = 0; i < n; i++) aux[i] = var[i] / v;
+			DataSet res(n, aux);
+			delete[] aux;
+			return res;
+		}
+		DataSet operator^(const DataSet &v){ 
+			if(n != v.n){
+				cout << "Tamanhos de vetores incompatíveis!" << endl;
+				return DataSet();
+			}
+			Var *aux = new Var[n];
+			for(int i = 0; i < n; i++) aux[i] = var[i] ^ v.var[i];
+			DataSet res(n, aux);
+			delete[] aux;
+			return res;
+		}
+		DataSet operator^(Var v){ 
+			Var *aux = new Var[n];
+			for(int i = 0; i < n; i++) aux[i] = var[i] ^ v;
 			DataSet res(n, aux);
 			delete[] aux;
 			return res;

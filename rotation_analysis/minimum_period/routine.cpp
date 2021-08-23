@@ -191,30 +191,27 @@ int main(int argc, char** argv){
 
 	sim1.pri = 10;
 
-	sim1.Eo = 5;
+	sim1.Eo = 8;
 	sim1.px0 = -1;
-	sim1.tfwhm = 500;
+	sim1.tfwhm = 50;
 
-	sim1.T = 2000;
+	sim1.T = 300;
 	sim1.N = sim1.T / 0.005;
 	sim1.directory = "";
-
-	simulation_data sim2 = sim1;
-	sim2.tfwhm = 5;
 	
 	//sim1.print();
 
-	//run_simulations(sim1, 6); // 500
+	run_simulations(sim1, 6); // 500
 	//run_simulations(sim2, 6); // 5
 
 	sim1.print();
-
+/*
 	int rise_min = 10;
 	int rise_max = 1500;
 	int drise = 10;
 	char file[256];
 	for(int rise = rise_min; rise <= rise_max; rise+=drise){
-
+*/
 		/*
 		cout << "SIMULATING TFWHM = " << rise << endl;
 
@@ -233,7 +230,7 @@ int main(int argc, char** argv){
 		system(file);
 		system("sleep 0.001;");
 		*/
-		
+	/*	
 
 		
 		char f1[256], f2[256], f3[256];
@@ -414,17 +411,17 @@ int main(int argc, char** argv){
 		fclose(fin);
 	}
 	fclose(fout);
+*/
 
 
 
-/*
 	//analise("Out00000.txt", "Plot00000.png", "Log00000.txt");
 	
 	TApplication* theApp = new TApplication("App", &argc, argv);
 
 	int n_points, n_cols;
-	//double** values = ReadFile("Out00000.txt", &n_cols, &n_points, true);
-	double** values = ReadFile("Sim_a0.1_p0.txt", &n_cols, &n_points, true);
+	double** values = ReadFile("Out00000.txt", &n_cols, &n_points, true);
+	//double** values = ReadFile("Sim_a0.1_p0.txt", &n_cols, &n_points, true);
 
 	cout << "N_POINTS = " << n_points << endl;
 	int start = 0;
@@ -467,7 +464,7 @@ int main(int argc, char** argv){
 
 
 	theApp->Run();
-*/
+
 
 	return 0;
 }
